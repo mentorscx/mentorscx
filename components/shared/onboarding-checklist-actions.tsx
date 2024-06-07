@@ -26,8 +26,18 @@ export const OnboardingChecklistActions = ({
     else if (dataType === "expertise") onOpen("addExpertise");
     else if (dataType === "experience") onOpen("addExperience");
     else if (dataType === "tool") onOpen("addTool");
-    else if (dataType === "bio") onOpen("editBio");
-    else if (dataType === "profession") onOpen("editProfession");
+    else if (dataType === "bio")
+      onOpen("editBio", {
+        user: {
+          id: profileId,
+        },
+      });
+    else if (dataType === "profession")
+      onOpen("editProfession", {
+        user: {
+          id: profileId,
+        },
+      });
     else if (dataType === "availability") {
       router.push(`/mentor/schedule`);
     }

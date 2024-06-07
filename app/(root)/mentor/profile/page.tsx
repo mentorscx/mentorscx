@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs";
-import { db } from "@/lib/db";
 
 import { Role } from "@prisma/client";
+
+import { db } from "@/lib/db";
+import { ProfileDisplayPage } from "@/components/shared/profile/profile-display";
 
 export const metadata: Metadata = {
   title: "Profile | Mentors CX",
@@ -19,31 +21,34 @@ const MentorProfilePage = async () => {
     redirect("/sign-in");
   }
 
-  const currUser = await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       clerkId: userId,
     },
-    select: {
-      id: true,
-      role: true,
+    include: {
+      expertise: true,
+      experiences: true,
+      toolkit: true,
+      industries: true,
+      languages: true,
     },
   });
 
   // If the user profile is not found, return an appropriate message
-  if (!currUser) {
+  if (!user) {
     return <div>Profile not found</div>;
   }
 
   // Redirect if the user is not MENTOR
-  if (currUser.role !== Role.MENTOR) {
+  if (user.role !== Role.MENTOR) {
     redirect("/dashboard/search");
   }
 
-  if (currUser) {
-    redirect(`/mentor/profile/${currUser.id}`);
-  }
-
-  return <div>Profile Page</div>;
+  return (
+    <div className="pt-[80px]">
+      <ProfileDisplayPage user={user} profileId={user.id} />
+    </div>
+  );
 };
 
 export default MentorProfilePage;

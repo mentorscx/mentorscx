@@ -1,7 +1,9 @@
 "use router";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs";
+
 import { db } from "@/lib/db";
+import { ProfileDisplayPage } from "@/components/shared/profile/profile-display";
 
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -13,30 +15,32 @@ export const metadata: Metadata = {
 const MenteeProfilePage = async () => {
   const { userId } = auth();
 
-  // If the user is not authenticated, redirect to sign-in page immediately
   if (!userId) {
     redirect("/sign-in");
   }
 
-  const currUser = await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       clerkId: userId,
     },
-    select: {
-      id: true,
+    include: {
+      expertise: true,
+      experiences: true,
+      toolkit: true,
+      industries: true,
+      languages: true,
     },
   });
 
-  // If the user profile is not found, return an appropriate message
-  if (!currUser) {
+  if (!user) {
     return <div>Profile not found</div>;
   }
 
-  if (currUser) {
-    redirect(`/dashboard/profile/${currUser.id}`);
-  }
-
-  return <div>Profile Page</div>;
+  return (
+    <div className="pt-[80px]">
+      <ProfileDisplayPage user={user} profileId={user.id} />
+    </div>
+  );
 };
 
 export default MenteeProfilePage;
