@@ -1,0 +1,282 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MENTOR
+  MENTEE
+  BOTH
+  ADMIN
+}
+
+model User {
+  id                  String       @id @default(uuid())
+  username            String
+  email               String       @unique
+  imageUrl            String       @db.Text
+  clerkId             String       @unique
+  bio                 String?      @db.Text
+  shortBio            String?      @db.Text
+  portfolioWebsite    String?      @db.Text
+  linkedinProfile     String?      @db.Text
+  twitterProfile      String?      @db.Text
+  facebookProfile     String?      @db.Text
+  tiktokProfile       String?      @db.Text
+  position            String?
+  organization        String?
+  city                String?
+  country             String?
+  location            String?
+  role                Role?        @default(MENTOR)
+  languages           Language[]
+  expertise           Expertise[]
+  toolkit             Tool[]
+  industries          Industry[]
+  experiences         Experience[]
+  duration            Int          @default(30)
+  price               Int          @default(0)
+  maxSessions         Int?
+  zoomLink            String?
+  googleMeetLink      String?
+  meetingPreference   String?
+  challenge           String?
+  recommendedBy       String?
+  otherRecommendation String?
+  companySize         String?
+  timeZone            String?
+  weeklyAvailability  Json?
+
+  isVerified  Boolean @default(false)
+  isArchived  Boolean @default(false)
+  isOnboarded Boolean @default(false)
+
+  events           Event[]
+  sessionsGiven    Session[] @relation("sessionsGiven")
+  sessionsReceived Session[] @relation("sessionsReceived")
+
+  joinedAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([id])
+  @@index([clerkId])
+}
+
+model Language {
+  id   String @id @default(uuid())
+  name String
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Tool {
+  id          String  @id @default(uuid())
+  name        String
+  description String  @db.Text
+  imageUrl    String? @db.Text
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Expertise {
+  id          String  @id @default(uuid())
+  name        String
+  description String  @db.Text
+  imageUrl    String? @db.Text
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Industry {
+  id          String  @id @default(uuid())
+  name        String
+  description String  @db.Text
+  imageUrl    String? @db.Text
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Event {
+  id    String   @id @default(uuid())
+  title String
+  start DateTime
+  end   DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum SessionStatus {
+  AVAILABLE     @map("AVAILABLE")
+  CANCELLED     @map("CANCELLED")
+  ACCEPTED      @map("ACCEPTED")
+  AWAITING_HOST @map("AWAITING_HOST")
+  REJECTED      @map("REJECTED")
+  COMPLETED     @map("COMPLETED")
+  RESCHEDULED   @map("RESCHEDULED")
+}
+
+model Session {
+  id        String @id @default(uuid())
+  objective String @db.Text
+  outcome   String @db.Text
+  duration  Int
+  category  String
+  price     Int
+
+  mentorId String
+  mentor   User   @relation("sessionsGiven", fields: [mentorId], references: [id])
+
+  menteeId String
+  mentee   User   @relation("sessionsReceived", fields: [menteeId], references: [id])
+
+  start DateTime
+  end   DateTime
+
+  acceptTerms Boolean
+  status      SessionStatus @default(AWAITING_HOST)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  declineReason String? @db.Text
+  declinedBy    Role?
+
+  @@index([mentorId])
+}
+
+model Subscribe {
+  id        String   @id @default(uuid())
+  email     String
+  role      String   @default("MENTEE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Support {
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  subject   String @db.Text
+  message   String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Experience {
+  id          String    @id @default(uuid())
+  name        String
+  description String    @db.Text
+  imageUrl    String    @db.Text
+  start       DateTime?
+  end         DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+// TODO: Add userId to ProfileView and FeatureRequest
+model ProfileView {
+  id        Int      @id @default(autoincrement())
+  profileId String
+  viewerId  String
+  createdAt DateTime @default(now())
+
+  @@index([profileId])
+}
+
+enum FeatureType {
+  NEW_FEATURE
+  IMPROVEMENT
+  BUG
+  DASHBOARD
+}
+
+model FeatureRequest {
+  id          Int         @id @default(autoincrement())
+  userId      String
+  featureType FeatureType @default(NEW_FEATURE)
+  description String      @db.Text
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  DECLINED
+}
+
+model MentorApplication {
+  id                            Int     @id @default(autoincrement())
+  firstname                     String
+  lastname                      String
+  email                         String  @unique
+  linkedinUrl                   String? @map("linkedin_url")
+  hasEnoughExperience           String  @map("has_enough_experience")
+  currentPosition               String  @default("NA") @map("current_position")
+  motivation                    String  @default("NA") @db.Text
+  anticipatedSessionRate        String  @default("NA") @map("anticipated_session_rate")
+  financialMotivationFactor     String  @default("NA") @map("financial_motivation_factor")
+  feePolicyAcceptance           String  @default("NA") @map("fee_policy_acceptance")
+  preferVideoSharing            String  @default("NA") @map("prefer_video_sharing")
+  weeklySessions                String  @default("NA") @map("weekly_sessions")
+  priorMentorshipExperience     String  @default("NA") @map("prior_mentorship_experience")
+  profileStatement              String  @default("NA") @map("profile_statement") @db.Text
+  descriptionCustomerExperience String  @default("NA") @map("description_customer_experience") @db.Text
+  challengeSolved               String  @default("NA") @map("challenge_solved") @db.Text
+  interests                     String  @default("NA") @db.Text
+  applicationStatus             String  @default("PENDING") @map("application_status")
+  applicationNotes              String  @default("NA") @map("application_notes") @db.Text
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("mentor_applications")
+}
