@@ -180,20 +180,17 @@ const Total = ({ control }: { control: Control<FormValues> }) => {
   );
 };
 
-interface RecurPageProps {
+interface MentorScheduleRecurringProps {
   user: string;
 }
 
-const RecurPage = ({ user }: RecurPageProps) => {
+const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
   const router = useRouter();
   const parsedUser = JSON.parse(user);
   const { duration, timeZone, weeklyAvailability } = parsedUser;
 
   const defaultWeeklyAvailability = weeklyAvailability || {
-    schedule: [
-      // { day: "Monday", startTime: "18:17", endTime: "20:19" },
-      // { day: "Tuesday", startTime: "18:18", endTime: "20:40" },
-    ],
+    schedule: [],
   };
   const defaultWeeklyInTimezone = convertScheduleFromUTC(
     defaultWeeklyAvailability.schedule,
@@ -241,15 +238,6 @@ const RecurPage = ({ user }: RecurPageProps) => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {fields.map((field, index) => (
           <section className="flex gap-4 flex-wrap" key={field.id}>
-            {/* <Input
-              placeholder="name"
-              {...register(`schedule.${index}.name` as const, {
-                required: "This field is required",
-              })}
-              className="w-[200px]"
-              defaultValue={field.name}
-            /> */}
-
             <Controller
               control={control}
               name={`schedule.${index}.day`}
@@ -295,27 +283,7 @@ const RecurPage = ({ user }: RecurPageProps) => {
                 className="min-w-[125px] w-fit"
                 defaultValue={field.endTime}
               />
-              {/*FUTURE: Ref to order*/}
-              {/* <Button
-              type="button"
-              onClick={() => {
-                if (index > 0) swap(index, index - 1);
-              }}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronUp />
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                if (index < fields.length - 1) swap(index, index + 1);
-              }}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronDown />
-            </Button> */}
+
               <Button
                 type="button"
                 onClick={() => remove(index)}
@@ -355,4 +323,4 @@ const RecurPage = ({ user }: RecurPageProps) => {
   );
 };
 
-export default RecurPage;
+export default MentorScheduleRecurring;

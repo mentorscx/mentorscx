@@ -1,47 +1,67 @@
-import type { Metadata } from "next";
-import { db } from "@/lib/db";
-import { MyCalendar } from "./_components/mentor-calendar";
 import React from "react";
-import { getSelf } from "@/lib/actions/user.action";
-import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs";
+
+import { db } from "@/lib/db";
+
+import RecurPage from "./_components/MentorScheduleRecurring";
+import { generateEventsForNextYear } from "@/lib/helpers/recurring";
+import { listEvents } from "@/lib/actions/google-calandar.action";
+import { MentorsCalendar } from "./_components/mentors-calendar";
 import { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Schedule | Mentors CX",
-  description:
-    "Organize your mentorship sessions. Use the Mentors CX scheduling tool to plan your calls with ease.",
-};
+import MentorCalendarHeader from "./_components/MentorScheduleHeader";
 
-const SchedulePage = async () => {
-  const currUser = await getSelf();
-  if (!currUser) return <div>Not logged in</div>;
+const MentorSchedulePage = async () => {
+  const { userId: clerkId } = auth();
+
+  if (!clerkId) {
+    return redirect("/login");
+  }
 
   const user = await db.user.findUnique({
     where: {
-      id: currUser.id,
+      clerkId,
     },
     include: {
       events: true,
     },
   });
 
-  //TODO: Add access error
   if (!user) {
     return <div>You cannot access this page!</div>;
   }
 
-  // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
     redirect("/dashboard/search");
   }
 
-  redirect("/mentor/schedule/" + user.id);
+  let externalEvents = await listEvents(user?.email);
+  const weeklyAvailability = user?.weeklyAvailability || {};
+  const { schedule } = JSON.parse(JSON.stringify(weeklyAvailability)) || [];
+  const events = generateEventsForNextYear(schedule);
+
+  if (externalEvents === undefined || externalEvents === null) {
+    externalEvents = [];
+  }
 
   return (
-    <div className="flex justify-center items-center h-screen mt-[80px]">
-      <MyCalendar user={JSON.stringify(user)} />
+    <div className="max-w-5xl mx-auto pt-[80px] p-3">
+      <MentorCalendarHeader />
+
+      <div className="mt-4 p-3 border shadow rounded bg-background">
+        <RecurPage user={JSON.stringify(user)} />
+      </div>
+
+      <div className="mt-4 p-3 border shadow rounded bg-background">
+        <MentorsCalendar
+          user={JSON.stringify(user)}
+          externalEvents={JSON.stringify(externalEvents)}
+          regularEvents={JSON.stringify(events)}
+        />
+      </div>
     </div>
   );
 };
 
-export default SchedulePage;
+export default MentorSchedulePage;
