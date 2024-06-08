@@ -20,30 +20,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { updateUser } from "@/lib/actions/user.action";
+import { User } from "@prisma/client";
 
 const FormSchema = z.object({
   zoomLink: z.string(),
 });
 
 interface ProfileFormProps {
-  user: string;
+  user: User;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
-  const parsedUser = JSON.parse(user);
-  const { zoomLink: initialZoomLink } = parsedUser;
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      zoomLink: initialZoomLink || "",
+      zoomLink: user.zoomLink || "",
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      await updateUser({ ...data, id: parsedUser.id });
+      await updateUser({ ...data, id: user.id });
       toast.success("Zoom updated");
       router.refresh();
     } catch {

@@ -1,7 +1,65 @@
 "use server";
-
 import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+
+import { User, Role } from "@prisma/client";
+
 import { db } from "../db";
+
+type IncludeOptions = {
+  sessionsGiven?: boolean;
+  sessionsReceived?: boolean;
+  events?: boolean;
+  industries?: boolean;
+  expertise?: boolean;
+  experiences?: boolean;
+  languages?: boolean;
+};
+
+type CurrentUserFetchOptions = {
+  includeOptions?: IncludeOptions; // Optional include options
+};
+
+type CurrentUserOptions = CurrentUserFetchOptions & {
+  isMentorRoute?: boolean;
+};
+
+// Update function signature to make the entire options object optional
+export async function getCurrentUser(
+  options: CurrentUserOptions = {}
+): Promise<User | null> {
+  const { includeOptions = {}, isMentorRoute = false } = options;
+  const { userId: clerkId } = auth();
+  if (!clerkId) {
+    redirect("/login");
+  }
+
+  const defaults: IncludeOptions = {
+    sessionsGiven: false,
+    sessionsReceived: false,
+    events: false,
+    industries: false,
+    expertise: false,
+    experiences: false,
+    languages: false,
+  };
+
+  const includes = { ...defaults, ...includeOptions };
+  const user = await db.user.findUnique({
+    where: { clerkId },
+    include: includes,
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  if (isMentorRoute && user.role !== Role.MENTOR) {
+    redirect("/dashboard/search");
+  }
+
+  return user;
+}
 
 export async function getSelfId() {
   try {

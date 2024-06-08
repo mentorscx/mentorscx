@@ -20,24 +20,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { updateUser } from "@/lib/actions/user.action";
+import { User } from "@prisma/client";
 
 const FormSchema = z.object({
   portfolioWebsite: z.string(),
 });
 
 interface AccountFormProps {
-  user: string;
+  user: User;
 }
 
 export function AccountForm({ user }: AccountFormProps) {
-  const parsedUser = JSON.parse(user);
-  const { portfolioWebsite: initialWebsite } = parsedUser;
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      portfolioWebsite: initialWebsite || "",
+      portfolioWebsite: user.portfolioWebsite || "",
     },
   });
 
@@ -45,7 +44,7 @@ export function AccountForm({ user }: AccountFormProps) {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      await updateUser({ ...data, id: parsedUser.id });
+      await updateUser({ ...data, id: user.id });
       toast.success("Details updated");
       router.refresh();
     } catch {
@@ -66,33 +65,6 @@ export function AccountForm({ user }: AccountFormProps) {
               </Link>
             </p>
           </div>
-
-          {/* <FormField
-          control={form.control}
-          name="mentors_url"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="large">
-                  CX Video Room{" "}
-                  <span className="text-green-700">[Coming soon...]</span>
-                </FormLabel>
-                <FormDescription className="muted">
-                  Allow in-app video call option, If not activated, atleast add
-                  one option below.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled
-                  aria-readonly
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        /> */}
 
           <FormField
             control={form.control}

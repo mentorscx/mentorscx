@@ -8,6 +8,14 @@ import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import {
   Form,
@@ -21,38 +29,34 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { formatPrice } from "@/lib/format";
 import { updateUser } from "@/lib/actions/user.action";
+import { User } from "@prisma/client";
 
-interface WeeklySessionFormProps {
-  user: string;
+interface MentorSettingsMaxSessionsProps {
+  user: User;
 }
 
 const formSchema = z.object({
   maxSessions: z.coerce.number(),
 });
 
-export const WeeklySessionForm = ({ user }: WeeklySessionFormProps) => {
-  const parsedUser = JSON.parse(user);
-  const { maxSessions: initialSessions } = parsedUser;
-  const [isEditing, setIsEditing] = useState(false);
-
-  const toggleEdit = () => setIsEditing((current) => !current);
-
+export const MentorSettingsMaxSessions = ({
+  user,
+}: MentorSettingsMaxSessionsProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      maxSessions: initialSessions || undefined,
+      maxSessions: user.maxSessions || undefined,
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting, isValid, isDirty } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await updateUser({ ...values, id: parsedUser.id });
+      await updateUser({ ...values, id: user.id });
       toast.success("Max Sessions updated");
-      toggleEdit();
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -60,36 +64,17 @@ export const WeeklySessionForm = ({ user }: WeeklySessionFormProps) => {
   };
 
   return (
-    <div className="mt-6 border rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        <span className="large">Max sessions per week</span>
-        <Button onClick={toggleEdit} variant="ghost">
-          {isEditing ? (
-            <>Cancel</>
-          ) : (
-            <>
-              <Pencil className="h-4 w-4 mr-2 text-blue-400" />
-              <span className="text-blue-400">Edit sessions</span>
-            </>
-          )}
-        </Button>
-      </div>
-      {!isEditing && (
-        <p
-          className={cn(
-            "text-sm mt-2",
-            !initialSessions && "text-slate-500 italic"
-          )}
-        >
-          {initialSessions !== 0 ? initialSessions : "No max sessions"}
-        </p>
-      )}
-      {isEditing && (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+    <Card>
+      <CardHeader>
+        <CardTitle>Maximum sessions per week</CardTitle>
+        <CardDescription>
+          This is used to send alerts when max sessions is reached
+        </CardDescription>
+      </CardHeader>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent>
             <FormField
               control={form.control}
               name="maxSessions"
@@ -108,14 +93,17 @@ export const WeeklySessionForm = ({ user }: WeeklySessionFormProps) => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
-              </Button>
-            </div>
-          </form>
-        </Form>
-      )}
-    </div>
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Button
+              disabled={!isDirty || isSubmitting || !isValid}
+              type="submit"
+            >
+              Save
+            </Button>
+          </CardFooter>
+        </form>
+      </Form>
+    </Card>
   );
 };
