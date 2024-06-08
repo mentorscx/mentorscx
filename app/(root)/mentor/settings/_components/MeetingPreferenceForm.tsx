@@ -19,16 +19,18 @@ import { saveMeetingPreference } from "@/lib/actions/user.action";
 import { User } from "@prisma/client";
 
 interface MentorSettingsMeetingPreferenceProps {
-  user: User;
+  id: string;
+  meetingPreference: string | null;
 }
 
 const MentorSettingsMeetingPreference = ({
-  user,
+  id,
+  meetingPreference: initialMeetingPreference,
 }: MentorSettingsMeetingPreferenceProps) => {
   const router = useRouter();
 
   const [meetingPreference, setMeetingPreference] = useState<string | null>(
-    user.meetingPreference
+    initialMeetingPreference
   );
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const MentorSettingsMeetingPreference = ({
 
   const handleMeetingChange = async (e: any) => {
     try {
-      await saveMeetingPreference(e, user.id);
+      await saveMeetingPreference(e, id);
 
       setMeetingPreference(e);
       toast.success("Meeting Preference updated");

@@ -1,36 +1,40 @@
 import React from "react";
-import { MentorSettingsPriceForm } from "./MentorSettingsPriceForm";
-import { MentorSettingsMaxSessions } from "./MentorSettingsMaxSessions";
-import MentorSettingsSessionDuration from "./MentorSettingsSessionDuration";
-import MentorSettingsMeetingPreference from "./MentorSettingsMeetingPreference";
-import MentorSettingsTimeZone from "./MentorSettingsTimeZone";
-import { User } from "@prisma/client";
 
-const formComponents = {
-  priceForm: MentorSettingsPriceForm,
-  maxSessions: MentorSettingsMaxSessions,
-  meetingPreference: MentorSettingsMeetingPreference,
-  sessionDuration: MentorSettingsSessionDuration,
-  timeZone: MentorSettingsTimeZone,
-};
+import PriceForm from "./PriceForm";
+import MaxSessions from "./MaxSessionsForm";
+import SessionDuration from "./SessionDurationForm";
+import MeetingPreference from "./MeetingPreferenceForm";
+import TimeZone from "./TimeZoneForm";
 
 interface SessionTabContentProps {
-  user: User;
+  id: string;
+  price: number;
+  maxSessions: number | null;
+  duration: number | null;
+  meetingPreference: string | null;
+  timeZone: string | null;
 }
 
-const FormSection = ({ children }: { children: React.ReactNode }) => (
-  <div className="w-full mt-4">{children}</div>
-);
-
-const SessionTabContent = ({ user }: SessionTabContentProps) => {
+const SessionTabContent = ({
+  id,
+  price,
+  maxSessions,
+  duration,
+  meetingPreference,
+  timeZone,
+}: SessionTabContentProps) => {
   return (
-    <>
-      {Object.entries(formComponents).map(([key, Component]) => (
-        <FormSection key={key}>
-          <Component user={user} />
-        </FormSection>
-      ))}
-    </>
+    <div className="space-y-4 mt-6">
+      <PriceForm id={id} price={price} />
+
+      <MaxSessions id={id} maxSessions={maxSessions} />
+
+      <SessionDuration id={id} durationPreference={duration} />
+
+      <MeetingPreference id={id} meetingPreference={meetingPreference} />
+
+      <TimeZone id={id} timeZone={timeZone} />
+    </div>
   );
 };
 

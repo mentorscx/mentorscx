@@ -1,14 +1,15 @@
-import React from "react";
+import React, { use } from "react";
 import { UserIcon, BellIcon, ClockIcon, CalendarIcon } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { DisplayForm } from "./notification-form";
+import { DisplayForm } from "./NotificationsForm";
 import SessionTabContent from "./SessionTabContent";
-import { AccountForm } from "./account-form";
+import { PersonalWebsiteForm } from "./PersonalWebsiteForm";
 import CalendarTabContent from "./CalendarTabContent";
 
 import { User } from "@prisma/client";
+import { NotificationForm } from "@/types/app/(root)/mentor/settings/_components/notification-form1";
 
 type MentorSettingsTabsProps = {
   user: User;
@@ -25,7 +26,7 @@ const tabConfig = [
     value: "account",
     label: "Account",
     Icon: UserIcon,
-    ContentComponent: AccountForm,
+    ContentComponent: PersonalWebsiteForm,
   },
   {
     value: "notifications",
@@ -58,11 +59,33 @@ const MentorSettingsTabs = ({ user }: MentorSettingsTabsProps) => {
               </TabsTrigger>
             ))}
           </TabsList>
-          {tabConfig.map(({ value, ContentComponent }) => (
-            <TabsContent key={value} value={value}>
-              <ContentComponent user={user} />
-            </TabsContent>
-          ))}
+
+          <TabsContent key="sessions" value="sessions">
+            <SessionTabContent
+              id={user.id}
+              price={user.price}
+              duration={user.duration}
+              meetingPreference={user.meetingPreference}
+              maxSessions={user.maxSessions}
+              timeZone={user.timeZone}
+            />
+          </TabsContent>
+          <TabsContent key="account" value="account">
+            <PersonalWebsiteForm
+              id={user.id}
+              portfolioWebsite={user.portfolioWebsite}
+            />
+          </TabsContent>
+          <TabsContent key="notifications" value="notifications">
+            <NotificationForm />
+          </TabsContent>
+          <TabsContent key="calendar" value="calendar">
+            <CalendarTabContent
+              id={user.id}
+              zoomLink={user.zoomLink}
+              googleMeetLink={user.googleMeetLink}
+            />
+          </TabsContent>
         </Tabs>
       </section>
     </div>

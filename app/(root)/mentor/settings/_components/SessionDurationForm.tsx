@@ -17,17 +17,19 @@ import { toast } from "sonner";
 import { saveDurationPreference } from "@/lib/actions/user.action";
 import { User } from "@prisma/client";
 
-interface MentorSettingsSessionDurationProps {
-  user: User;
+interface SessionDurationProps {
+  id: string;
+  durationPreference: number | null;
 }
 
-const MentorSettingsSessionDuration = ({
-  user,
-}: MentorSettingsSessionDurationProps) => {
+const SessionDuration = ({
+  id,
+  durationPreference: initialDuartionPreference,
+}: SessionDurationProps) => {
   const router = useRouter();
 
   const [durationPreference, setDurationPreference] = useState(
-    user.duration?.toString()
+    initialDuartionPreference?.toString()
   );
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const MentorSettingsSessionDuration = ({
 
   const handleDurationChange = async (e: any) => {
     try {
-      await saveDurationPreference(Number(e), user.id);
+      await saveDurationPreference(Number(e), id);
 
       setDurationPreference(e);
       toast.success("Duration Preference updated");
@@ -58,7 +60,7 @@ const MentorSettingsSessionDuration = ({
           type="single"
           className="flex justify-start gap-4"
           onValueChange={handleDurationChange}
-          defaultValue={user.duration?.toString()}
+          defaultValue={initialDuartionPreference?.toString()}
         >
           <ToggleGroupItem
             value="15"
@@ -98,4 +100,4 @@ const MentorSettingsSessionDuration = ({
   );
 };
 
-export default MentorSettingsSessionDuration;
+export default SessionDuration;

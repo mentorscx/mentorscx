@@ -1,13 +1,12 @@
 "use client";
 
-import * as z from "zod";
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
-import { useState } from "react";
+import * as z from "zod";
+import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -17,75 +16,74 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { formatPrice } from "@/lib/format";
+import { Switch } from "@/components/ui/switch";
 import { updateUser } from "@/lib/actions/user.action";
 import { User } from "@prisma/client";
 
-interface MentorSettingsMaxSessionsProps {
-  user: User;
-}
-
-const formSchema = z.object({
-  maxSessions: z.coerce.number(),
+const FormSchema = z.object({
+  portfolioWebsite: z.string(),
 });
 
-export const MentorSettingsMaxSessions = ({
-  user,
-}: MentorSettingsMaxSessionsProps) => {
+interface PersonalWebsiteFormProps {
+  id: string;
+  portfolioWebsite: string | null;
+}
+
+export function PersonalWebsiteForm({
+  id,
+  portfolioWebsite,
+}: PersonalWebsiteFormProps) {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
-      maxSessions: user.maxSessions || undefined,
+      portfolioWebsite: portfolioWebsite || "",
     },
   });
 
   const { isSubmitting, isValid, isDirty } = form.formState;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      await updateUser({ ...values, id: user.id });
-      toast.success("Max Sessions updated");
+      await updateUser({ ...data, id });
+      toast.success("Details updated");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
     }
-  };
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Maximum sessions per week</CardTitle>
+        <CardTitle>Personal website</CardTitle>
         <CardDescription>
-          This is used to send alerts when max sessions is reached
+          Add your personal or portfolio website to show case to users
         </CardDescription>
       </CardHeader>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
             <FormField
               control={form.control}
-              name="maxSessions"
+              name="portfolioWebsite"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
-                      type="number"
-                      step="1"
-                      disabled={isSubmitting}
-                      placeholder="Set a number of sessions per week"
+                      placeholder="Your website url goes here."
                       {...field}
                     />
                   </FormControl>
@@ -106,4 +104,4 @@ export const MentorSettingsMaxSessions = ({
       </Form>
     </Card>
   );
-};
+}

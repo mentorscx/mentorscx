@@ -32,23 +32,22 @@ import { formatPrice } from "@/lib/format";
 import { updateUser } from "@/lib/actions/user.action";
 import { User } from "@prisma/client";
 
-interface MentorSettingsPriceFormProps {
-  user: User;
+interface PriceFormProps {
+  id: string;
+  price: number;
 }
 
 const formSchema = z.object({
   price: z.coerce.number(),
 });
 
-export const MentorSettingsPriceForm = ({
-  user,
-}: MentorSettingsPriceFormProps) => {
+const PriceForm = ({ id, price }: PriceFormProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      price: user.price || undefined,
+      price: price || undefined,
     },
   });
 
@@ -56,7 +55,7 @@ export const MentorSettingsPriceForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await updateUser({ ...values, id: user.id });
+      await updateUser({ ...values, id });
       toast.success("Price updated");
       router.refresh();
     } catch {
@@ -68,7 +67,9 @@ export const MentorSettingsPriceForm = ({
     <Card>
       <CardHeader>
         <CardTitle>Default hourly rate</CardTitle>
-        <CardDescription>Used to calculate price per session</CardDescription>
+        <CardDescription>
+          This is used to calculate price per session
+        </CardDescription>
       </CardHeader>
 
       <Form {...form}>
@@ -106,3 +107,5 @@ export const MentorSettingsPriceForm = ({
     </Card>
   );
 };
+
+export default PriceForm;

@@ -6,7 +6,7 @@ import { User, Role } from "@prisma/client";
 
 import { db } from "../db";
 
-type TGetCurrentUser = {
+type UserIncludeOptions = {
   sessionsGiven?: boolean;
   sessionsReceived?: boolean;
   events?: boolean;
@@ -17,35 +17,31 @@ type TGetCurrentUser = {
   isMentorRoute?: boolean;
 };
 
+type TGetCurrentUser = {
+  includes?: UserIncludeOptions;
+  isMentorRoute?: Boolean;
+};
+
 // Update function signature to make the entire options object optional
-export async function getCurrentUser(
-  options: TGetCurrentUser
-): Promise<User | null> {
+export async function getCurrentUser({
+  includes,
+  isMentorRoute,
+}: TGetCurrentUser): Promise<User | null> {
   const { userId: clerkId } = auth();
   if (!clerkId) {
     redirect("/login");
   }
 
-  const includeOptions = {
-    sessionsGiven: false || options.sessionsGiven,
-    sessionsReceived: false || options.sessionsReceived,
-    events: false || options.events,
-    industries: false || options.industries,
-    expertise: false || options.expertise,
-    experiences: false || options.experiences,
-    languages: false || options.languages,
-  };
-
   const user = await db.user.findUnique({
     where: { clerkId },
-    include: includeOptions,
+    include: includes,
   });
 
   if (!user) {
     return null;
   }
 
-  if (options.isMentorRoute && user.role !== Role.MENTOR) {
+  if (isMentorRoute && user.role !== Role.MENTOR) {
     redirect("/dashboard/search");
   }
 

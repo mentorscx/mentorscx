@@ -1,29 +1,26 @@
 import React from "react";
-import Link from "next/link";
-import { CalandarForm } from "./calandar-form";
-import { GoogleCalandarForm } from "./google-calendar-form";
-import { User } from "@prisma/client";
+
+import ZoomLinkForm from "./ZoomLinkForm";
+import GoogleMeetLinkForm from "./GoogleMeetLinkForm";
+import CalendarTabHeading from "./CalendarTabHeading";
 
 type CalendarTabContentProps = {
-  user: User;
+  id: string;
+  zoomLink: string | null;
+  googleMeetLink: string | null;
 };
 
-const CalendarTabContent = ({ user }: CalendarTabContentProps) => {
+const CalendarTabContent = ({
+  id,
+  zoomLink,
+  googleMeetLink,
+}: CalendarTabContentProps) => {
   return (
-    <>
-      <div className="my-4 lg:my-8 p-3 border shadow-sm rounded">
-        <p className="large">Connecting with mentees</p>
-        <p className="muted">
-          You can connect with mentees using Zoom and Google meets
-          <Link href="/" className="text-blue-400 underline">
-            (Learn more)
-          </Link>
-        </p>
-      </div>
-
-      <CalandarForm user={user} />
-      <GoogleCalandarForm user={user} />
-    </>
+    <div className="space-y-4 mt-6">
+      <CalendarTabHeading />
+      <ZoomLinkForm id={id} zoomLink={zoomLink} />
+      <GoogleMeetLinkForm id={id} googleMeetLink={googleMeetLink} />
+    </div>
   );
 };
 

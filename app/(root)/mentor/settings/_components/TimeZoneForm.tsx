@@ -65,20 +65,19 @@ const FormSchema = z.object({
   }),
 });
 
-interface MentorSettingsTimeZoneProps {
-  user: User;
+interface TimeZoneProps {
+  id: string;
+  timeZone: string | null;
 }
 
-export default function MentorSettingsTimeZoneForm({
-  user,
-}: MentorSettingsTimeZoneProps) {
+export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
   const router = useRouter();
   const [valueChanged, setValueChange] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      timeZone: user.timeZone || "",
+      timeZone: timeZone || "",
     },
   });
 
@@ -86,7 +85,7 @@ export default function MentorSettingsTimeZoneForm({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      await updateUser({ ...data, id: user.id });
+      await updateUser({ ...data, id });
       toast.success("Time zone preference updated");
       router.refresh();
     } catch {
