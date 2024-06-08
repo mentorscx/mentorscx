@@ -3,13 +3,13 @@ import { UserIcon, BellIcon, ClockIcon, CalendarIcon } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { DisplayForm } from "./NotificationsForm";
 import SessionTabContent from "./SessionTabContent";
-import { PersonalWebsiteForm } from "./PersonalWebsiteForm";
+import PersonalWebsiteForm from "./PersonalWebsiteForm";
 import CalendarTabContent from "./CalendarTabContent";
+import NotificationForm from "./notification-form1";
 
 import { User } from "@prisma/client";
-import { NotificationForm } from "@/types/app/(root)/mentor/settings/_components/notification-form1";
+import { getCurrentUser } from "@/lib/actions/user.action";
 
 type MentorSettingsTabsProps = {
   user: User;
@@ -20,29 +20,30 @@ const tabConfig = [
     value: "sessions",
     label: "Sessions",
     Icon: ClockIcon,
-    ContentComponent: SessionTabContent,
   },
   {
     value: "account",
     label: "Account",
     Icon: UserIcon,
-    ContentComponent: PersonalWebsiteForm,
   },
   {
     value: "notifications",
     label: "Notifications",
     Icon: BellIcon,
-    ContentComponent: DisplayForm,
   },
   {
-    value: "calendar", // Corrected spelling
+    value: "calendar",
     label: "Calendar Integration",
     Icon: CalendarIcon,
-    ContentComponent: CalendarTabContent,
   },
-];
+] as const;
 
-const MentorSettingsTabs = ({ user }: MentorSettingsTabsProps) => {
+const MentorSettingsTabs = async () => {
+  const user = await getCurrentUser({ isMentorRoute: true });
+
+  if (!user) {
+    return <div>Profile not found</div>;
+  }
   return (
     <div className="mx-auto max-w-5xl pt-[80px]">
       <section className="my-4 lg:my-8 p-3 border shadow rounded bg-background">

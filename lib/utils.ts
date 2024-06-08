@@ -127,3 +127,7 @@ export function getInitials(fullName: string): string {
   const lastInitial = parts[parts.length - 1][0];
   return (firstInitial + lastInitial).toUpperCase();
 }
+
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

@@ -40,7 +40,7 @@ interface PersonalWebsiteFormProps {
   portfolioWebsite: string | null;
 }
 
-export function PersonalWebsiteForm({
+export default function PersonalWebsiteForm({
   id,
   portfolioWebsite,
 }: PersonalWebsiteFormProps) {
@@ -66,7 +66,7 @@ export function PersonalWebsiteForm({
   }
 
   return (
-    <Card>
+    <Card className="mt-6">
       <CardHeader>
         <CardTitle>Personal website</CardTitle>
         <CardDescription>
