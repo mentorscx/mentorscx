@@ -5,7 +5,14 @@ import MentorSettingsSessionDuration from "./MentorSettingsSessionDuration";
 import MentorSettingsMeetingPreference from "./MentorSettingsMeetingPreference";
 import MentorSettingsTimeZone from "./MentorSettingsTimeZone";
 import { User } from "@prisma/client";
-import TestForm from "./test-from";
+
+const formComponents = {
+  priceForm: MentorSettingsPriceForm,
+  maxSessions: MentorSettingsMaxSessions,
+  meetingPreference: MentorSettingsMeetingPreference,
+  sessionDuration: MentorSettingsSessionDuration,
+  timeZone: MentorSettingsTimeZone,
+};
 
 interface SessionTabContentProps {
   user: User;
@@ -18,21 +25,11 @@ const FormSection = ({ children }: { children: React.ReactNode }) => (
 const SessionTabContent = ({ user }: SessionTabContentProps) => {
   return (
     <>
-      <FormSection>
-        <MentorSettingsPriceForm user={user} />
-      </FormSection>
-      <FormSection>
-        <MentorSettingsMaxSessions user={user} />
-      </FormSection>
-      <FormSection>
-        <MentorSettingsSessionDuration user={user} />
-      </FormSection>
-      <FormSection>
-        <MentorSettingsMeetingPreference user={user} />
-      </FormSection>
-      <FormSection>
-        <MentorSettingsTimeZone user={user} />
-      </FormSection>
+      {Object.entries(formComponents).map(([key, Component]) => (
+        <FormSection key={key}>
+          <Component user={user} />
+        </FormSection>
+      ))}
     </>
   );
 };

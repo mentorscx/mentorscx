@@ -65,7 +65,7 @@ const MentorSettingsMeetingPreference = ({
           <ToggleGroupItem
             value="google-meet"
             aria-label="Toggle underline"
-            className="h-20 w-40 border-1 px-3 py-1 large"
+            className="h-10 w-40 border-1 px-3 py-1 font-semibold"
             size="lg"
           >
             Google Meet
@@ -73,7 +73,7 @@ const MentorSettingsMeetingPreference = ({
           <ToggleGroupItem
             value="zoom"
             aria-label="Toggle underline"
-            className="h-20 w-40 px-3 py-1 large bg-white border-1"
+            className="h-10 w-40 px-3 py-1 bg-white border-1 font-semibold"
             size="lg"
           >
             Zoom
