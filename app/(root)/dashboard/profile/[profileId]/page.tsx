@@ -58,15 +58,13 @@ const page = async ({ params }: Props) => {
   );
 
   return (
-    <div className="pt-[80px]">
-      <Suspense fallback={<ProfileSkeleton />}>
-        <ProfileDisplayPage
-          isMentorRoute={false}
-          isOwnProfile={false}
-          profileId={profileId}
-        />
-      </Suspense>
-    </div>
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileDisplayPage
+        isMentorRoute={false}
+        isOwnProfile={false}
+        profileId={profileId}
+      />
+    </Suspense>
   );
 };
 

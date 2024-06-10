@@ -12,11 +12,9 @@ export const metadata: Metadata = {
 
 const MentorProfilePage = async () => {
   return (
-    <div className="pt-[80px]">
-      <Suspense fallback={<ProfileSkeleton />}>
-        <ProfileDisplayPage isMentorRoute={true} isOwnProfile={true} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileDisplayPage isMentorRoute={true} isOwnProfile={true} />
+    </Suspense>
   );
 };
 
