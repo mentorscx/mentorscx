@@ -1,5 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import ProfileSkeleton from "@/components/shared/skeletons/ProfileSkeleton";
 
 import { db } from "@/lib/db";
 import { ProfileDisplayPage } from "@/components/shared/profile/profile-display";
@@ -44,26 +46,15 @@ interface Props {
 const page = async ({ params }: Props) => {
   const { profileId } = params;
 
-  const user = await db.user.findUnique({
-    where: {
-      id: profileId,
-    },
-    include: {
-      expertise: true,
-      experiences: true,
-      toolkit: true,
-      industries: true,
-      languages: true,
-    },
-  });
-
-  if (!user) {
-    return <div>Profile not found</div>;
-  }
-
   return (
     <div className="pt-[80px]">
-      <ProfileDisplayPage user={user} profileId={profileId} />
+      <Suspense fallback={<ProfileSkeleton />}>
+        <ProfileDisplayPage
+          isMentorRoute={true}
+          isOwnProfile={false}
+          profileId={profileId}
+        />
+      </Suspense>
     </div>
   );
 };

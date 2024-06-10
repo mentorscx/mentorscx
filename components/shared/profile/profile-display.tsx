@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+
 import {
   BuildingIcon,
   LucideFacebook,
@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/footer";
 
-import { getSelfId } from "@/lib/actions/user.action";
 import { formatMonthYear } from "@/lib/format";
 import { RequestCallButton } from "./profile-item-action";
 import ProfileSkillList from "./profile-skill-list";
@@ -34,66 +33,55 @@ import {
 } from "./edit-profile-action";
 import { OnboardingChecklist } from "@/components/shared/onboarding-checklist";
 
-import {
-  User,
-  Industry,
-  Expertise,
-  Tool,
-  Experience,
-  Language,
-} from "@prisma/client";
+import { Role } from "@prisma/client";
 import ProfileBioPage from "./profile-bio";
 import ProfileLinks from "./profile-links";
 import ShareOwnProfile from "./share-my-profile";
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 type ProfileDisplayPageProps = {
-  profileId: string;
-  user: User & {
-    industries: Industry[];
-    expertise: Expertise[];
-    toolkit: Tool[];
-    experiences: Experience[];
-    languages: Language[];
-  };
+  isMentorRoute: boolean;
+  isOwnProfile: boolean;
+  profileId?: string;
 };
 
 export const ProfileDisplayPage = async ({
-  user,
-  profileId,
+  isMentorRoute = false,
+  isOwnProfile = false,
+  profileId = undefined,
 }: ProfileDisplayPageProps) => {
-  const {
-    id,
-    username,
-    location,
-    bio,
-    city,
-    country,
-    imageUrl,
-    position,
-    organization,
-    languages,
-    industries,
-    expertise,
-    toolkit,
-    experiences,
-    linkedinProfile,
-    twitterProfile,
-    facebookProfile,
-    tiktokProfile,
-    joinedAt,
-    price,
-    duration,
-    portfolioWebsite,
-  } = user;
+  const { userId } = await auth();
 
-  // Get the self account
-  const selfAccount = await getSelfId();
-  if (!selfAccount) {
-    return null;
+  if (isOwnProfile && !userId) {
+    redirect("/login");
+  }
+
+  const user = await db.user.findUnique({
+    where: {
+      id: profileId,
+      clerkId: isOwnProfile && userId ? userId : undefined,
+    },
+    include: {
+      experiences: true,
+      expertise: true,
+      industries: true,
+      languages: true,
+      toolkit: true,
+    },
+  });
+
+  if (!user) {
+    return <div>Profile not found!</div>;
+  }
+
+  if (isMentorRoute) {
+    user.role !== Role.MENTOR && redirect("/dashboard/search");
   }
 
   // Check if the person can edit the profile
-  const canEdit = profileId === selfAccount.id;
+  const canEdit = isOwnProfile || profileId === user.id;
 
   return (
     <div className="max-lg:p-3">
@@ -108,7 +96,7 @@ export const ProfileDisplayPage = async ({
           <div className="flex flex-col items-center gap-4">
             <div className="flex flex-col gap-4 items-center justify-center">
               <Image
-                src={imageUrl}
+                src={user.imageUrl}
                 alt="avatar"
                 width={100}
                 height={100}
@@ -117,23 +105,23 @@ export const ProfileDisplayPage = async ({
               <div>
                 {canEdit ? (
                   <ShareOwnProfile
-                    path={`dashboard/profile/${id}`}
+                    path={`dashboard/profile/${user.id}`}
                     title="Share your profile"
                   />
                 ) : null}
               </div>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <h3 className="h3">{username}</h3>
+              <h3 className="h3">{user.username}</h3>
               <h4 className="large text-slate-800">
-                {position} @ {organization}
+                {user.position} @ {user.organization}
               </h4>
             </div>
             {canEdit && (
               <EditProfileDetailsAction
-                position={position}
-                organization={organization}
-                id={id}
+                position={user.position}
+                organization={user.organization}
+                id={user.id}
               />
             )}
           </div>
@@ -143,15 +131,17 @@ export const ProfileDisplayPage = async ({
             <div className="flex flex-col items-center lg:flex-row lg:space-x-6 max-lg:space-y-4">
               <p className="text-base flex items-center">
                 <Languages className="h-4 w-4 text-blue-500 mr-1" />
-                {languages.map((language: any) => language.name).join(", ")}
+                {user.languages
+                  .map((language: any) => language.name)
+                  .join(", ")}
               </p>
               <p className="text-base flex items-center">
                 <MapPin className="h-4 w-4 text-blue-500 mr-1" />
-                {city}, {country}
+                {user.city}, {user.country}
               </p>
               <p className="text-base flex items-center">
                 <BuildingIcon className="h-4 w-4 text-blue-500 mr-1" />
-                Joined {formatMonthYear(joinedAt?.toString())}
+                Joined {formatMonthYear(user.joinedAt?.toString())}
               </p>
             </div>
 
@@ -167,11 +157,11 @@ export const ProfileDisplayPage = async ({
                 </div>
                 <Separator className="h-[2px] lg:hidden" />
                 <div className="flex flex-col items-center muted">
-                  {price === 0 ? (
+                  {user.price === 0 ? (
                     <p className="font-bold text-2xl text-green-600">Free</p>
                   ) : (
                     <p className="font-bold text-2xl text-slate-800">
-                      {price}$
+                      {user.price}$
                     </p>
                   )}
                   <p className="text-sm">Price per hour</p>
@@ -179,7 +169,7 @@ export const ProfileDisplayPage = async ({
                 <Separator className="h-[2px] lg:hidden" />
                 <div className="flex flex-col items-center muted">
                   <div className="bg-green-100 text-green-600 px-2 py-1 rounded-full font-semibold text-sm">
-                    <p className="text-sm">{duration} min</p>
+                    <p className="text-sm">{user.duration} min</p>
                   </div>
                   <div>Time blocks Available</div>
                 </div>
@@ -198,17 +188,17 @@ export const ProfileDisplayPage = async ({
         {/* Social and Invites */}
         <div className="lg:h-24 flex flex-col lg:flex-row items-center justify-between w-full mt-8 p-6 max-w-3xl mx-auto">
           <div className="flex items-center justify-center w-full space-x-3 lg:justify-start">
-            <RequestCallButton id={id} />
+            <RequestCallButton id={user.id} />
             <Button className="rounded-full" variant="outline">
               <MessageCircleIcon className="w-5 h-5 mr-1" />
               Message me
             </Button>
           </div>
 
-          {portfolioWebsite && (
+          {user.portfolioWebsite && (
             <Button variant="link" className="max-lg:mt-4" asChild>
               <Link
-                href={portfolioWebsite}
+                href={user.portfolioWebsite}
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -219,10 +209,10 @@ export const ProfileDisplayPage = async ({
           )}
 
           <div className="max-lg:mt-6 flex items-center justify-center">
-            {facebookProfile && (
+            {user.facebookProfile && (
               <Button variant="link" size="icon" asChild>
                 <Link
-                  href={facebookProfile}
+                  href={user.facebookProfile}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -230,10 +220,10 @@ export const ProfileDisplayPage = async ({
                 </Link>
               </Button>
             )}
-            {linkedinProfile && (
+            {user.linkedinProfile && (
               <Button variant="link" size="icon" asChild>
                 <Link
-                  href={linkedinProfile}
+                  href={user.linkedinProfile}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -241,10 +231,10 @@ export const ProfileDisplayPage = async ({
                 </Link>
               </Button>
             )}
-            {twitterProfile && (
+            {user.twitterProfile && (
               <Button variant="link" size="icon" asChild>
                 <Link
-                  href={twitterProfile}
+                  href={user.twitterProfile}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -252,10 +242,10 @@ export const ProfileDisplayPage = async ({
                 </Link>
               </Button>
             )}
-            {tiktokProfile && (
+            {user.tiktokProfile && (
               <Button variant="link" size="icon" asChild>
                 <Link
-                  href={tiktokProfile}
+                  href={user.tiktokProfile}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -266,12 +256,12 @@ export const ProfileDisplayPage = async ({
 
             <EditSocialsAction
               dataType="socials"
-              id={id}
-              portfolioWebsite={portfolioWebsite ?? ""}
-              linkedinProfile={linkedinProfile ?? ""}
-              twitterProfile={twitterProfile ?? ""}
-              facebookProfile={facebookProfile ?? ""}
-              tiktokProfile={tiktokProfile ?? ""}
+              id={user.id}
+              portfolioWebsite={user.portfolioWebsite ?? ""}
+              linkedinProfile={user.linkedinProfile ?? ""}
+              twitterProfile={user.twitterProfile ?? ""}
+              facebookProfile={user.facebookProfile ?? ""}
+              tiktokProfile={user.tiktokProfile ?? ""}
             />
           </div>
         </div>
@@ -286,11 +276,16 @@ export const ProfileDisplayPage = async ({
       </div>
 
       <div id="bio"></div>
-      <ProfileBioPage canEdit={canEdit} bio={bio} dataType="bio" id={id} />
+      <ProfileBioPage
+        canEdit={canEdit}
+        bio={user.bio}
+        dataType="bio"
+        id={user.id}
+      />
 
       <div id="experience"></div>
       <ProfileSkillList
-        data={experiences}
+        data={user.experiences}
         canEdit={canEdit}
         dataType="experience"
         name="Experience"
@@ -298,7 +293,7 @@ export const ProfileDisplayPage = async ({
 
       <div id="expertise"></div>
       <ProfileSkillList
-        data={expertise}
+        data={user.expertise}
         canEdit={canEdit}
         dataType="expertise"
         name="Expertise"
@@ -306,7 +301,7 @@ export const ProfileDisplayPage = async ({
 
       <div id="industry"></div>
       <ProfileSkillList
-        data={industries}
+        data={user.industries}
         canEdit={canEdit}
         dataType="industry"
         name="Industry"
@@ -314,7 +309,7 @@ export const ProfileDisplayPage = async ({
 
       <div id="toolkit"></div>
       <ProfileSkillList
-        data={toolkit}
+        data={user.toolkit}
         canEdit={canEdit}
         dataType="tool"
         name="Toolkit"

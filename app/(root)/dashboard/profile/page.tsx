@@ -1,11 +1,8 @@
-"use router";
-import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs";
-
-import { db } from "@/lib/db";
 import { ProfileDisplayPage } from "@/components/shared/profile/profile-display";
+import ProfileSkeleton from "@/components/shared/skeletons/ProfileSkeleton";
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Profile | Mentors CX",
   description:
@@ -13,32 +10,11 @@ export const metadata: Metadata = {
 };
 
 const MenteeProfilePage = async () => {
-  const { userId } = auth();
-
-  if (!userId) {
-    redirect("/sign-in");
-  }
-
-  const user = await db.user.findUnique({
-    where: {
-      clerkId: userId,
-    },
-    include: {
-      expertise: true,
-      experiences: true,
-      toolkit: true,
-      industries: true,
-      languages: true,
-    },
-  });
-
-  if (!user) {
-    return <div>Profile not found</div>;
-  }
-
   return (
     <div className="pt-[80px]">
-      <ProfileDisplayPage user={user} profileId={user.id} />
+      <Suspense fallback={<ProfileSkeleton />}>
+        <ProfileDisplayPage isMentorRoute={false} isOwnProfile={true} />
+      </Suspense>
     </div>
   );
 };
