@@ -86,6 +86,7 @@ const MaxSessions = ({ id, maxSessions }: MaxSessionsProps) => {
                       disabled={isSubmitting}
                       placeholder="Set a number of sessions per week"
                       {...field}
+                      className="w-32"
                     />
                   </FormControl>
                   <FormMessage />

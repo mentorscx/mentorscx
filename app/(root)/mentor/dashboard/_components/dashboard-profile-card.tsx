@@ -43,7 +43,7 @@ const DashBoardProfileCard = ({
 
         <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
           <Button
-            variant="outline"
+            variant="secondary"
             asChild
             className="min-w-[150px] md:w-fit flex items-center"
           >

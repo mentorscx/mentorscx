@@ -86,6 +86,7 @@ const PriceForm = ({ id, price }: PriceFormProps) => {
                       step="0.01"
                       disabled={isSubmitting}
                       placeholder="Set a price for your session"
+                      className="w-32"
                       {...field}
                     />
                   </FormControl>
