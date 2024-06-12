@@ -4,10 +4,11 @@ import { ArrowBigUpDashIcon, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Heading from "@/components/shared/heading";
+import { Card } from "@/components/ui/card";
 
 const MentorCalendarHeader = () => {
   return (
-    <div className="mt-4 p-3 border shadow rounded bg-background md:pl-6">
+    <Card className="mt-4 p-3 md:pl-6">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <Heading
           title="My Schedule"
@@ -21,7 +22,7 @@ const MentorCalendarHeader = () => {
           </Link>
         </Button>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -15,6 +15,13 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { addEvent, deleteEvent } from "@/lib/actions/event.action";
 import { isEventInThePast, isEventOverlapping } from "@/lib/utils";
 import { AlertPopup } from "@/components/shared/alert-popup";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const now = new Date();
 
@@ -188,19 +195,22 @@ export const MentorsCalendar = ({
   );
 
   return (
-    <div className="p-3">
-      <section className="flex items-start justify-between flex-col md:flex-row gap-4">
-        <div>
-          <h3 className="text-2xl font-semibold">Specific Availability</h3>
-          <p className="muted">Add specific dates and times to your calendar</p>
+    <Card className="mt-4">
+      <CardHeader className="flex flex-row justify-between items-center gap-4">
+        <div className="space-y-1.5">
+          <CardTitle className="text-2xl">Specific Availability</CardTitle>
+          <CardDescription>
+            Add specific dates and times to your calendar
+          </CardDescription>
         </div>
-        <div>
+
+        <div className="space-y-1">
           <p className="muted !font-semibold">
-            *click or drag to set a timeslot
+            * click or drag to set a timeslot
           </p>
-          <p className="muted !font-semibold">*right click to delete event</p>
+          <p className="muted !font-semibold">* right click to delete event</p>
         </div>
-      </section>
+      </CardHeader>
       <AlertPopup
         title="Are you  sure?"
         description="This event will be removed from your calendar."
@@ -213,7 +223,7 @@ export const MentorsCalendar = ({
           setShowDeleteAlert(false);
         }}
       />
-      <div className="h-[400px] md:h-[600px] max-w-5xl">
+      <CardContent className="h-[400px] md:h-[600px] w-full">
         <DnDCalendar
           defaultView={Views.WEEK}
           events={myEvents}
@@ -231,7 +241,7 @@ export const MentorsCalendar = ({
           selectable
           popup
         />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

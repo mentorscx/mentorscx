@@ -26,6 +26,14 @@ import { ChevronDown, ChevronUp, PlusIcon } from "lucide-react";
 import { TrashIcon } from "@radix-ui/react-icons";
 
 import { updateUser } from "@/lib/actions/user.action";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type FormValues = {
   schedule: {
@@ -228,75 +236,78 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl p-3">
-      <div className="mb-4">
-        <h3 className="text-2xl font-semibold">Weekly Recurrence</h3>
-        <p className="muted">
+    <Card className="mt-4">
+      <CardHeader>
+        <CardTitle className="text-2xl">Weekly Recurrence</CardTitle>
+        <CardDescription>
           Set up your recurrent availability - set times repeat weekly
-        </p>
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        </CardDescription>
+      </CardHeader>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => (
-          <section className="flex gap-4 flex-wrap" key={field.id}>
-            <Controller
-              control={control}
-              name={`schedule.${index}.day`}
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                  }}
+          <CardContent>
+            <section className="flex gap-4 flex-wrap" key={field.id}>
+              <Controller
+                control={control}
+                name={`schedule.${index}.day`}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select day" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Monday">Monday</SelectItem>
+                      <SelectItem value="Tuesday">Tuesday</SelectItem>
+                      <SelectItem value="Wednesday">Wednesday</SelectItem>
+                      <SelectItem value="Thursday">Thursday</SelectItem>
+                      <SelectItem value="Friday">Friday</SelectItem>
+                      <SelectItem value="Saturday">Saturday</SelectItem>
+                      <SelectItem value="Sunday">Sunday</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              <div className="flex gap-4">
+                <Input
+                  placeholder="Start Time"
+                  type="time"
+                  {...register(`schedule.${index}.startTime` as const, {
+                    required: "Start time is required",
+                  })}
+                  className="min-w-[125px] w-fit"
+                  defaultValue={field.startTime}
+                />
+                <Input
+                  placeholder="End Time"
+                  type="time"
+                  {...register(`schedule.${index}.endTime` as const, {
+                    required: "End time is required",
+                  })}
+                  className="min-w-[125px] w-fit"
+                  defaultValue={field.endTime}
+                />
+
+                <Button
+                  type="button"
+                  onClick={() => remove(index)}
+                  variant="outline"
+                  size="icon"
                 >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select day" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Monday">Monday</SelectItem>
-                    <SelectItem value="Tuesday">Tuesday</SelectItem>
-                    <SelectItem value="Wednesday">Wednesday</SelectItem>
-                    <SelectItem value="Thursday">Thursday</SelectItem>
-                    <SelectItem value="Friday">Friday</SelectItem>
-                    <SelectItem value="Saturday">Saturday</SelectItem>
-                    <SelectItem value="Sunday">Sunday</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-
-            <div className="flex gap-4">
-              <Input
-                placeholder="Start Time"
-                type="time"
-                {...register(`schedule.${index}.startTime` as const, {
-                  required: "Start time is required",
-                })}
-                className="min-w-[125px] w-fit"
-                defaultValue={field.startTime}
-              />
-              <Input
-                placeholder="End Time"
-                type="time"
-                {...register(`schedule.${index}.endTime` as const, {
-                  required: "End time is required",
-                })}
-                className="min-w-[125px] w-fit"
-                defaultValue={field.endTime}
-              />
-
-              <Button
-                type="button"
-                onClick={() => remove(index)}
-                variant="outline"
-                size="icon"
-              >
-                <TrashIcon className="w-4 h-4 text-danger" />
-              </Button>
-            </div>
-          </section>
+                  <TrashIcon className="w-4 h-4 text-danger" />
+                </Button>
+              </div>
+            </section>
+          </CardContent>
         ))}
 
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+        <CardFooter className="flex justify-between">
           <div className="flex gap-4">
             <Button
               variant="outline"
@@ -317,9 +328,9 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
           </div>
 
           <Total control={control} />
-        </div>
+        </CardFooter>
       </form>
-    </div>
+    </Card>
   );
 };
 
