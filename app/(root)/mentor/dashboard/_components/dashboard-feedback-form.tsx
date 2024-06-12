@@ -17,6 +17,13 @@ import { Button } from "@/components/ui/button";
 
 import { Textarea } from "@/components/ui/textarea";
 import { createFeatureRequest } from "@/lib/actions/support.action";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface DashboardFeedbackFormProps {
   userId: string;
@@ -60,39 +67,42 @@ export const DashboardFeedbackForm = ({
   };
 
   return (
-    <div className="my-4 p-3 md:px-6 border shadow rounded-lg bg-background">
-      <div className="font-medium flex items-center justify-between">
-        <p className="large">
+    <Card className="mt-4">
+      <CardHeader>
+        <CardTitle>
           What else would you like to see in your dashboard?
-        </p>
-      </div>
-
+        </CardTitle>
+      </CardHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Textarea
-                    disabled={isSubmitting}
-                    placeholder="Type your request here..."
-                    {...field}
-                    className="h-[150px] md:h-[100px]"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex items-center gap-x-2">
-            <Button disabled={!isValid || isSubmitting} type="submit">
-              Submit
-            </Button>
-          </div>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      disabled={isSubmitting}
+                      placeholder="Type your request here..."
+                      {...field}
+                      className="h-[150px] md:h-[100px]"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter>
+            <div className="flex items-center gap-x-2">
+              <Button disabled={!isValid || isSubmitting} type="submit">
+                Submit
+              </Button>
+            </div>
+          </CardFooter>
         </form>
       </Form>
-    </div>
+    </Card>
   );
 };
