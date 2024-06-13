@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { auth } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
 
@@ -9,17 +9,19 @@ import { listEvents } from "@/lib/actions/google-calandar.action";
 import { MentorsCalendar } from "./mentors-calendar";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
+import MentorEmailsList from "./MentorEmailsList";
+import { EmailAddress } from "@clerk/nextjs/server";
 
 const MentorScheduleMain = async () => {
-  const { userId: clerkId } = auth();
+  const clerkUser = await currentUser();
 
-  if (!clerkId) {
+  if (!clerkUser) {
     return redirect("/login");
   }
 
   const user = await db.user.findUnique({
     where: {
-      clerkId,
+      clerkId: clerkUser.id,
     },
     include: {
       events: true,
@@ -34,7 +36,7 @@ const MentorScheduleMain = async () => {
     redirect("/dashboard/search");
   }
 
-  let externalEvents = await listEvents(user?.email);
+  let externalEvents = await listEvents(user.calendarEmails);
   const weeklyAvailability = user?.weeklyAvailability || {};
   const { schedule } = JSON.parse(JSON.stringify(weeklyAvailability)) || [];
   const events = generateEventsForNextYear(schedule);
@@ -43,9 +45,19 @@ const MentorScheduleMain = async () => {
     externalEvents = [];
   }
 
+  const connectedEmails = clerkUser.emailAddresses?.map(
+    (email) => email.emailAddress
+  );
+
   return (
     <>
       <RecurPage user={JSON.stringify(user)} />
+
+      <MentorEmailsList
+        userId={user.id}
+        emails={user.calendarEmails}
+        connectedEmails={connectedEmails}
+      />
 
       <MentorsCalendar
         user={JSON.stringify(user)}

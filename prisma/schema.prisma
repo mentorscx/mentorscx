@@ -54,6 +54,7 @@ model User {
   companySize         String?
   timeZone            String?
   weeklyAvailability  Json?
+  calendarEmails      String[] // Used to sync calendars
 
   isVerified  Boolean @default(false)
   isArchived  Boolean @default(false)

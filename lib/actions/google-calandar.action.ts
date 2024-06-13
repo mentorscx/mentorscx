@@ -5,11 +5,10 @@ import { getOauthToken } from "./clerk.action";
 import { OAuth2Client, Credentials } from "google-auth-library";
 
 /**
- * Lists the next 10 events on the user's primary calendar.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ * Lists the next 10 events on the specified calendars.
+ * @param {string[] | undefined} emails An array of email addresses or undefined.
  */
-
-export async function listEvents(email: string) {
+export async function listEvents(emails: string[] | undefined) {
   const auth = await getOauthToken();
   if (!auth) {
     console.error("Failed to retrieve OAuth token.");
@@ -31,28 +30,39 @@ export async function listEvents(email: string) {
   const timeMin = subMonths(new Date(), 1);
   const timeMax = addMonths(new Date(), 3);
 
-  try {
-    const res = await calendar.events.list({
-      calendarId: email,
-      maxResults: 2000,
-      singleEvents: true,
-      orderBy: "startTime",
-      timeMin: formatISO(timeMin),
-      timeMax: formatISO(timeMax),
-    });
+  // Define default calendar IDs
+  const calendarIds = emails ?? [];
 
-    const events = res.data.items;
+  const allEvents = [];
 
-    if (!events || events.length === 0) {
-      console.log("No upcoming events found.");
-      return [];
+  for (const calendarId of calendarIds) {
+    try {
+      const res = await calendar.events.list({
+        calendarId: calendarId,
+        maxResults: 2000,
+        singleEvents: true,
+        orderBy: "startTime",
+        timeMin: formatISO(timeMin),
+        timeMax: formatISO(timeMax),
+      });
+
+      const events = res.data.items;
+
+      if (events && events.length > 0) {
+        allEvents.push(...events);
+      } else {
+        console.log(`No upcoming events found for ${calendarId}.`);
+      }
+    } catch (error: any) {
+      console.error(
+        `LIST_EXTERNAL_EVENTS: Error fetching Google Calendar events for ${calendarId}:`,
+        error?.message
+      );
+      // Log error but continue with the next calendarId in the loop
     }
-
-    return events;
-  } catch (error) {
-    console.error("Error fetching Google Calendar events:", error);
-    return [];
   }
+
+  return allEvents;
 }
 
 export async function scheduleMeeting(

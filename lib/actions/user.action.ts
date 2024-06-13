@@ -1,6 +1,7 @@
 "use server";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 import { User, Role } from "@prisma/client";
 
@@ -472,7 +473,7 @@ export async function updateUserOnboarding06(values: any) {
   }
 }
 
-export async function updateUser(user: any) {
+export async function updateUser(user: any, path?: string) {
   try {
     const { id } = user;
 
@@ -488,7 +489,9 @@ export async function updateUser(user: any) {
         ...user,
       },
     });
-    console.log(updatedUser);
+    if (path) {
+      revalidatePath(path);
+    }
     return updatedUser;
   } catch (error) {
     console.log(error);
