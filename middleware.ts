@@ -15,6 +15,7 @@ export default authMiddleware({
     "/about",
     "/pricing",
     "/api/uploadthing",
+    "/onboard/mentor",
     "/onboard/mentor/(.*)",
   ],
   ignoredRoutes: ["/api/webhook", "/api/chatgpt", "/", "/subscribe"],

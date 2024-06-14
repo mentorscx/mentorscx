@@ -21,7 +21,7 @@ import { useLocalStorage, useIsClient } from "usehooks-ts";
 import { toast } from "sonner";
 
 import { saveMentorApplication } from "@/lib/actions/helper.action";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 const FormSchema = z.object({
   lastname: z.string().min(2, { message: "Last name is required" }),
@@ -238,8 +238,10 @@ const ProfileInfoPage = () => {
                 >
                   <span>Next</span>
                   <span>
-                    {isSubmitting && (
+                    {isSubmitting ? (
                       <Loader2 className="animate-spin h-4 w-4 ml-1" />
+                    ) : (
+                      <ArrowRight className="h-4 w-4 ml-1" />
                     )}
                   </span>
                 </Button>

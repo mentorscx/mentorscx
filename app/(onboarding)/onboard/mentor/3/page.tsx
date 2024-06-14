@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { z } from "zod";
 import React from "react";
 import {
@@ -260,8 +260,10 @@ const ProfileInfoPage = () => {
                 >
                   <span>Next</span>
                   <span>
-                    {isSubmitting && (
+                    {isSubmitting ? (
                       <Loader2 className="animate-spin h-4 w-4 ml-1" />
+                    ) : (
+                      <ArrowRight className="h-4 w-4 ml-1" />
                     )}
                   </span>
                 </Button>
