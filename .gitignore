@@ -39,3 +39,5 @@ lib/seed/*.ts
 
 #contentlayer
 .contentlayer
+
+types/
