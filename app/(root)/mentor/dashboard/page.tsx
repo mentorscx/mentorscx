@@ -97,7 +97,7 @@ const MentorDashboardPage = async () => {
       </div>
 
       {/* ONBOARDING CHECKLIST */}
-      <OnboardingChecklist user={user} route="dashboard" />
+      <OnboardingChecklist user={user} route="mentor/dashboard" />
 
       {/* SESSIONS REQUESTS */}
       <Suspense fallback={<DashboardSessionSkeleton />}>

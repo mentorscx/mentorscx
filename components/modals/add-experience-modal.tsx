@@ -76,7 +76,6 @@ export const AddExperienceModal = () => {
       form.reset();
       router.refresh();
       onClose();
-      console.log(experience);
       if (experience !== null) {
         toast.success("Added successfully");
       } else {

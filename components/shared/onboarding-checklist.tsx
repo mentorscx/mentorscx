@@ -71,7 +71,7 @@ export async function OnboardingChecklist({
   });
 
   const hasSessions: boolean =
-    sessionCount > 0 && user.weeklyAvailability !== null;
+    sessionCount > 0 || user.weeklyAvailability !== null;
   const hasBio: boolean = Boolean(user.bio);
   const hasExpertise: boolean = user.expertise.length > 0;
   const hasIndustries: boolean = user.industries.length > 0;

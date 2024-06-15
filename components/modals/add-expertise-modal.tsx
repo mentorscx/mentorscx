@@ -26,6 +26,7 @@ import { Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
+import { toast } from "sonner";
 
 import { Textarea } from "@/components/ui/textarea";
 
@@ -71,7 +72,6 @@ export const AddExpertiseModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log("values", values);
       addExpertise({
         ...values,
         userId: user?.id as string,
@@ -80,9 +80,11 @@ export const AddExpertiseModal = () => {
 
       form.reset();
       router.refresh();
+      toast.success("Expertise added!");
       onClose();
     } catch (error) {
       console.log(error);
+      toast.error("Failed to add the expertise");
     }
   };
 
