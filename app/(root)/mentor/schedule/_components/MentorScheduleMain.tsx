@@ -33,7 +33,7 @@ const MentorScheduleMain = async () => {
   }
 
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
   let externalEvents = await listEvents(user.calendarEmails);

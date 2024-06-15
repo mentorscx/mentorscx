@@ -56,7 +56,7 @@ const MentorDashboardPage = async () => {
 
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
   const { id, imageUrl, username } = user;

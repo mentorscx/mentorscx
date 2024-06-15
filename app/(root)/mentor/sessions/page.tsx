@@ -25,7 +25,7 @@ const SessionPage = async () => {
 
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
   const sessions = await db.session.findMany({

@@ -77,7 +77,7 @@ export const ProfileDisplayPage = async ({
   }
 
   if (isMentorRoute) {
-    user.role !== Role.MENTOR && redirect("/dashboard/search");
+    user.role !== Role.MENTOR && redirect("/");
   }
 
   // Check if the person can edit the profile

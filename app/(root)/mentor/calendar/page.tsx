@@ -56,7 +56,7 @@ const CalendarPage = async () => {
   if (!user) return null;
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
   // Get rrule for next one year recurring events

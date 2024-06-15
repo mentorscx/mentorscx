@@ -8,8 +8,9 @@ import PersonalWebsiteForm from "./PersonalWebsiteForm";
 import CalendarTabContent from "./CalendarTabContent";
 import NotificationForm from "./notification-form1";
 
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { getCurrentUser } from "@/lib/actions/user.action";
+import { redirect } from "next/navigation";
 
 type MentorSettingsTabsProps = {
   user: User;
@@ -44,6 +45,11 @@ const MentorSettingsTabs = async () => {
   if (!user) {
     return <div>Profile not found</div>;
   }
+
+  if (user.role !== Role.MENTOR) {
+    redirect("/");
+  }
+
   return (
     <div className="mx-auto max-w-5xl pt-[80px]">
       <section className="my-4 lg:my-8 p-3 border shadow rounded bg-background">
