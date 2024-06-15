@@ -34,7 +34,9 @@ const searchPage = async ({ searchParams }: ProfilesPageProps) => {
             <ProfileSearchFilters />
           </section>
           <section className="mt-6">
-            <ProfileList users={JSON.stringify(users)} />
+            {users.length > 0 ? (
+              <ProfileList users={JSON.stringify(users)} />
+            ) : null}
           </section>
         </div>
       </div>
