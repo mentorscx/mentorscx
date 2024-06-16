@@ -10,6 +10,7 @@ import { Role } from "@prisma/client";
 import BookingCalendarDetails from "@/components/shared/booking-calendar-details";
 import BookingCalendarMain from "@/components/shared/booking-calendar-main";
 import { generateEventsForNextYear } from "@/lib/helpers/recurring";
+import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 export const metadata: Metadata = {
   title: "Calendar | Mentors CX",
@@ -23,6 +24,9 @@ const CalendarPage = async () => {
   if (!userId) {
     redirect("/login");
   }
+
+  const isUserOnboarded = await isOnboardingDone(userId);
+  if (!isUserOnboarded) redirect("/onboard/1");
 
   // Get user details from database
   const user = await db.user.findUnique({

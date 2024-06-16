@@ -40,6 +40,7 @@ const OnboardRecommendedByPage = async () => {
 
           <RecommendedByForm
             userId={user.id}
+            clerkId={userId}
             recommendedBy={user.recommendedBy}
             otherRecommendation={user.otherRecommendation}
           />

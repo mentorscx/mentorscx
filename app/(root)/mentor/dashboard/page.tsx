@@ -21,6 +21,7 @@ import {
   DashboardSessionSkeleton,
 } from "./_components/dashboard-skelton";
 import { Card } from "@/components/ui/card";
+import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 export const metadata: Metadata = {
   title: "Dashboard | Mentors CX",
@@ -39,6 +40,9 @@ const MentorDashboardPage = async () => {
   if (!userId) {
     redirect("/login");
   }
+
+  const isUserOnboarded = await isOnboardingDone(userId);
+  if (!isUserOnboarded) redirect("/onboard/1");
 
   const user = await db.user.findUnique({
     where: {

@@ -12,6 +12,7 @@ import { Role, SessionStatus } from "@prisma/client";
 import SessionList from "./_components/session-list";
 import { EmptyBookingsCard } from "@/components/shared/empty-bookings-card";
 import Heading from "@/components/shared/heading";
+import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 export const metadata: Metadata = {
   title: "Sessions | Mentors CX",
@@ -22,6 +23,9 @@ export const metadata: Metadata = {
 const SessionPage = async () => {
   const user = await getSelf();
   if (!user) return redirect("/login");
+
+  const isUserOnboarded = await isOnboardingDone(user.clerkId);
+  if (!isUserOnboarded) redirect("/onboard/1");
 
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {

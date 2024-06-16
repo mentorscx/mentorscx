@@ -11,6 +11,7 @@ import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import MentorEmailsList from "./MentorEmailsList";
 import { EmailAddress } from "@clerk/nextjs/server";
+import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 const MentorScheduleMain = async () => {
   const clerkUser = await currentUser();
@@ -19,7 +20,8 @@ const MentorScheduleMain = async () => {
     return redirect("/login");
   }
 
-  console.log(clerkUser.id);
+  const isUserOnboarded = await isOnboardingDone(clerkUser.id);
+  if (!isUserOnboarded) redirect("/onboard/1");
 
   const user = await db.user.findUnique({
     where: {

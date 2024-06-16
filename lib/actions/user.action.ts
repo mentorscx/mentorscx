@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { User, Role } from "@prisma/client";
 
 import { db } from "../db";
+import { markOnboardingComplete } from "./clerk.action";
 
 type UserIncludeOptions = {
   sessionsGiven?: boolean;
@@ -515,16 +516,19 @@ export async function getAllMentors() {
 
 interface IsaveUserReferenceById {
   userId: string;
+  clerkId: string;
   recommendedBy: string;
   otherRecommendation?: string;
 }
 
 export async function saveUserReferenceById({
   userId,
+  clerkId,
   recommendedBy,
   otherRecommendation,
 }: IsaveUserReferenceById) {
   try {
+    await markOnboardingComplete(clerkId);
     const user = await db.user.update({
       where: {
         id: userId,
@@ -532,6 +536,7 @@ export async function saveUserReferenceById({
       data: {
         recommendedBy,
         otherRecommendation,
+        isOnboarded: true,
       },
     });
     return user;

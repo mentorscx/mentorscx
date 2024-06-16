@@ -1,4 +1,7 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 export async function getOauthToken(): Promise<string | undefined> {
   try {
@@ -35,5 +38,31 @@ export async function getOauthToken(): Promise<string | undefined> {
   } catch (error) {
     console.error("An error occurred while fetching the OAuth token:", error);
     return undefined;
+  }
+}
+
+export async function isOnboardingDone(clerkId: string) {
+  try {
+    const user = await clerkClient.users.getUser(clerkId);
+    const isOnboardingDone = user?.publicMetadata?.isOnboardingDone as boolean;
+    return isOnboardingDone;
+  } catch (error: any) {
+    console.error(`User is not onboarded with ID ${clerkId}:`, error);
+  }
+}
+
+export async function markOnboardingComplete(clerkId: string) {
+  try {
+    await clerkClient.users.updateUserMetadata(clerkId, {
+      publicMetadata: {
+        isOnboardingDone: true,
+      },
+    });
+  } catch (error: any) {
+    console.error(
+      `Failed to mark onboarding complete for ID ${clerkId}`,
+      error
+    );
+    throw new Error("Failed to mark onboarding complete", error);
   }
 }
