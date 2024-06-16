@@ -19,6 +19,8 @@ const MentorScheduleMain = async () => {
     return redirect("/login");
   }
 
+  console.log(clerkUser.id);
+
   const user = await db.user.findUnique({
     where: {
       clerkId: clerkUser.id,
@@ -45,6 +47,7 @@ const MentorScheduleMain = async () => {
     externalEvents = [];
   }
 
+  console.log(clerkUser.emailAddresses);
   const connectedEmails = clerkUser.emailAddresses?.map(
     (email) => email.emailAddress
   );

@@ -38,7 +38,7 @@ import ProfileBioPage from "./profile-bio";
 import ProfileLinks from "./profile-links";
 import ShareOwnProfile from "./share-my-profile";
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 type ProfileDisplayPageProps = {

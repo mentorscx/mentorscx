@@ -1,4 +1,4 @@
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function getOauthToken(): Promise<string | undefined> {
   try {
@@ -17,13 +17,14 @@ export async function getOauthToken(): Promise<string | undefined> {
       userId,
       provider
     );
-
-    if (!clerkResponse || clerkResponse.length === 0) {
+    if (!clerkResponse || clerkResponse.totalCount === 0) {
       console.error("No OAuth token found for the user");
       return undefined;
     }
 
-    const accessToken = clerkResponse[0]?.token;
+    console.log(clerkResponse);
+
+    const accessToken = clerkResponse.data[1]?.token;
 
     if (!accessToken) {
       console.error("Access token is undefined");

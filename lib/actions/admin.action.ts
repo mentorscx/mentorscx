@@ -1,5 +1,5 @@
 "use server";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 
 export async function hasAdminAccess() {

@@ -35,6 +35,9 @@ export async function listEvents(emails: string[] | undefined) {
 
   const allEvents = [];
 
+  console.log("calendarIds");
+  console.log(calendarIds);
+
   for (const calendarId of calendarIds) {
     try {
       const res = await calendar.events.list({
