@@ -2,7 +2,7 @@ import { useMDXComponent } from "next-contentlayer/hooks";
 import PostLink from "./link";
 import PostImage from "./image";
 import PostBanner from "./banner";
-import { cn } from "@nextui-org/react";
+import { cn } from '@/lib/utils';
 import { MdxCard } from "@/components/mdx/mdx-card";
 
 import React from "react";

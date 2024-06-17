@@ -10,7 +10,6 @@ import { Role } from "@prisma/client";
 import BookingCalendarDetails from "@/components/shared/booking-calendar-details";
 import BookingCalendarMain from "@/components/shared/booking-calendar-main";
 import { generateEventsForNextYear } from "@/lib/helpers/recurring";
-import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 export const metadata: Metadata = {
   title: "Calendar | Mentors CX",
@@ -24,9 +23,6 @@ const CalendarPage = async () => {
   if (!userId) {
     redirect("/login");
   }
-
-  const isUserOnboarded = await isOnboardingDone(userId);
-  if (!isUserOnboarded) redirect("/onboard/1");
 
   // Get user details from database
   const user = await db.user.findUnique({
@@ -43,6 +39,7 @@ const CalendarPage = async () => {
       price: true,
       weeklyAvailability: true,
       role: true,
+      isOnboarded: true,
       expertise: {
         select: {
           name: true,
@@ -63,8 +60,7 @@ const CalendarPage = async () => {
     redirect("/");
   }
 
-  // Get rrule for next one year recurring events
-  // Get Available events from the database
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   // Combine recurring events and available events
   const individualEvents = await db.event.findMany({

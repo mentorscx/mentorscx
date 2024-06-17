@@ -21,8 +21,7 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { updateUserOnboarding01 } from "@/lib/actions/user.action";
-import { user } from "@nextui-org/react";
-import { User } from "@prisma/client";
+
 
 const onboard1Schema = z.object({
   shortBio: z.string().min(20, {

@@ -40,7 +40,6 @@ import ShareOwnProfile from "./share-my-profile";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -59,11 +58,6 @@ export const ProfileDisplayPage = async ({
     redirect("/login");
   }
 
-  if (isOwnProfile && userId) {
-    const isUserOnboarded = await isOnboardingDone(userId);
-    if (!isUserOnboarded) redirect("/onboard/1");
-  }
-
   const user = await db.user.findUnique({
     where: {
       id: profileId,
@@ -80,6 +74,10 @@ export const ProfileDisplayPage = async ({
 
   if (!user) {
     return <div>Profile not found!</div>;
+  }
+
+  if (isOwnProfile && userId) {
+    if (!user.isOnboarded) redirect("/onboard/1");
   }
 
   if (isMentorRoute) {

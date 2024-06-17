@@ -1,4 +1,5 @@
 import { Check, Square } from "lucide-react";
+import { Gauge } from "@suyalcinkaya/gauge";
 
 import {
   Accordion,
@@ -7,10 +8,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import { cn } from "@/lib/utils";
 import { Experience, Expertise, Industry, Tool, User } from "@prisma/client";
 import { OnboardingChecklistActions } from "@/components/shared/onboarding-checklist-actions";
 import { db } from "@/lib/db";
+import { Button } from "../ui/button";
+import OnboardingProgressBar from "./onboarding-progress";
 
 type OnboardingChecklistProps = {
   user: User & {
@@ -122,45 +134,45 @@ export async function OnboardingChecklist({
   if (completionPercentage === 100) return null;
 
   return (
-    <section className="mt-4 p-3 md:p-6 bg-blue-950 text-white rounded shadow">
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="item-1" className="border-none">
-          <AccordionTrigger className="w-full flex items-center justify-start gap-4">
-            <div
-              className={cn(
-                "flex items-center justify-center w-14 h-14 p-3 rounded-full border-2 text-base font-semibold",
-                completionPercentage === 100
-                  ? "text-emerald-500 border-green-500"
-                  : "text-white border-white"
-              )}
-            >
-              {completionPercentage}%
-            </div>
-            <div>
-              <p className="text-base">
-                Complete your account to activate your profile
-              </p>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <ul className="text-base space-y-3">
-              {checklist.map((item) => {
-                return (
-                  <div key={item.label}>
-                    <ChecklistItem
-                      isChecked={item.isChecked}
-                      text={item.label}
-                      dataType={item.dataType}
-                      route={route}
-                      profileId={user.id}
-                    />
-                  </div>
-                );
-              })}
-            </ul>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+    <section>
+      <Card className=" bg-blue-950 text-white mt-4">
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="item-1" className="border-none">
+            <CardHeader>
+              <AccordionTrigger className="w-full flex items-center justify-start gap-4">
+                <OnboardingProgressBar
+                  completionPercentage={completionPercentage}
+                />
+                <div>
+                  <p className="text-base">
+                    Complete your account to activate your profile
+                  </p>
+                </div>
+              </AccordionTrigger>
+            </CardHeader>
+
+            <AccordionContent>
+              <CardContent>
+                <ul className="text-base space-y-3">
+                  {checklist.map((item) => {
+                    return (
+                      <div key={item.label}>
+                        <ChecklistItem
+                          isChecked={item.isChecked}
+                          text={item.label}
+                          dataType={item.dataType}
+                          route={route}
+                          profileId={user.id}
+                        />
+                      </div>
+                    );
+                  })}
+                </ul>
+              </CardContent>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </Card>
     </section>
   );
 }

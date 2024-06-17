@@ -11,7 +11,6 @@ import NotificationForm from "./notification-form1";
 import { Role, User } from "@prisma/client";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { redirect } from "next/navigation";
-import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 type MentorSettingsTabsProps = {
   user: User;
@@ -47,8 +46,7 @@ const MentorSettingsTabs = async () => {
     return <div>Profile not found</div>;
   }
 
-  const isUserOnboarded = await isOnboardingDone(user.clerkId);
-  if (!isUserOnboarded) redirect("/onboard/1");
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   if (user.role !== Role.MENTOR) {
     redirect("/");

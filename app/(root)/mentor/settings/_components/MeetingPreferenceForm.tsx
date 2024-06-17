@@ -12,7 +12,7 @@ import {
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Bold, Italic, Underline } from "lucide-react";
-import { user } from "@nextui-org/react";
+
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { saveMeetingPreference } from "@/lib/actions/user.action";

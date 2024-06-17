@@ -2,6 +2,16 @@ import React from "react";
 import { EditBioAction } from "./edit-profile-action";
 import { Separator } from "@/components/ui/separator";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { SelectSeparator } from "@/components/ui/select";
+
 interface ProfileBioPageProps {
   canEdit: boolean;
   id: string;
@@ -16,16 +26,20 @@ const ProfileBioPage = ({
 }: ProfileBioPageProps) => {
   return (
     <div id="bio">
-      <div className="max-w-4xl mx-auto w-full p-3 bg-background mt-4 shadow border rounded-lg">
-        <div className="max-w-4xl mx-auto space-y-3 p-3">
-          <div className="flex justify-between items-center">
-            <h3 className="h3 ml-3">Bio</h3>
+      <Card className="max-w-4xl mx-auto mt-4">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <h3 className="text-xl">Bio</h3>
             {canEdit && <EditBioAction id={id} bio={bio} dataType={dataType} />}
-          </div>
-          <hr className="my-3 h-[1px]" />
-          <p className="text-base text-slate-800 pl-3">{bio}</p>
-        </div>
-      </div>
+          </CardTitle>
+        </CardHeader>
+
+        <Separator className="mb-3" />
+
+        <CardContent>
+          <p className="text-base text-slate-800">{bio}</p>
+        </CardContent>
+      </Card>
     </div>
   );
 };

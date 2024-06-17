@@ -6,7 +6,6 @@ import MentorCalendarHeader from "./_components/MentorScheduleHeader";
 import ScheduleSkeleton from "@/components/shared/skeletons/ScheduleSkeleton";
 
 const MentorSchedulePage = async () => {
-  console.log("I am here");
   return (
     <div className="max-w-5xl mx-auto pt-[80px] p-3">
       <MentorCalendarHeader />

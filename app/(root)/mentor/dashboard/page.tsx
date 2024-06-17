@@ -14,14 +14,13 @@ import DashboardSessionsUpcoming from "./_components/dashboard-sessions-upcoming
 import DashboardSessionsRequest from "./_components/dashboard-sessions-request";
 import { OnboardingChecklist } from "@/components/shared/onboarding-checklist";
 import { Role } from "@prisma/client";
-import { Skeleton } from "@nextui-org/react";
+
 import {
   DashboardCardSkelton,
   DashboardProfileSkelton,
   DashboardSessionSkeleton,
 } from "./_components/dashboard-skelton";
 import { Card } from "@/components/ui/card";
-import { isOnboardingDone } from "@/lib/actions/clerk.action";
 
 export const metadata: Metadata = {
   title: "Dashboard | Mentors CX",
@@ -41,9 +40,6 @@ const MentorDashboardPage = async () => {
     redirect("/login");
   }
 
-  const isUserOnboarded = await isOnboardingDone(userId);
-  if (!isUserOnboarded) redirect("/onboard/1");
-
   const user = await db.user.findUnique({
     where: {
       clerkId: userId,
@@ -57,6 +53,8 @@ const MentorDashboardPage = async () => {
   });
 
   if (!user) return null;
+
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
