@@ -38,14 +38,9 @@ const ProfileSkillList = ({
       </CardHeader>
       <Separator />
       {data.length === 0 && (
-        <div className="flex justify-center items-center flex-col gap-4">
-          <Image
-            src="/assets/waiting.svg"
-            alt="avatar"
-            width={100}
-            height={100}
-          />
-          <p>{name} will be added!</p>
+        <div className="flex justify-center items-center flex-col gap-4 my-3">
+          <Image src="/no_data.svg" alt="avatar" width={100} height={100} />
+          <p className="text-muted-foreground">No Data!</p>
         </div>
       )}
 

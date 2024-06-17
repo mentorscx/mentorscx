@@ -1,6 +1,7 @@
 import React from "react";
 import { EditBioAction } from "./edit-profile-action";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 import {
   Card,
@@ -37,7 +38,20 @@ const ProfileBioPage = ({
         <Separator className="mb-3" />
 
         <CardContent>
-          <p className="text-base text-slate-800">{bio}</p>
+          {bio?.length === 0 ? (
+            <div className="flex justify-center items-center flex-col gap-4">
+              <Image
+                src="/no_data.svg"
+                alt="avatar"
+                width={100}
+                height={100}
+                className="object-cover"
+              />
+              <p className="text-muted-foreground">No Data!</p>
+            </div>
+          ) : (
+            <p className="text-base text-slate-800">{bio}</p>
+          )}
         </CardContent>
       </Card>
     </div>
