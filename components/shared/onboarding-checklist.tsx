@@ -8,21 +8,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
 import { Experience, Expertise, Industry, Tool, User } from "@prisma/client";
 import { OnboardingChecklistActions } from "@/components/shared/onboarding-checklist-actions";
 import { db } from "@/lib/db";
-import { Button } from "../ui/button";
+
 import OnboardingProgressBar from "./onboarding-progress";
+import OnboardingCompleteButton from "./onboarding-complete-button";
 
 type OnboardingChecklistProps = {
   user: User & {
@@ -131,7 +125,26 @@ export async function OnboardingChecklist({
     },
   ];
 
-  if (completionPercentage === 100) return null;
+  if (completionPercentage === 100 && user.isActivated) return null;
+  else if (completionPercentage === 100 && !user.isActivated)
+    return (
+      <section>
+        <Card className="mt-4">
+          <CardHeader className="w-full flex flex-row items-center justify-start gap-4">
+            <OnboardingProgressBar
+              completionPercentage={completionPercentage}
+            />
+            <div className="space-y-2">
+              <p>
+                Hurray! You have competed the profile, Click below to activate
+                your profile
+              </p>
+              <OnboardingCompleteButton userId={user.id} />
+            </div>
+          </CardHeader>
+        </Card>
+      </section>
+    );
 
   return (
     <section>
@@ -143,11 +156,10 @@ export async function OnboardingChecklist({
                 <OnboardingProgressBar
                   completionPercentage={completionPercentage}
                 />
-                <div>
-                  <p className="text-base">
-                    Complete your account to activate your profile
-                  </p>
-                </div>
+
+                <p className="text-base">
+                  Complete your account to activate your profile
+                </p>
               </AccordionTrigger>
             </CardHeader>
 

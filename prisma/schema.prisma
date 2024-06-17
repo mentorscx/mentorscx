@@ -59,6 +59,7 @@ model User {
   isVerified  Boolean @default(false)
   isArchived  Boolean @default(false)
   isOnboarded Boolean @default(false)
+  isActivated Boolean @default(false)
 
   events           Event[]
   sessionsGiven    Session[] @relation("sessionsGiven")
