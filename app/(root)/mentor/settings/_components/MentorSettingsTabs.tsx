@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { UserIcon, BellIcon, ClockIcon, CalendarIcon } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,13 +8,9 @@ import PersonalWebsiteForm from "./PersonalWebsiteForm";
 import CalendarTabContent from "./CalendarTabContent";
 import NotificationForm from "./notification-form1";
 
-import { Role, User } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { redirect } from "next/navigation";
-
-type MentorSettingsTabsProps = {
-  user: User;
-};
 
 const tabConfig = [
   {

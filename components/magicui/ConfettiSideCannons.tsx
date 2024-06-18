@@ -46,7 +46,7 @@ export function ConfettiSideCannons({
 
   return (
     <div className="relative">
-      <ShinyButton text="Active profile" onButtonClick={handleClick} />
+      <ShinyButton text="Activate profile" onButtonClick={handleClick} />
     </div>
   );
 }

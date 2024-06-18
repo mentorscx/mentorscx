@@ -52,7 +52,7 @@ export const ProfileDisplayPage = async ({
   isOwnProfile = false,
   profileId = undefined,
 }: ProfileDisplayPageProps) => {
-  const { userId } = await auth();
+  const { userId } = auth();
 
   if (isOwnProfile && !userId) {
     redirect("/login");

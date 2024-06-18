@@ -1,6 +1,7 @@
 "use client";
 import { type AnimationProps, motion } from "framer-motion";
-import { Button } from "../ui/button";
+
+import { useState } from "react";
 
 const animationProps = {
   initial: { "--x": "100%", scale: 0.8 },
@@ -29,14 +30,18 @@ type ShinyButtonProps = {
 };
 
 const ShinyButton = ({ text, onButtonClick }: ShinyButtonProps) => {
-  const handleClick = () => {
-    alert("clicked");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const handleClick = async () => {
+    await onButtonClick();
+    setIsDisabled(true);
   };
+
   return (
     <motion.button
       {...animationProps}
       className="relative rounded-lg px-6 py-2 font-medium backdrop-blur-xl transition-[box-shadow] duration-300 ease-in-out hover:shadow dark:bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/10%)_0%,transparent_60%)] dark:hover:shadow-[0_0_20px_hsl(var(--primary)/10%)]"
-      onClick={onButtonClick}
+      onClick={handleClick}
+      disabled={isDisabled}
     >
       <span
         className="relative block h-full w-full text-sm uppercase tracking-wide text-[rgb(0,0,0,65%)] dark:font-light dark:text-[rgb(255,255,255,90%)]"

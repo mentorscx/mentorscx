@@ -60,7 +60,7 @@ const MentorApplicationPage = async ({
 }: TMentorApplicationPageProps) => {
   const { id } = params;
 
-  const { userId } = await auth();
+  const { userId } = auth();
   if (!userId) {
     redirect("/sign-in");
   }

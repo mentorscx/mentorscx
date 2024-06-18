@@ -41,7 +41,7 @@ function getMentorApplications() {
 }
 
 const ApplicationTable = async () => {
-  const { userId } = await auth();
+  const { userId } = auth();
   if (!userId) {
     redirect("/sign-in");
   }

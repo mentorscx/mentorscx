@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 
 export async function hasAdminAccess() {
   try {
-    const { userId } = await auth();
+    const { userId } = auth();
     if (!userId) {
       throw new Error("User not found");
     }

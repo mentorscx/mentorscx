@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const AdminPage = async () => {
-  const { userId } = await auth();
+  const { userId } = auth();
   if (!userId) {
     redirect("/sign-in");
   }
