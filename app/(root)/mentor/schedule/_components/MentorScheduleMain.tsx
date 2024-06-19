@@ -35,7 +35,22 @@ const MentorScheduleMain = async () => {
     redirect("/");
   }
 
-  let externalEvents = await listEvents(user.calendarEmails);
+  // Get all externalEmails accounts
+  const externalEmails = clerkUser.externalAccounts?.map(
+    (email) => email.emailAddress
+  );
+
+  // Get all connected emails
+  const connectedEmails = clerkUser.emailAddresses?.map(
+    (email) => email.emailAddress
+  );
+
+  // Filter out the gmail connected emails
+  const googleConnectedEmails = connectedEmails.filter((email) =>
+    email.endsWith("@gmail.com")
+  );
+
+  let externalEvents = await listEvents(googleConnectedEmails);
   const weeklyAvailability = user?.weeklyAvailability || {};
   const { schedule } = JSON.parse(JSON.stringify(weeklyAvailability)) || [];
   const events = generateEventsForNextYear(schedule);
@@ -43,11 +58,6 @@ const MentorScheduleMain = async () => {
   if (externalEvents === undefined || externalEvents === null) {
     externalEvents = [];
   }
-
-  console.log(clerkUser.emailAddresses);
-  const connectedEmails = clerkUser.emailAddresses?.map(
-    (email) => email.emailAddress
-  );
 
   return (
     <>

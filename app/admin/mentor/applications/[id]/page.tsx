@@ -61,15 +61,12 @@ const MentorApplicationPage = async ({
   const { id } = params;
 
   const { userId } = auth();
-  if (!userId) {
-    redirect("/sign-in");
-  }
+  if (!userId) redirect("/sign-in");
+
   const user = await clerkClient.users.getUser(userId);
   const isAdmin = user.privateMetadata?.admin;
 
-  if (!isAdmin) {
-    throw notFound();
-  }
+  if (!isAdmin) throw notFound();
 
   const application = await db.mentorApplication.findUnique({
     where: {

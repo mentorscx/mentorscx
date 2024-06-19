@@ -1,7 +1,4 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
 
 export async function getOauthToken(): Promise<string | undefined> {
   try {
@@ -25,9 +22,7 @@ export async function getOauthToken(): Promise<string | undefined> {
       return undefined;
     }
 
-    console.log(clerkResponse);
-
-    const accessToken = clerkResponse.data[1]?.token;
+    const accessToken = clerkResponse.data[0]?.token;
 
     if (!accessToken) {
       console.error("Access token is undefined");
