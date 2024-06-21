@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -14,7 +14,7 @@ import DashboardSessionsUpcoming from "./_components/dashboard-sessions-upcoming
 import DashboardSessionsRequest from "./_components/dashboard-sessions-request";
 import { OnboardingChecklist } from "@/components/shared/onboarding-checklist";
 import { Role } from "@prisma/client";
-import { Skeleton } from "@nextui-org/react";
+
 import {
   DashboardCardSkelton,
   DashboardProfileSkelton,
@@ -54,9 +54,11 @@ const MentorDashboardPage = async () => {
 
   if (!user) return null;
 
+  if (!user.isOnboarded) redirect("/onboard/1");
+
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
   const { id, imageUrl, username } = user;
@@ -97,7 +99,7 @@ const MentorDashboardPage = async () => {
       </div>
 
       {/* ONBOARDING CHECKLIST */}
-      <OnboardingChecklist user={user} route="dashboard" />
+      <OnboardingChecklist user={user} route="mentor/dashboard" />
 
       {/* SESSIONS REQUESTS */}
       <Suspense fallback={<DashboardSessionSkeleton />}>

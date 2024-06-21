@@ -87,7 +87,7 @@ export const CancelSessionModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] rounded-lg">
         <DialogHeader>
           <DialogTitle>Cancel Session</DialogTitle>
           <DialogDescription>

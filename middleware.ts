@@ -1,24 +1,35 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default authMiddleware({
-  publicRoutes: [
-    "/",
-    "/api/webhook",
-    "/api/chatgpt",
-    "/blog",
-    "/blog/(.*)",
-    "/subscribe",
-    "/support",
-    "/docs/(.*)",
-    "/dashboard/profile/(.*)",
-    "/privacy",
-    "/about",
-    "/pricing",
-    "/api/uploadthing",
-    "/onboard/mentor",
-    "/onboard/mentor/(.*)",
-  ],
-  ignoredRoutes: ["/api/webhook", "/api/chatgpt", "/", "/subscribe"],
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/api/webhook",
+  "/api/chatgpt",
+  "/blog",
+  "/blog/(.*)",
+  "/subscribe",
+  "/support",
+  "/docs/(.*)",
+  "/dashboard/profile/(.*)",
+  "/privacy",
+  "/about",
+  "/pricing",
+  "/api/uploadthing",
+  "/onboard/mentor",
+  "/onboard/mentor/(.*)",
+]);
+
+const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+const isMentorRoute = createRouteMatcher(["/mentor(.*)"]);
+
+export default clerkMiddleware(async (auth, req) => {
+  // Only protect non-public routes
+  if (!isPublicRoute(req)) {
+    // Apply additional protection based on routes
+
+    auth().protect();
+  }
 });
 
 export const config = {

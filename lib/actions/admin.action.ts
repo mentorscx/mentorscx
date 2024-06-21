@@ -1,10 +1,10 @@
 "use server";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 
 export async function hasAdminAccess() {
   try {
-    const { userId } = await auth();
+    const { userId } = auth();
     if (!userId) {
       throw new Error("User not found");
     }

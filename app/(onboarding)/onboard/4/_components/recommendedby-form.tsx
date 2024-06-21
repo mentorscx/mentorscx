@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { saveUserReferenceById } from "@/lib/actions/user.action";
+import { markOnboardingComplete } from "@/lib/actions/clerk.action";
 
 const options = [
   { value: "Google search", label: "Google search" },
@@ -42,12 +43,14 @@ const FormSchema = z.object({
 
 interface RecommendedByFormProps {
   userId: string;
+  clerkId: string;
   recommendedBy: string | null;
   otherRecommendation: string | null;
 }
 
 export function RecommendedByForm({
   userId,
+  clerkId,
   recommendedBy,
   otherRecommendation,
 }: RecommendedByFormProps) {
@@ -74,6 +77,7 @@ export function RecommendedByForm({
       setIsSubmitting(true);
       await saveUserReferenceById({
         userId,
+        clerkId,
         recommendedBy: data.recommendedBy,
         otherRecommendation:
           data.recommendedBy === "Other" ? data?.otherRecommendation || "" : "",

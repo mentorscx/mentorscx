@@ -1,4 +1,4 @@
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function getOauthToken(): Promise<string | undefined> {
   try {
@@ -17,13 +17,12 @@ export async function getOauthToken(): Promise<string | undefined> {
       userId,
       provider
     );
-
-    if (!clerkResponse || clerkResponse.length === 0) {
+    if (!clerkResponse || clerkResponse.totalCount === 0) {
       console.error("No OAuth token found for the user");
       return undefined;
     }
 
-    const accessToken = clerkResponse[0]?.token;
+    const accessToken = clerkResponse.data[0]?.token;
 
     if (!accessToken) {
       console.error("Access token is undefined");
@@ -34,5 +33,31 @@ export async function getOauthToken(): Promise<string | undefined> {
   } catch (error) {
     console.error("An error occurred while fetching the OAuth token:", error);
     return undefined;
+  }
+}
+
+export async function isOnboardingDone(clerkId: string) {
+  try {
+    const user = await clerkClient.users.getUser(clerkId);
+    const isOnboardingDone = user?.publicMetadata?.isOnboardingDone as boolean;
+    return isOnboardingDone;
+  } catch (error: any) {
+    console.error(`User is not onboarded with ID ${clerkId}:`, error);
+  }
+}
+
+export async function markOnboardingComplete(clerkId: string) {
+  try {
+    await clerkClient.users.updateUserMetadata(clerkId, {
+      publicMetadata: {
+        isOnboardingDone: true,
+      },
+    });
+  } catch (error: any) {
+    console.error(
+      `Failed to mark onboarding complete for ID ${clerkId}`,
+      error
+    );
+    throw new Error("Failed to mark onboarding complete", error);
   }
 }

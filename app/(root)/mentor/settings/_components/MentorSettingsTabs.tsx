@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { UserIcon, BellIcon, ClockIcon, CalendarIcon } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,12 +8,9 @@ import PersonalWebsiteForm from "./PersonalWebsiteForm";
 import CalendarTabContent from "./CalendarTabContent";
 import NotificationForm from "./notification-form1";
 
-import { User } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { getCurrentUser } from "@/lib/actions/user.action";
-
-type MentorSettingsTabsProps = {
-  user: User;
-};
+import { redirect } from "next/navigation";
 
 const tabConfig = [
   {
@@ -44,6 +41,13 @@ const MentorSettingsTabs = async () => {
   if (!user) {
     return <div>Profile not found</div>;
   }
+
+  if (!user.isOnboarded) redirect("/onboard/1");
+
+  if (user.role !== Role.MENTOR) {
+    redirect("/");
+  }
+
   return (
     <div className="mx-auto max-w-5xl pt-[80px]">
       <section className="my-4 lg:my-8 p-3 border shadow rounded bg-background">

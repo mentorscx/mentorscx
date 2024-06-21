@@ -99,7 +99,7 @@ export const EditProfessionModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] rounded-lg">
         <DialogHeader className="w-full flex justify-center">
           <DialogTitle>Professional Information</DialogTitle>
           <DialogDescription>

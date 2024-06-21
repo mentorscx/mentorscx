@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import React, { CSSProperties } from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { button } from "@nextui-org/react";
+
 
 export interface ShimmerButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

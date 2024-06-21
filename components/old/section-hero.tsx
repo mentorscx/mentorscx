@@ -1,5 +1,5 @@
 import { siteConfig } from '@/config/site';
-import { cn } from '@nextui-org/react';
+import { cn } from '@/lib/utils';
 import { Link } from 'lucide-react';
 import React from 'react';
 import { buttonVariants } from '../ui/button';

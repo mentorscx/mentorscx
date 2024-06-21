@@ -38,7 +38,7 @@ import ProfileBioPage from "./profile-bio";
 import ProfileLinks from "./profile-links";
 import ShareOwnProfile from "./share-my-profile";
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 type ProfileDisplayPageProps = {
@@ -52,7 +52,7 @@ export const ProfileDisplayPage = async ({
   isOwnProfile = false,
   profileId = undefined,
 }: ProfileDisplayPageProps) => {
-  const { userId } = await auth();
+  const { userId } = auth();
 
   if (isOwnProfile && !userId) {
     redirect("/login");
@@ -76,8 +76,12 @@ export const ProfileDisplayPage = async ({
     return <div>Profile not found!</div>;
   }
 
+  if (isOwnProfile && userId) {
+    if (!user.isOnboarded) redirect("/onboard/1");
+  }
+
   if (isMentorRoute) {
-    user.role !== Role.MENTOR && redirect("/dashboard/search");
+    user.role !== Role.MENTOR && redirect("/");
   }
 
   // Check if the person can edit the profile

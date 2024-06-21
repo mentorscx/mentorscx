@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { MoreVertical } from "lucide-react";
 
 import { redirect, notFound } from "next/navigation";
@@ -41,7 +41,7 @@ function getMentorApplications() {
 }
 
 const ApplicationTable = async () => {
-  const { userId } = await auth();
+  const { userId } = auth();
   if (!userId) {
     redirect("/sign-in");
   }

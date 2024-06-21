@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound, redirect } from "next/navigation";
 
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
 import {
@@ -60,16 +60,13 @@ const MentorApplicationPage = async ({
 }: TMentorApplicationPageProps) => {
   const { id } = params;
 
-  const { userId } = await auth();
-  if (!userId) {
-    redirect("/sign-in");
-  }
+  const { userId } = auth();
+  if (!userId) redirect("/sign-in");
+
   const user = await clerkClient.users.getUser(userId);
   const isAdmin = user.privateMetadata?.admin;
 
-  if (!isAdmin) {
-    throw notFound();
-  }
+  if (!isAdmin) throw notFound();
 
   const application = await db.mentorApplication.findUnique({
     where: {

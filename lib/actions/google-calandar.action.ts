@@ -9,6 +9,10 @@ import { OAuth2Client, Credentials } from "google-auth-library";
  * @param {string[] | undefined} emails An array of email addresses or undefined.
  */
 export async function listEvents(emails: string[] | undefined) {
+  if (emails?.length === 0 || !emails) {
+    return [];
+  }
+
   const auth = await getOauthToken();
   if (!auth) {
     console.error("Failed to retrieve OAuth token.");

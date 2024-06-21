@@ -19,9 +19,10 @@ export const OnboardingChecklistActions = ({
   const { onOpen } = useModal();
   const router = useRouter();
   const handleClick = async () => {
-    if (route !== "profile") {
-      await router.push(`/dashboard/profile/${profileId}`);
+    if (route === "mentor/dashboard") {
+      await router.push(`/mentor/profile`);
     }
+
     if (dataType === "industry") onOpen("addIndustry");
     else if (dataType === "expertise") onOpen("addExpertise");
     else if (dataType === "experience") onOpen("addExperience");

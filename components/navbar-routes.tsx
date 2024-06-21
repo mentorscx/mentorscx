@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Montserrat } from "next/font/google";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@nextui-org/react";
+import { cn } from '@/lib/utils';
 
 const poppins = Montserrat({ weight: "600", subsets: ["latin"] });
 

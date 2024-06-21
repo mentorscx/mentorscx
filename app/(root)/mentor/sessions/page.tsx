@@ -25,7 +25,7 @@ const SessionPage = async () => {
 
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
   const sessions = await db.session.findMany({
@@ -38,6 +38,7 @@ const SessionPage = async () => {
           id: true,
           role: true,
           timeZone: true,
+          isOnboarded: true,
         },
       },
       mentee: {
@@ -48,6 +49,8 @@ const SessionPage = async () => {
       },
     },
   });
+
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   const upcomingSessions = sessions.filter((session) => {
     return session.status === SessionStatus.ACCEPTED;

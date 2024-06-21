@@ -3,6 +3,8 @@ import { Sidebar } from "./_components/sidebar";
 
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen h-full">

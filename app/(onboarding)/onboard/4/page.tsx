@@ -1,6 +1,6 @@
 import React from "react";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
@@ -40,6 +40,7 @@ const OnboardRecommendedByPage = async () => {
 
           <RecommendedByForm
             userId={user.id}
+            clerkId={userId}
             recommendedBy={user.recommendedBy}
             otherRecommendation={user.otherRecommendation}
           />

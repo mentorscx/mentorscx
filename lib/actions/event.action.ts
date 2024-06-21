@@ -2,7 +2,6 @@
 
 import { db } from "../db";
 import { getSelf } from "./user.action";
-import { splitEventToSessions } from "../utils";
 
 export async function addEvent(event: any) {
   try {

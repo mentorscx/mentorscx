@@ -1,6 +1,6 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import type { Metadata } from "next";
 
@@ -39,6 +39,7 @@ const CalendarPage = async () => {
       price: true,
       weeklyAvailability: true,
       role: true,
+      isOnboarded: true,
       expertise: {
         select: {
           name: true,
@@ -56,11 +57,10 @@ const CalendarPage = async () => {
   if (!user) return null;
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/");
   }
 
-  // Get rrule for next one year recurring events
-  // Get Available events from the database
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   // Combine recurring events and available events
   const individualEvents = await db.event.findMany({
