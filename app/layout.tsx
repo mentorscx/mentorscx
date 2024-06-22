@@ -34,7 +34,7 @@ export default function RootLayout({
           <Providers>
             <div className="flex min-h-screen flex-col overflow-hidden supports-[overflow:clip]:text-clip">
               {children}
-              <Toaster />
+              <Toaster richColors />
               <CrispProvider />
             </div>
           </Providers>
