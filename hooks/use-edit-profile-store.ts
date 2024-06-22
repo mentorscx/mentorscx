@@ -6,6 +6,6 @@ interface EditProfileStore {
 }
 
 export const useEditProfileStore = create<EditProfileStore>((set) => ({
-  isActive: false,
+  isActive: true,
   toggleActive: () => set((state) => ({ isActive: !state.isActive })),
 }));

@@ -1,5 +1,4 @@
-import { Check, Square } from "lucide-react";
-import { Gauge } from "@suyalcinkaya/gauge";
+import { Check, Square, ChevronRight } from "lucide-react";
 
 import {
   Accordion,
@@ -42,25 +41,29 @@ const ChecklistItem = ({
   profileId: string;
 }) => (
   <li className="flex items-center">
-    <div className="flex items-center text-base">
-      {isChecked ? (
-        <Check className="w-5 h-5 mr-2 text-emerald-400" />
-      ) : (
-        <Square className="w-5 h-5 mr-2 text-white" />
-      )}
-      <span
-        className={cn(isChecked ? "text-slate-500 line-through" : "text-white")}
-      >
-        {text}
-      </span>
-    </div>
-    {!isChecked && (
-      <OnboardingChecklistActions
-        dataType={dataType}
-        route={route}
-        profileId={profileId}
-      />
-    )}
+    <OnboardingChecklistActions
+      dataType={dataType}
+      route={route}
+      profileId={profileId}
+      isChecked={isChecked}
+    >
+      <div className="flex items-center text-base">
+        {isChecked ? (
+          <Check className="w-5 h-5 mr-2 text-emerald-400" />
+        ) : (
+          <Square className="w-5 h-5 mr-2 text-white" />
+        )}
+        <span
+          className={cn(
+            isChecked ? "text-slate-500 line-through" : "text-white",
+            "text-base"
+          )}
+        >
+          {text}
+        </span>
+        {!isChecked && <ChevronRight className="w-5 h-5 ml-2 text-base" />}
+      </div>
+    </OnboardingChecklistActions>
   </li>
 );
 
@@ -110,12 +113,12 @@ export async function OnboardingChecklist({
     },
     {
       isChecked: hasExpertise,
-      label: "Add your Expertise",
+      label: "Add your expertise",
       dataType: "expertise",
     },
     {
       isChecked: hasIndustries,
-      label: "Add your Industry",
+      label: "Add your industry",
       dataType: "industry",
     },
     {

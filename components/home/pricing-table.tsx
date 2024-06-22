@@ -91,13 +91,11 @@ export default function PricingTables() {
                 <div className="mb-4">
                   <div className="text-lg font-bold mb-1">Eclipse</div>
                   <div className="inline-flex items-baseline mb-2">
-                    {/* <span className="text-3xl font-bold">$</span>
+                    <span className="text-3xl font-bold">$</span>
                     <span className="text-4xl font-bold">
-                       {annual ? "31" : "39"} 
-                      coming soon!
+                      {annual ? "31" : "39"}
                     </span>
-                     <span className="text-gray-600 pl-2">/month</span>  */}
-                    coming soon!
+                    <span className="text-gray-600 pl-2">/month</span>
                   </div>
                   <div className="text-lg text-gray-800">
                     For those exploring the mentorship world
@@ -112,7 +110,7 @@ export default function PricingTables() {
                     >
                       <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                     </svg>
-                    <span>4 calls/month</span>
+                    <span>2 calls/month</span>
                   </li>
                   <li className="flex items-center mb-2">
                     <svg
@@ -173,12 +171,11 @@ export default function PricingTables() {
                 <div className="mb-4">
                   <div className="text-lg font-bold mb-1">Moon</div>
                   <div className="inline-flex items-baseline mb-2">
-                    {/* <span className="text-3xl font-bold">$</span> */}
-                    {/* <span className="text-4xl font-bold">
+                    <span className="text-3xl font-bold">$</span>
+                    <span className="text-4xl font-bold">
                       {annual ? "49" : "59"}
                     </span>
-                    <span className="text-gray-600 pl-2">/month</span> */}
-                    coming soon
+                    <span className="text-gray-600 pl-2">/month</span>
                   </div>
                   <div className="text-lg text-gray-800">
                     For those committed to a more sustainable growth
@@ -252,7 +249,9 @@ export default function PricingTables() {
                       {annual ? "159" : "199"}
                     </span>
                     <span className="text-gray-600 pl-2">/month</span> */}
-                    coming soon!
+                    <span className="text-4xl font-bold text-muted-foreground">
+                      coming soon!
+                    </span>
                   </div>
                   <div className="text-lg text-gray-800">
                     For teams that want to grow & develop together

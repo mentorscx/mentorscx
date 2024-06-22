@@ -63,12 +63,6 @@ const MentorScheduleMain = async () => {
     <>
       <RecurPage user={JSON.stringify(user)} />
 
-      <MentorEmailsList
-        userId={user.id}
-        emails={user.calendarEmails}
-        connectedEmails={connectedEmails}
-      />
-
       <MentorsCalendar
         user={JSON.stringify(user)}
         externalEvents={JSON.stringify(externalEvents)}
