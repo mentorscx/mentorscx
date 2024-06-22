@@ -40,12 +40,6 @@ const Onboard1Page = async () => {
           />
 
           <OnboardStepOneForm user={JSON.stringify(user)} />
-
-          <AlertComponent
-            title="Why are we asking this?"
-            description="We are excited to have you on board. You will be able to connect with mentors and mentees after filling in the form below in the locations"
-            name="Info"
-          />
         </div>
       </div>
     </div>

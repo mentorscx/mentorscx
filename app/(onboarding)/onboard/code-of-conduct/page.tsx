@@ -2,16 +2,18 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { HeartHandshake } from "lucide-react";
+import { CheckIcon, HeartHandshake, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
 import { useRouter } from "next/navigation";
+import { delay } from "@/lib/utils";
 
 const Onboard5Page = () => {
   const router = useRouter();
   const [role, setRole] = React.useState("mentor");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleToggleRole = () => {
     if (role === "mentor") {
@@ -21,7 +23,9 @@ const Onboard5Page = () => {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    setIsLoading(true);
+
     if (role === "mentee") {
       router.push("/pricing");
     } else {
@@ -240,11 +244,18 @@ const Onboard5Page = () => {
             </Link>
             <Button
               type="submit"
-              className="rounded-full"
+              disabled={isLoading}
               onClick={handleClick}
+              className="min-w-[100px] rounded-full"
             >
-              {" "}
-              Yes, I agree!
+              <span>
+                {isLoading ? (
+                  <Loader2Icon className="animate-spin h-4 w-4 mr-1" />
+                ) : (
+                  <CheckIcon className="h-4 w-4 mr-1" />
+                )}
+              </span>
+              <span>Yes, I agree!</span>
             </Button>
           </div>
         </div>

@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ArrowRightIcon, Loader2Icon } from "lucide-react";
+import { ArrowLeft, ArrowRightIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,7 @@ import Select from "react-select";
 
 import { useRouter } from "next/navigation";
 import { saveUserCompanyAndRoleById } from "@/lib/actions/user.action";
+import Link from "next/link";
 
 const rangeOptions = [
   { label: "Solo", value: "Solo" },
@@ -37,22 +38,19 @@ const FormSchema = z.object({
   company: z
     .string()
     .optional()
+    .nullable()
     .refine((value) => !value || value.length >= 2, {
       message: "Please enter a company name",
     }),
-  companySize: z.string().optional(),
+  companySize: z.string().min(1, "Please choose an option"),
   role: z
     .string()
     .optional()
+    .nullable()
     .refine((value) => !value || value.length >= 2, {
       message: "Please enter your current role",
     }),
-  linkedinProfile: z
-    .string()
-    .optional()
-    .refine((value) => !value || z.string().url().safeParse(value).success, {
-      message: "Please enter a valid URL.",
-    }),
+  linkedinProfile: z.string().url().nullable().optional(),
 });
 
 interface Props {
@@ -81,10 +79,10 @@ export function OnboardStepTwoForm({ user }: Props) {
       setIsSubmitting(true);
       await saveUserCompanyAndRoleById({
         userId: id,
-        company: data.company,
+        company: data.company || undefined,
         companySize: data.companySize,
-        currentRole: data.role,
-        linkedinProfile: data.linkedinProfile,
+        currentRole: data.role || undefined,
+        linkedinProfile: data.linkedinProfile || undefined,
       });
 
       router.push("/onboard/3");
@@ -107,7 +105,7 @@ export function OnboardStepTwoForm({ user }: Props) {
             <FormItem>
               <FormLabel>Your current role</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} value={form.getValues("role") || undefined} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -121,7 +119,11 @@ export function OnboardStepTwoForm({ user }: Props) {
             <FormItem>
               <FormLabel>Your current organization</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <Input
+                  placeholder=""
+                  {...field}
+                  value={form.getValues("company") || undefined}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -167,14 +169,27 @@ export function OnboardStepTwoForm({ user }: Props) {
             <FormItem>
               <FormLabel>Linkedin profile</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  value={form.getValues("linkedinProfile") || undefined}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="flex items-start justify-end">
+        <div className="flex items-start justify-between pt-4">
+          <Button
+            asChild
+            variant="outline"
+            className="min-w-[100px] rounded-full"
+          >
+            <Link href="/onboard/1">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back
+            </Link>
+          </Button>
           <Button
             type="submit"
             disabled={isSubmitting}

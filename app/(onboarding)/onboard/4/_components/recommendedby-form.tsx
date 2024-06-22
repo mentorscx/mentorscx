@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRightIcon, Loader2Icon } from "lucide-react";
+import { ArrowRightIcon, Loader2Icon, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -161,7 +162,17 @@ export function RecommendedByForm({
           />
         )}
 
-        <div className="flex items-start justify-end">
+        <div className="flex items-start justify-between pt-4">
+          <Button
+            asChild
+            variant="outline"
+            className="min-w-[100px] rounded-full"
+          >
+            <Link href="/onboard/3">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back
+            </Link>
+          </Button>
           <Button
             type="submit"
             disabled={isSubmitting}

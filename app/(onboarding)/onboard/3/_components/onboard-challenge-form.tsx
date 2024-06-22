@@ -1,12 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+
 import { useForm } from "react-hook-form";
 import {
   Check,
   ChevronsUpDown,
   ArrowRightIcon,
   Loader2Icon,
+  ArrowLeft,
 } from "lucide-react";
 import { z } from "zod";
 import { useState } from "react";
@@ -92,20 +95,27 @@ interface RecommendedByFormProps {
   userId: string;
   timeZone: string | null;
   meetingPreference: string | null;
+  googleMeetLink: string | null;
+  zoomLink: string | null;
 }
 
 export function OnboardChallengeForm({
   userId,
   timeZone,
   meetingPreference,
+  googleMeetLink,
+  zoomLink,
 }: RecommendedByFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const defaultMeetingURL =
+    meetingPreference === "zoom" ? zoomLink : googleMeetLink;
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       timeZone: timeZone || undefined,
       meetingPreference: meetingPreference || undefined,
+      meetingURL: defaultMeetingURL || undefined,
     },
   });
 
@@ -201,7 +211,7 @@ export function OnboardChallengeForm({
             name="meetingPreference"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Meeting Preference</FormLabel>
+                <FormLabel>Meeting preference</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -243,7 +253,17 @@ export function OnboardChallengeForm({
           />
         )}
 
-        <div className="flex items-start justify-end">
+        <div className="flex items-start justify-between pt-4">
+          <Button
+            asChild
+            variant="outline"
+            className="min-w-[100px] rounded-full"
+          >
+            <Link href="/onboard/2">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back
+            </Link>
+          </Button>
           <Button
             type="submit"
             disabled={isSubmitting}

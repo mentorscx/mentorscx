@@ -21,6 +21,8 @@ const OnboardChallengePage = async () => {
       id: true,
       timeZone: true,
       meetingPreference: true,
+      zoomLink: true,
+      googleMeetLink: true,
     },
   });
 
@@ -42,12 +44,8 @@ const OnboardChallengePage = async () => {
             userId={user.id}
             timeZone={user?.timeZone}
             meetingPreference={user?.meetingPreference}
-          />
-
-          <AlertComponent
-            title="Why are we asking this?"
-            description="This information helps us to schedule meetings based on your timezone"
-            name="Info"
+            zoomLink={user.zoomLink}
+            googleMeetLink={user.googleMeetLink}
           />
         </div>
       </div>
