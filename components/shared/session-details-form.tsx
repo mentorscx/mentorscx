@@ -203,14 +203,18 @@ export function SessionDetailsForm({
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel>
-                    I followed{" "}
+                    <span>I followed </span>
                     <Link
-                      href="/examples/forms"
+                      href="/docs/writing-an-effective-session-request"
                       className="text-blue-600 hover:underline"
+                      target="_blank"
                     >
                       these tips{" "}
                     </Link>
-                    to fill out the request & commit to joining my call on time.
+                    <span>
+                      to fill out the request & commit to joining my call on
+                      time.
+                    </span>
                   </FormLabel>
                 </div>
               </FormItem>

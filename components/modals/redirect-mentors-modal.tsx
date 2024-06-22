@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useIsClient } from "usehooks-ts";
 import Image from "next/image";
 import { DashboardIcon } from "@radix-ui/react-icons";
+import { Loader2Icon } from "lucide-react";
 
 type MentorRedirectDialogProps = {
   isOpen: boolean;
@@ -25,11 +26,13 @@ export const MentorRedirectDialog = ({
   isOpen = false,
 }: MentorRedirectDialogProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(isOpen);
+  const [isLoading, setIsLoading] = useState(false);
   const isClient = useIsClient();
 
   const router = useRouter();
 
-  const handleClose = () => {
+  const handleClose = async () => {
+    setIsLoading(true);
     router.push("/mentor/dashboard");
   };
 
@@ -59,17 +62,22 @@ export const MentorRedirectDialog = ({
           <h4 className="h4">Thanks for your interest ❤️</h4>
 
           <p className="text-muted-foreground">
-            This page in Progress, you will soon be notified about this!
+            Page in progress. You'll be able to access it soon!
           </p>
         </div>
         <AlertDialogFooter className="w-full pt-4 flex items-center justify-center">
           <AlertDialogAction
             type="submit"
-            className="min-w-[200px] w-full mx-auto animate-buttonheartbeat"
+            className="mx-auto animate-buttonheartbeat"
             onClick={handleClose}
+            disabled={isLoading}
           >
-            Take me to Dashboard
-            <DashboardIcon className="h-4 w-4 ml-1" />
+            Go to my dashboard
+            {isLoading ? (
+              <Loader2Icon className="animate-spin w-4 h-4 ml-1" />
+            ) : (
+              <DashboardIcon className="h-4 w-4 ml-1" />
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

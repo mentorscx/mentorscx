@@ -55,7 +55,9 @@ const OnboardingMentorPage = () => {
                     for free until you have four reviews.
                   </span>
                   <Button variant="link" asChild className="text-base px-1">
-                    <Link href="/">Read about our GBC philosophy.</Link>
+                    <Link href="/docs/gbc-philosophy" target="_blank">
+                      Read about our GBC philosophy.
+                    </Link>
                   </Button>
                 </>
               </p>
