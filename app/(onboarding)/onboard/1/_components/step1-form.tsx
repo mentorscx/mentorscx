@@ -8,6 +8,15 @@ import { useRouter } from "next/navigation";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -137,7 +146,7 @@ export function OnboardStepOneForm({ user }: Props) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Languages <span className="text-red-400">*</span>
+                  Languages you speak <span className="text-red-400">*</span>
                 </FormLabel>
                 <FormControl>
                   <Select {...field} isMulti={true} options={languageData} />
@@ -152,7 +161,7 @@ export function OnboardStepOneForm({ user }: Props) {
           />
         </div>
 
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end pt-4">
           <Button
             type="submit"
             disabled={isSubmitting}

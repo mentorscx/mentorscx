@@ -47,12 +47,6 @@ const Onboard2Page = async () => {
           />
 
           <OnboardStepTwoForm user={JSON.stringify(user)} />
-
-          <AlertComponent
-            title="Why are we asking this?"
-            description="This information will help us to match with the most relevant one."
-            name="Info"
-          />
         </div>
       </div>
     </div>

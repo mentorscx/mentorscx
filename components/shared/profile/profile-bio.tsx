@@ -38,7 +38,7 @@ const ProfileBioPage = ({
         <Separator className="mb-3" />
 
         <CardContent>
-          {bio?.length === 0 ? (
+          {!bio || bio?.length === 0 ? (
             <div className="flex justify-center items-center flex-col gap-4">
               <Image
                 src="/no_data.svg"

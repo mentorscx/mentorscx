@@ -9,16 +9,21 @@ interface OnboardingChecklistActionsProps {
   profileId: string;
   dataType: string;
   route?: string;
+  children: React.ReactNode;
+  isChecked: boolean;
 }
 
 export const OnboardingChecklistActions = ({
   profileId,
   dataType,
   route,
+  children,
+  isChecked,
 }: OnboardingChecklistActionsProps) => {
   const { onOpen } = useModal();
   const router = useRouter();
   const handleClick = async () => {
+    if (isChecked) return;
     if (route === "mentor/dashboard") {
       await router.push(`/mentor/profile`);
     }
@@ -49,10 +54,11 @@ export const OnboardingChecklistActions = ({
       <Button
         onClick={handleClick}
         variant="link"
-        size="sm"
-        className="text-white"
+        size="lg"
+        className="text-white hover:no-underline"
+        asChild
       >
-        <ChevronRight className="w-5 h-5 p-0" />
+        {children}
       </Button>
     </div>
   );
