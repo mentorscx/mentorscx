@@ -57,7 +57,6 @@ export async function POST(req: Request) {
     const applicationData = await db.mentorApplication.findUnique({
       where: {
         email: email_addresses[0].email_address,
-        applicationStatus: "ACCEPTED",
       },
     });
 
