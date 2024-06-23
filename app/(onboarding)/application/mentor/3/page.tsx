@@ -1,45 +1,55 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { infer, z } from "zod";
-import React, { useEffect } from "react";
+import { Loader2, ArrowRight } from "lucide-react";
+import { z } from "zod";
+import React from "react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocalStorage, useReadLocalStorage, useIsClient } from "usehooks-ts";
 
-import { toast } from "sonner";
+const financialMotivationFactorOptions = [
+  { label: "1", value: "1" },
+  { label: "2", value: "2" },
+  { label: "3", value: "3" },
+  { label: "4", value: "4" },
+  { label: "5", value: "5" },
+];
+
+const anticipatedSessionRateOptions = [
+  { label: "Free", value: "Free" },
+  { label: "1-25", value: "1-25" },
+  { label: "26-50", value: "26-50" },
+  { label: "51-75", value: "51-75" },
+  { label: "76-100", value: "76-100" },
+  { label: "100+", value: "100+" },
+];
+
+// Define your Zod schema for the form
 const FormSchema = z.object({
-  currentPosition: z.string().min(2, {
-    message: "Please choose an option.",
-  }),
-  motivation: z.string().min(20, {
-    message: "Please enter atleast 20 letters.",
-  }),
-  anticipatedSessionRate: z.string().min(2, {
-    message: "Please choose an option.",
-  }),
+  anticipatedSessionRate: z.string().nonempty("Please select a rate."),
+  financialMotivationFactor: z.string().nonempty("Please select a factor."),
+  feePolicyAcceptance: z.string().nonempty("Please select an option."),
 });
 
-const emptyData = {
-  currentPosition: "",
-  motivation: "",
+const emptyFormValues = {
   anticipatedSessionRate: "",
+  financialMotivationFactor: "",
+  feePolicyAcceptance: "",
 };
 
 const ProfileInfoPage = () => {
@@ -48,36 +58,25 @@ const ProfileInfoPage = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [mentorOnboardData, setMentorOnboardData] = useLocalStorage(
     "mentorOnboardingData",
-    emptyData
+    emptyFormValues
   );
 
-  // Inside your component
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      currentPosition: mentorOnboardData?.currentPosition || "",
-      motivation: mentorOnboardData?.motivation || "",
-      anticipatedSessionRate: mentorOnboardData?.anticipatedSessionRate || "",
+      financialMotivationFactor:
+        mentorOnboardData?.financialMotivationFactor || undefined,
+      anticipatedSessionRate:
+        mentorOnboardData?.anticipatedSessionRate || undefined,
+      feePolicyAcceptance: mentorOnboardData?.feePolicyAcceptance || "yes",
     },
   });
-
-  const handleClearStorage = () => {
-    setMentorOnboardData({
-      ...mentorOnboardData,
-      ...emptyData,
-    });
-
-    form.reset();
-  };
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setIsSubmitting(true);
       setMentorOnboardData({ ...mentorOnboardData, ...data });
-      const anticipatedSessionRate = data?.anticipatedSessionRate;
-      anticipatedSessionRate === "no"
-        ? router.push("/onboard/mentor/4")
-        : router.push("/onboard/mentor/3");
+      router.push("/application/mentor/4");
     } catch (e) {
       toast.error("Something went wrong");
     } finally {
@@ -92,66 +91,42 @@ const ProfileInfoPage = () => {
       {/* Form content here */}
       <div className="form-container pt-10 space-y-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="card-block !bg-primary ">
-              <p className="text-white font-bold text-lg">Motive</p>
+              <p className="text-white font-bold text-lg">Financial talk</p>
             </div>
 
             <div className="card-block">
               <FormField
                 control={form.control}
-                name="currentPosition"
+                name="anticipatedSessionRate"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="md:text-base">
-                      What describes you best?
+                      {" "}
+                      What hourly rate do you anticipate setting for your
+                      mentoring sessions on Mentors CX? ($USD){" "}
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex flex-col space-y-1"
+                        className="flex flex-row gap-4 flex-wrap "
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="I'm a business owner" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            I&apos;m a business owner
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="I'm a paid employee" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            I&apos;m a paid employee
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="I'm a freelancer or consultant" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            I&apos;m a freelancer or consultant
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="I'm a CX influencer/content creator" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            I&apos;m a CX influencer/content creator
-                          </FormLabel>
-                        </FormItem>
-
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="Other" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Other</FormLabel>
-                        </FormItem>
+                        {anticipatedSessionRateOptions.map((option) => (
+                          <FormItem
+                            key={option.value}
+                            className="flex items-center space-x-1 space-y-0"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={option.value} />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {option.label}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
@@ -159,27 +134,60 @@ const ProfileInfoPage = () => {
                 )}
               />
             </div>
-            <div className="card-block ">
+
+            <div className="card-block">
               <FormField
                 control={form.control}
-                name="motivation"
+                name="financialMotivationFactor"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="space-y-3">
                     <FormLabel className="md:text-base">
-                      Why would you like to become a CX mentor? (one sentence)
+                      {" "}
+                      How much does the financial incentive of compensated
+                      mentoring sessions serve as a motivating factor for you to
+                      become a CX mentor?{" "}
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Your answer"
-                        {...field}
-                        className="w-full min-h-[150px]"
-                      />
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-row space-x-3"
+                      >
+                        {financialMotivationFactorOptions.map((option) => (
+                          <FormItem
+                            key={option.value}
+                            className="flex items-center space-x-1 space-y-0"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={option.value} />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {option.label}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+
+                        {/* <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="yes" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Yes</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="no" />
+                          </FormControl>
+                          <FormLabel className="font-normal">No</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="Unsure" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Unsure</FormLabel>
+                        </FormItem> */}
+                      </RadioGroup>
                     </FormControl>
-                    <FormDescription>
-                      {form.getValues("motivation").length} characters (20
-                      minimum)
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -189,11 +197,17 @@ const ProfileInfoPage = () => {
             <div className="card-block ">
               <FormField
                 control={form.control}
-                name="anticipatedSessionRate"
+                name="feePolicyAcceptance"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="md:text-base">
-                      Are you planning on charging for your mentorship?{" "}
+                      <span>
+                        You won&apos;t have the ability to set a fee until you
+                        receive your initial four reviews. Additionally, you
+                        won&apos;t be able to charge more than $120 per hour
+                        until you accumulate ten reviews. Is this acceptable to
+                        you?
+                      </span>
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
@@ -216,11 +230,9 @@ const ProfileInfoPage = () => {
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="Maybe later" />
+                            <RadioGroupItem value="Unsure" />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            Maybe later
-                          </FormLabel>
+                          <FormLabel className="font-normal">Unsure</FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -239,7 +251,7 @@ const ProfileInfoPage = () => {
                   className="min-w-[100px]"
                   asChild
                 >
-                  <Link href="/onboard/mentor/1">Back</Link>
+                  <Link href="/onboard/2">Back</Link>
                 </Button>
                 <Button
                   type="submit"
@@ -256,15 +268,6 @@ const ProfileInfoPage = () => {
                   </span>
                 </Button>
               </div>
-
-              <Button
-                variant="link"
-                onClick={handleClearStorage}
-                type="button"
-                className="hidden"
-              >
-                Clear form
-              </Button>
             </div>
           </form>
         </Form>

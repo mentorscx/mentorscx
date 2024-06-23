@@ -8,15 +8,6 @@ import { useRouter } from "next/navigation";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -93,8 +84,6 @@ export function OnboardStepOneForm({ user }: Props) {
       toast.success("Basic details saved successfully.");
     } catch (error) {
       toast.error("Unexpected error, Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   }
 

@@ -207,7 +207,7 @@ const ProfileInfoPage = () => {
       form.reset();
       await setMentorOnboardData(null);
       toast.success("Application submitted!");
-      router.push("/onboard/mentor/thankyou");
+      router.push("/application/mentor/thankyou");
     } catch (error: any) {
       toast.error(error?.message || "Submission failed!");
     } finally {
@@ -500,8 +500,8 @@ const ProfileInfoPage = () => {
                   <Link
                     href={
                       mentorOnboardData?.anticipatedSessionRate === "no"
-                        ? "/onboard/mentor/2"
-                        : "/onboard/mentor/3"
+                        ? "/application/mentor/2"
+                        : "/application/mentor/3"
                     }
                   >
                     Back

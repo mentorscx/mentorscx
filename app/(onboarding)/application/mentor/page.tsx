@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useLocalStorage, useReadLocalStorage, useIsClient } from "usehooks-ts";
+import { useIsClient } from "usehooks-ts";
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -79,7 +79,7 @@ const OnboardingMentorPage = () => {
           className="rounded-full animate-buttonheartbeat"
           size="lg"
         >
-          <Link href="/onboard/mentor/1" className="text-large">
+          <Link href="/application/mentor/1" className="text-large">
             Fill your application
             <ArrowRight className="w-4 h-4 ml-1" />
           </Link>

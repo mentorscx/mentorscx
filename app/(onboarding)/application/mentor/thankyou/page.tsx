@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+
 import { useRouter } from "next/navigation";
 import ShimmerButton from "@/components/ui/shimmer-button";
-import Link from "next/link";
+
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 
 const ThankyouPage = () => {
