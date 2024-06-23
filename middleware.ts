@@ -15,8 +15,8 @@ const isPublicRoute = createRouteMatcher([
   "/about",
   "/pricing",
   "/api/uploadthing",
-  "/onboard/mentor",
-  "/onboard/mentor/(.*)",
+  "/application/mentor",
+  "/application/mentor/(.*)",
 ]);
 
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
