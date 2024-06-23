@@ -72,12 +72,12 @@ const ProfileInfoPage = () => {
     try {
       if (data.hasEnoughExperience === "yes") {
         await setMentorOnboardData(data); // Update only once here
-        router.push("/onboard/mentor/2");
+        router.push("/application/mentor/2");
       } else {
         await saveMentorApplication({ ...data, applicationStatus: "DECLINED" });
         await setMentorOnboardData(emptyData); // Clear data on successful submission
         toast.success("Application Submitted!");
-        router.push("/onboard/mentor/thankyou");
+        router.push("/application/mentor/thankyou");
       }
     } catch (error: any) {
       toast.error(error?.message || "Submission Failed!");
@@ -229,7 +229,7 @@ const ProfileInfoPage = () => {
                   variant="outline"
                   className="min-w-[100px]"
                 >
-                  <Link href="/onboard/mentor">Back</Link>
+                  <Link href="/application/mentor">Back</Link>
                 </Button>
                 <Button
                   type="submit"

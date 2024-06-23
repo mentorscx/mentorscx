@@ -90,8 +90,6 @@ export function OnboardStepTwoForm({ user }: Props) {
     } catch (e) {
       console.log(e);
       toast.error("Unexpected error, Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   }
 

@@ -87,8 +87,6 @@ export function RecommendedByForm({
       toast.success("Details submitted successfully.");
     } catch (err) {
       toast.error("Unexpected error, Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   }
 

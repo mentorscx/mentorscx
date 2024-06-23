@@ -36,8 +36,6 @@ export async function POST(req: Request) {
 
   let evt: WebhookEvent;
 
-  console.log("payload", payload);
-
   // Verify the payload with the headers
   try {
     evt = wh.verify(body, {
@@ -83,7 +81,6 @@ export async function POST(req: Request) {
           username: `${first_name}${last_name ? ` ${last_name}` : ""}`,
           imageUrl: image_url,
           email: email_addresses[0].email_address,
-          role: "MENTEE",
         },
       });
     }

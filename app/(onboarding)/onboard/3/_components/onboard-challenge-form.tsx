@@ -132,8 +132,6 @@ export function OnboardChallengeForm({
     } catch (err) {
       console.error(err);
       toast.error("Unexpected error, Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
 
     router.refresh();
