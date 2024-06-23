@@ -30,7 +30,7 @@ const ThankyouPage = () => {
         </div>
 
         <h3 className="h3 mt-8 text-muted-foreground px-6">
-          Thank you! Your response has been saved! We will get back to you
+          Thank you! Your response has been saved. We will get back to you
           shortly!
         </h3>
 
