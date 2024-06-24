@@ -53,13 +53,13 @@ const Onboard5Page = () => {
               <li className="flex items-center gap-4">
                 <CheckIcon className="h-5 w-5 shrink-0 text-primary-500" />
                 <span>
-                  Reflect our shared core{" "}
+                  Reflect our shared{" "}
                   <Link
                     href="https://mentorscx.com/about#core-values"
                     className="text-blue-500 hover:underline"
                     target="_blank"
                   >
-                    values
+                    core values
                   </Link>{" "}
                   on your behavior: community-focused, lifelong learner,
                   humbleness, and own your growth.{" "}
