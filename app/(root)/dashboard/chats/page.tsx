@@ -1,5 +1,6 @@
 import ChatLayout from "@/components/chats/ChatLayout";
 import React from "react";
+import MentorRedirectDialog from "@/components/modals/redirect-mentors-modal";
 
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
 };
 
 const ChatsPage = () => {
-  return <ChatLayout />;
+  return <MentorRedirectDialog isOpen={true} />;
+  // return <ChatLayout />;
 };
 
 export default ChatsPage;
