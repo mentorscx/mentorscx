@@ -281,7 +281,7 @@ export const ProfileDisplayPage = async ({
           {canEdit ? <OnboardingChecklist user={user} /> : null}
         </div>
 
-        <YouTubeVideo videoURL="https://www.youtube.com/embed/7acWqZ6_vFc?si=dJEL7dyw1g4VeNuQ" />
+        <YouTubeVideo videoURL={user.videoUrl} />
 
         <div id="bio"></div>
         <ProfileBioPage
