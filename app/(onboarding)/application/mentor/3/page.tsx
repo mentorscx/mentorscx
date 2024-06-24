@@ -68,7 +68,7 @@ const ProfileInfoPage = () => {
         mentorOnboardData?.financialMotivationFactor || undefined,
       anticipatedSessionRate:
         mentorOnboardData?.anticipatedSessionRate || undefined,
-      feePolicyAcceptance: mentorOnboardData?.feePolicyAcceptance || "yes",
+      feePolicyAcceptance: mentorOnboardData?.feePolicyAcceptance || undefined,
     },
   });
 
@@ -251,7 +251,7 @@ const ProfileInfoPage = () => {
                   className="min-w-[100px]"
                   asChild
                 >
-                  <Link href="/onboard/2">Back</Link>
+                  <Link href="/application/mentor/2">Back</Link>
                 </Button>
                 <Button
                   type="submit"
