@@ -260,15 +260,17 @@ export const ProfileDisplayPage = async ({
                 </Button>
               )}
 
-              <EditSocialsAction
-                dataType="socials"
-                id={user.id}
-                portfolioWebsite={user.portfolioWebsite ?? ""}
-                linkedinProfile={user.linkedinProfile ?? ""}
-                twitterProfile={user.twitterProfile ?? ""}
-                facebookProfile={user.facebookProfile ?? ""}
-                tiktokProfile={user.tiktokProfile ?? ""}
-              />
+              {canEdit && (
+                <EditSocialsAction
+                  dataType="socials"
+                  id={user.id}
+                  portfolioWebsite={user.portfolioWebsite ?? ""}
+                  linkedinProfile={user.linkedinProfile ?? ""}
+                  twitterProfile={user.twitterProfile ?? ""}
+                  facebookProfile={user.facebookProfile ?? ""}
+                  tiktokProfile={user.tiktokProfile ?? ""}
+                />
+              )}
             </div>
           </div>
 
