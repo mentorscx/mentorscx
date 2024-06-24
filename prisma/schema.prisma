@@ -23,6 +23,7 @@ model User {
   username            String
   email               String       @unique
   imageUrl            String       @db.Text
+  videoUrl            String?      @db.Text
   clerkId             String       @unique
   bio                 String?      @db.Text
   shortBio            String?      @db.Text
