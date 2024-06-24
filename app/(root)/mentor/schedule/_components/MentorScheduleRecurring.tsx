@@ -183,7 +183,7 @@ const Total = ({ control }: { control: Control<FormValues> }) => {
 
   return (
     <p className="small !text-base">
-      Your weeekly availability: {totalHours}h {totalMinutes}min
+      Your weekly availability: {totalHours}h {totalMinutes}min
     </p>
   );
 };

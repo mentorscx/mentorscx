@@ -16,12 +16,7 @@ const CalendarTabHeading = () => {
         <CardTitle>Connecting with mentees</CardTitle>
         <CardDescription>
           <>
-            <span>
-              You can connect with mentees using Zoom and Google meets
-            </span>
-            <Link href="/" className="text-blue-400 underline">
-              (Learn more)
-            </Link>
+            <span>You can connect with mentees using Zoom and Google Meet</span>
           </>
         </CardDescription>
       </CardHeader>
