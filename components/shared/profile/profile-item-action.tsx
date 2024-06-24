@@ -128,7 +128,7 @@ export function RequestCallButton({ id }: RequestCallButtonProps) {
   };
 
   return (
-    <Button className="rounded-full" onClick={handleClick}>
+    <Button className="rounded-full" onClick={handleClick} disabled={true}>
       <PhoneIcon className="w-4 h-5 mr-1" />
       Request a call
     </Button>
