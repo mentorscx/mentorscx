@@ -50,7 +50,9 @@ const ProfileBioPage = ({
               <p className="text-muted-foreground">No Data!</p>
             </div>
           ) : (
-            <p className="text-base text-slate-800">{bio}</p>
+            <p className="text-base text-slate-800 whitespace-pre-line">
+              {bio}
+            </p>
           )}
         </CardContent>
       </Card>

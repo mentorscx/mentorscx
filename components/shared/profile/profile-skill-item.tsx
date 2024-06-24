@@ -54,7 +54,9 @@ const ProfileSkillItem = ({
       </div>
       <div className="flex min-h-[2rem] w-full min-w-0 flex-col items-start justify-start">
         <h4 className="large text-slate-800 ">{name} </h4>
-        <p className="w-full text-base text-slate-700">{description}</p>
+        <p className="w-full text-base text-slate-700 whitespace-pre-line">
+          {description}
+        </p>
       </div>
       <div>
         {canEdit && (
