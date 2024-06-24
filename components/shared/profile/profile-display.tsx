@@ -40,6 +40,7 @@ import ShareOwnProfile from "./share-my-profile";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import YouTubeVideo from "./profile-video";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -279,6 +280,8 @@ export const ProfileDisplayPage = async ({
         <div className="max-w-4xl mx-auto mt-4">
           {canEdit ? <OnboardingChecklist user={user} /> : null}
         </div>
+
+        <YouTubeVideo videoURL="https://www.youtube.com/embed/7acWqZ6_vFc?si=dJEL7dyw1g4VeNuQ" />
 
         <div id="bio"></div>
         <ProfileBioPage
