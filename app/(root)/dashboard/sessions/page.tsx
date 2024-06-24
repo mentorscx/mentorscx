@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSelf } from "@/lib/actions/user.action";
 import { EmptyBookingsCard } from "@/components/shared/empty-bookings-card";
 import { SessionList } from "./_components/session-list";
+import MentorRedirectDialog from "@/components/modals/redirect-mentors-modal";
 
 export const metadata: Metadata = {
   title: "Sessions | Mentors CX",
@@ -61,6 +62,7 @@ const SessionPage = async () => {
 
   return (
     <div className="mx-auto max-w-5xl  pt-[80px]">
+      <MentorRedirectDialog isOpen={true} />
       <section className=" w-full bg-white p-3 min-h-screen mt-6 rounded shadow border">
         <Tabs defaultValue="upcoming" className="p-6">
           <TabsList>

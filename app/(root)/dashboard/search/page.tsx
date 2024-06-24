@@ -2,6 +2,7 @@ import ProfileList from "./_components/profile-list";
 import ProfileFilters from "./_components/profile-filters";
 import { getUsersWithProfileFilters } from "@/lib/actions/user.action";
 import ProfileSearchFilters from "./_components/profile-search-filters";
+import MentorRedirectDialog from "@/components/modals/redirect-mentors-modal";
 
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ const searchPage = async ({ searchParams }: ProfilesPageProps) => {
 
   return (
     <div className="max-w-7xl mx-auto pt-[80px] px-3">
+      <MentorRedirectDialog isOpen={true} />
       <div className="flex">
         <section className="max-w-7xl mt-6 hidden md:block">
           <ProfileFilters />
