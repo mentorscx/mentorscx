@@ -471,7 +471,7 @@ export const TOOLS: readonly tool[] = [
   },
   {
     value: "FrontApp",
-    label: "Front App",
+    label: "FrontApp",
     filePath: "/assets/toolkit/frontapp.png",
   },
   {
@@ -500,12 +500,12 @@ export const TOOLS: readonly tool[] = [
   { value: "Hiver", label: "Hiver", filePath: "/assets/toolkit/hiver.png" },
   {
     value: "HubSpotServiceHub",
-    label: "HubSpot Service Hub",
+    label: "HubSpotServiceHub",
     filePath: "/assets/toolkit/hubspot.jpeg",
   },
   {
     value: "SalesforceServiceCloud",
-    label: "Salesforce Service Cloud",
+    label: "SalesforceServiceCloud",
     filePath: "/assets/toolkit/salesforce.png",
   },
   {
@@ -542,7 +542,7 @@ export const TOOLS: readonly tool[] = [
   {
     value: "KnowledgeOwl",
     label: "KnowledgeOwl",
-    filePath: "/assets/toolkit/knowledgeowl.png",
+    filePath: "/assets/toolkit/knowledge_owl.svg",
   },
   {
     value: "Confluence",
@@ -557,7 +557,7 @@ export const TOOLS: readonly tool[] = [
   {
     value: "HelpJuice",
     label: "HelpJuice",
-    filePath: "/assets/toolkit/helpjuice.png",
+    filePath: "/assets/toolkit/help_juice.png",
   },
   { value: "Docebo", label: "Docebo", filePath: "/assets/toolkit/docebo.png" },
   {
@@ -584,7 +584,7 @@ export const TOOLS: readonly tool[] = [
   { value: "Klaus", label: "Klaus", filePath: "/assets/toolkit/klaus.png" },
   // TODO: MISSING the WAIZEN Png
   { value: "Waizen", label: "Waizen", filePath: "/assets/toolkit/waizen.png" },
-  { value: "Loris", label: "Loris", filePath: "/assets/toolkit/loris.png" },
+  { value: "Loris", label: "Loris", filePath: "/assets/toolkit/loris.jpeg" },
   {
     value: "MaestroQA",
     label: "MaestroQA",
@@ -614,17 +614,17 @@ export const TOOLS: readonly tool[] = [
   },
   {
     value: "GenesisCloudCX",
-    label: "Genesis Cloud CX",
+    label: "GenesisCloudCX",
     filePath: "/assets/toolkit/genesis.png",
   },
   {
     value: "NiceCXOne",
-    label: "Nice CXOne",
-    filePath: "/assets/toolkit/nice_cxone.png",
+    label: "NiceCXOne",
+    filePath: "/assets/toolkit/nice_cx_one.png",
   },
   {
     value: "ObserveAi",
-    label: "Observe.ai",
+    label: "ObserveAi",
     filePath: "/assets/toolkit/observe_ai.png",
   },
   {
@@ -634,7 +634,7 @@ export const TOOLS: readonly tool[] = [
   },
   {
     value: "AmazonConnect",
-    label: "Amazon Connect",
+    label: "AmazonConnect",
     filePath: "/assets/toolkit/amazon_connect.png",
   },
   { value: "Avaya", label: "Avaya", filePath: "/assets/toolkit/avaya.png" },
@@ -708,7 +708,7 @@ export const EXPERTISE = [
   {
     label: "User Experience (UX) Design",
     value: "User Experience (UX) Design",
-    filePath: "/assets/expertise/user_experience_ux_design.svg",
+    filePath: "/assets/expertise/user_experience.svg",
   },
   {
     label: "Customer Service and Support",
@@ -723,7 +723,7 @@ export const EXPERTISE = [
   {
     label: "Voice of the Customer (VoC) Programs",
     value: "Voice of the Customer (VoC) Programs",
-    filePath: "/assets/expertise/voice_of_the_customer_voc_programs.svg",
+    filePath: "/assets/expertise/voice_of_the_customer_programs.svg",
   },
   {
     label: "Customer Feedback and Surveys",
@@ -793,7 +793,7 @@ export const EXPERTISE = [
   {
     label: "Customer-led Growth",
     value: "Customer-led Growth",
-    filePath: "/assets/expertise/customer_led_growth.svg",
+    filePath: "/assets/expertise/customer_led_experience.svg",
   },
 ];
 
@@ -1401,7 +1401,7 @@ export const industryData = [
   {
     label: "Fitness and Wellness",
     value: "Fitness and Wellness",
-    filePath: "/assets/industries/fitness_and_wellness.svg",
+    filePath: "/assets/industries/healthcare.svg",
   },
   {
     label: "Food and Beverage",
