@@ -257,26 +257,27 @@ enum ApplicationStatus {
 }
 
 model MentorApplication {
-  id                            Int     @id @default(autoincrement())
+  id                            Int      @id @default(autoincrement())
   firstname                     String
   lastname                      String
-  email                         String  @unique
-  linkedinUrl                   String? @map("linkedin_url")
-  hasEnoughExperience           String  @map("has_enough_experience")
-  currentPosition               String  @default("NA") @map("current_position")
-  motivation                    String  @default("NA") @db.Text
-  anticipatedSessionRate        String  @default("NA") @map("anticipated_session_rate")
-  financialMotivationFactor     String  @default("NA") @map("financial_motivation_factor")
-  feePolicyAcceptance           String  @default("NA") @map("fee_policy_acceptance")
-  preferVideoSharing            String  @default("NA") @map("prefer_video_sharing")
-  weeklySessions                String  @default("NA") @map("weekly_sessions")
-  priorMentorshipExperience     String  @default("NA") @map("prior_mentorship_experience")
-  profileStatement              String  @default("NA") @map("profile_statement") @db.Text
-  descriptionCustomerExperience String  @default("NA") @map("description_customer_experience") @db.Text
-  challengeSolved               String  @default("NA") @map("challenge_solved") @db.Text
-  interests                     String  @default("NA") @db.Text
-  applicationStatus             String  @default("PENDING") @map("application_status")
-  applicationNotes              String  @default("NA") @map("application_notes") @db.Text
+  email                         String   @unique
+  linkedinUrl                   String?  @map("linkedin_url")
+  hasEnoughExperience           String   @map("has_enough_experience")
+  currentPosition               String   @default("NA") @map("current_position")
+  motivation                    String   @default("NA") @db.Text
+  anticipatedSessionRate        String   @default("NA") @map("anticipated_session_rate")
+  financialMotivationFactor     String   @default("NA") @map("financial_motivation_factor")
+  feePolicyAcceptance           String   @default("NA") @map("fee_policy_acceptance")
+  preferVideoSharing            String   @default("NA") @map("prefer_video_sharing")
+  weeklySessions                String   @default("NA") @map("weekly_sessions")
+  priorMentorshipExperience     String   @default("NA") @map("prior_mentorship_experience")
+  profileStatement              String   @default("NA") @map("profile_statement") @db.Text
+  descriptionCustomerExperience String   @default("NA") @map("description_customer_experience") @db.Text
+  challengeSolved               String   @default("NA") @map("challenge_solved") @db.Text
+  interests                     String[]
+
+  applicationStatus String @default("PENDING") @map("application_status")
+  applicationNotes  String @default("NA") @map("application_notes") @db.Text
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
