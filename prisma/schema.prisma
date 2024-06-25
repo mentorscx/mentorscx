@@ -274,7 +274,7 @@ model MentorApplication {
   profileStatement              String   @default("NA") @map("profile_statement") @db.Text
   descriptionCustomerExperience String   @default("NA") @map("description_customer_experience") @db.Text
   challengeSolved               String   @default("NA") @map("challenge_solved") @db.Text
-  interests                     String[] @default([])
+  interests                     String[]
 
   applicationStatus String @default("PENDING") @map("application_status")
   applicationNotes  String @default("NA") @map("application_notes") @db.Text
