@@ -518,8 +518,8 @@ export const TOOLS: readonly tool[] = [
     label: "ZohoDesk",
     filePath: "/assets/toolkit/zoho_desk.png",
   },
-  //TODO: GET KAYAKO SVG
-  { value: "Kayako", label: "Kayako", filePath: "/assets/toolkit/kayako.svg" },
+
+  { value: "Kayako", label: "Kayako", filePath: "/assets/toolkit/kayako.webp" },
 
   {
     value: "LiveChat",
@@ -582,8 +582,6 @@ export const TOOLS: readonly tool[] = [
     filePath: "/assets/toolkit/happitu.png",
   },
   { value: "Klaus", label: "Klaus", filePath: "/assets/toolkit/klaus.png" },
-  // TODO: MISSING the WAIZEN Png
-  { value: "Waizen", label: "Waizen", filePath: "/assets/toolkit/waizen.png" },
   { value: "Loris", label: "Loris", filePath: "/assets/toolkit/loris.jpeg" },
   {
     value: "MaestroQA",
