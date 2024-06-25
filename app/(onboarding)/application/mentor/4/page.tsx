@@ -22,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -39,7 +38,7 @@ import { MentorApplication } from "@prisma/client";
 
 import { saveMentorApplication } from "@/lib/actions/helper.action";
 
-const roles = [
+const interests = [
   {
     id: "First-time founders",
     label: "First-time founders",
@@ -152,8 +151,9 @@ const FormSchema = z.object({
   challengeSolved: z
     .string()
     .min(60, { message: "Please enter atleast 60 characters." }),
-  interests: z.string().min(1, {
-    message: "Please choose an option",
+
+  interests: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "You have to select at least one item.",
   }),
 });
 
@@ -164,7 +164,7 @@ const emptyFormValues = {
   profileStatement: "",
   descriptionCustomerExperience: "",
   challengeSolved: "",
-  interests: "",
+  interests: [],
 };
 
 type TMentor = Omit<MentorApplication, "id">;
@@ -187,7 +187,7 @@ const ProfileInfoPage = () => {
       descriptionCustomerExperience:
         mentorOnboardData?.descriptionCustomerExperience || "",
       challengeSolved: mentorOnboardData?.challengeSolved || "",
-      interests: mentorOnboardData?.interests || "",
+      interests: [],
     },
   });
 
@@ -448,40 +448,57 @@ const ProfileInfoPage = () => {
               />
             </div>
 
-            <div className="card-block ">
+            <div className="card-block">
               <FormField
                 control={form.control}
                 name="interests"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="space-y-3">
-                    <FormLabel className="md:text-base">
-                      <span>
-                        Which groups of people looking for guidance are you most
-                        excited to support as a mentor?
-                      </span>
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-1"
-                      >
-                        {roles.map((role) => (
-                          <FormItem
-                            key={role.id}
-                            className="flex items-center space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <RadioGroupItem value={role.id} />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {role.label}
-                            </FormLabel>
-                          </FormItem>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
+                    <div className="mb-4">
+                      <FormLabel className="md:text-base">
+                        <span>
+                          Which groups of people looking for guidance are you
+                          most excited to support as a mentor?{" "}
+                        </span>
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                    </div>
+                    {interests.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="interests"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([
+                                          ...field.value,
+                                          item.id,
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {item.label}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
                     <FormMessage />
                   </FormItem>
                 )}
