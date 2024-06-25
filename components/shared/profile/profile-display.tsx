@@ -86,7 +86,7 @@ export const ProfileDisplayPage = async ({
   }
 
   // Check if the person can edit the profile
-  const canEdit = isOwnProfile && profileId === user.id;
+  const canEdit = isOwnProfile || userId === user.clerkId;
 
   return (
     <div className="pt-[80px]">
