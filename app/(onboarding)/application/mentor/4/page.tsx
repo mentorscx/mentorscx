@@ -372,7 +372,7 @@ const ProfileInfoPage = () => {
                         If you become a mentor, your response to this question
                         will be added to your mentor profile{" "}
                       </span>
-                      <span>(you’ll be able to edit it later).</span>
+                      <span>(you’ll be able to edit it later). </span>
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
@@ -428,7 +428,8 @@ const ProfileInfoPage = () => {
                     <FormLabel className="md:text-base">
                       Share an inventive solution to a challenging problem that
                       you came up with, leaving you with a sense of confidence
-                      and thinking, (I&apos;m pretty good at this!){" "}
+                      and thinking "hey, I&apos;m pretty good at this!" (this
+                      won't be added to your profile){" "}
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
