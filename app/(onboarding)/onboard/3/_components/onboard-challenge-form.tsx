@@ -68,6 +68,157 @@ const timeZones = [
   { label: "Asia/Shanghai (China Standard Time)", value: "Asia/Shanghai" },
   { label: "Asia/Dubai (Gulf Standard Time)", value: "Asia/Dubai" },
   { label: "Asia/Kolkata (India Standard Time)", value: "Asia/Kolkata" },
+  { label: "Europe/Moscow (Moscow Standard Time)", value: "Europe/Moscow" },
+  { label: "Asia/Seoul (Korea Standard Time)", value: "Asia/Seoul" },
+  { label: "America/Sao_Paulo (Brasilia Time)", value: "America/Sao_Paulo" },
+  {
+    label: "Africa/Johannesburg (South Africa Standard Time)",
+    value: "Africa/Johannesburg",
+  },
+  { label: "America/Mexico_City (Central Time)", value: "America/Mexico_City" },
+  { label: "Asia/Jakarta (Indonesia Western Time)", value: "Asia/Jakarta" },
+  { label: "Europe/Paris (Central European Time)", value: "Europe/Paris" },
+  { label: "Europe/Istanbul (Turkey Time)", value: "Europe/Istanbul" },
+  { label: "America/Toronto (Eastern Time)", value: "America/Toronto" },
+  { label: "Asia/Singapore (Singapore Time)", value: "Asia/Singapore" },
+  { label: "Europe/Rome (Central European Time)", value: "Europe/Rome" },
+  {
+    label: "America/Buenos_Aires (Argentina Time)",
+    value: "America/Buenos_Aires",
+  },
+  { label: "Europe/Athens (Eastern European Time)", value: "Europe/Athens" },
+  { label: "Asia/Bangkok (Indochina Time)", value: "Asia/Bangkok" },
+  { label: "Africa/Cairo (Eastern European Time)", value: "Africa/Cairo" },
+  { label: "America/Vancouver (Pacific Time)", value: "America/Vancouver" },
+  { label: "Africa/Nairobi (East Africa Time)", value: "Africa/Nairobi" },
+  { label: "Europe/Madrid (Central European Time)", value: "Europe/Madrid" },
+  { label: "Asia/Kuala_Lumpur (Malaysia Time)", value: "Asia/Kuala_Lumpur" },
+  {
+    label: "Europe/Amsterdam (Central European Time)",
+    value: "Europe/Amsterdam",
+  },
+  { label: "Asia/Manila (Philippine Time)", value: "Asia/Manila" },
+  {
+    label: "Europe/Stockholm (Central European Time)",
+    value: "Europe/Stockholm",
+  },
+  { label: "America/Lima (Peru Time)", value: "America/Lima" },
+  { label: "Asia/Hong_Kong (Hong Kong Time)", value: "Asia/Hong_Kong" },
+  { label: "Asia/Taipei (Taiwan Time)", value: "Asia/Taipei" },
+  { label: "America/Bogota (Colombia Time)", value: "America/Bogota" },
+  { label: "Europe/Zurich (Central European Time)", value: "Europe/Zurich" },
+  { label: "America/Denver (Mountain Time)", value: "America/Denver" },
+  { label: "Asia/Beirut (Eastern European Time)", value: "Asia/Beirut" },
+  {
+    label: "Australia/Perth (Australian Western Standard Time)",
+    value: "Australia/Perth",
+  },
+  { label: "Asia/Karachi (Pakistan Standard Time)", value: "Asia/Karachi" },
+  { label: "America/Chicago (Central Time)", value: "America/Chicago" },
+  { label: "Europe/Lisbon (Western European Time)", value: "Europe/Lisbon" },
+  { label: "Asia/Dhaka (Bangladesh Standard Time)", value: "Asia/Dhaka" },
+  { label: "Asia/Riyadh (Arabian Standard Time)", value: "Asia/Riyadh" },
+  { label: "Europe/Oslo (Central European Time)", value: "Europe/Oslo" },
+  { label: "Asia/Tehran (Iran Standard Time)", value: "Asia/Tehran" },
+  { label: "America/Montreal (Eastern Time)", value: "America/Montreal" },
+  {
+    label: "Europe/Brussels (Central European Time)",
+    value: "Europe/Brussels",
+  },
+  { label: "Asia/Amman (Eastern European Time)", value: "Asia/Amman" },
+  { label: "Asia/Ho_Chi_Minh (Indochina Time)", value: "Asia/Ho_Chi_Minh" },
+  {
+    label: "America/Phoenix (Mountain Standard Time)",
+    value: "America/Phoenix",
+  },
+  {
+    label: "Europe/Helsinki (Eastern European Time)",
+    value: "Europe/Helsinki",
+  },
+  { label: "America/Caracas (Venezuela Time)", value: "America/Caracas" },
+  { label: "Asia/Yakutsk (Yakutsk Time)", value: "Asia/Yakutsk" },
+  { label: "Pacific/Auckland (New Zealand Time)", value: "Pacific/Auckland" },
+  { label: "America/Anchorage (Alaska Time)", value: "America/Anchorage" },
+  { label: "Asia/Calcutta (India Standard Time)", value: "Asia/Calcutta" },
+  { label: "Europe/Vienna (Central European Time)", value: "Europe/Vienna" },
+  { label: "America/Halifax (Atlantic Time)", value: "America/Halifax" },
+  { label: "Asia/Muscat (Gulf Standard Time)", value: "Asia/Muscat" },
+  { label: "Europe/Kiev (Eastern European Time)", value: "Europe/Kiev" },
+  { label: "Asia/Magadan (Magadan Time)", value: "Asia/Magadan" },
+  { label: "Europe/Warsaw (Central European Time)", value: "Europe/Warsaw" },
+  {
+    label: "America/Guatemala (Central America Time)",
+    value: "America/Guatemala",
+  },
+  { label: "Asia/Qatar (Arabian Standard Time)", value: "Asia/Qatar" },
+  {
+    label: "Europe/Bucharest (Eastern European Time)",
+    value: "Europe/Bucharest",
+  },
+  {
+    label: "Pacific/Honolulu (Hawaii-Aleutian Standard Time)",
+    value: "Pacific/Honolulu",
+  },
+  { label: "Africa/Lagos (West Africa Time)", value: "Africa/Lagos" },
+  { label: "Asia/Jerusalem (Israel Standard Time)", value: "Asia/Jerusalem" },
+  { label: "America/Winnipeg (Central Time)", value: "America/Winnipeg" },
+  { label: "Europe/Prague (Central European Time)", value: "Europe/Prague" },
+  {
+    label: "America/El_Salvador (Central America Time)",
+    value: "America/El_Salvador",
+  },
+  { label: "Asia/Baku (Azerbaijan Standard Time)", value: "Asia/Baku" },
+  {
+    label: "Europe/Belgrade (Central European Time)",
+    value: "Europe/Belgrade",
+  },
+  { label: "America/Regina (Central Standard Time)", value: "America/Regina" },
+  {
+    label: "America/Newfoundland (Newfoundland Time)",
+    value: "America/St_Johns",
+  },
+  { label: "Asia/Almaty (East Kazakhstan Time)", value: "Asia/Almaty" },
+  {
+    label: "Europe/Budapest (Central European Time)",
+    value: "Europe/Budapest",
+  },
+  { label: "America/Santiago (Chile Time)", value: "America/Santiago" },
+  { label: "Asia/Colombo (India Standard Time)", value: "Asia/Colombo" },
+  {
+    label: "Europe/Copenhagen (Central European Time)",
+    value: "Europe/Copenhagen",
+  },
+  { label: "America/Panama (Eastern Time)", value: "America/Panama" },
+  { label: "Europe/Oslo (Central European Time)", value: "Europe/Oslo" },
+  { label: "Asia/Ulaanbaatar (Ulaanbaatar Time)", value: "Asia/Ulaanbaatar" },
+  { label: "Asia/Damascus (Eastern European Time)", value: "Asia/Damascus" },
+  { label: "America/Asuncion (Paraguay Time)", value: "America/Asuncion" },
+  { label: "Europe/Dublin (Greenwich Mean Time)", value: "Europe/Dublin" },
+  { label: "Asia/Yerevan (Armenia Time)", value: "Asia/Yerevan" },
+  {
+    label: "America/Tegucigalpa (Central America Time)",
+    value: "America/Tegucigalpa",
+  },
+  { label: "Asia/Urumqi (China Time)", value: "Asia/Urumqi" },
+  { label: "America/Managua (Central America Time)", value: "America/Managua" },
+  { label: "Asia/Kabul (Afghanistan Time)", value: "Asia/Kabul" },
+  { label: "America/Dominica (Atlantic Time)", value: "America/Dominica" },
+  { label: "Asia/Omsk (Omsk Time)", value: "Asia/Omsk" },
+  {
+    label: "Europe/Luxembourg (Central European Time)",
+    value: "Europe/Luxembourg",
+  },
+  { label: "America/Montevideo (Uruguay Time)", value: "America/Montevideo" },
+  { label: "Asia/Novosibirsk (Novosibirsk Time)", value: "Asia/Novosibirsk" },
+  { label: "Europe/Malta (Central European Time)", value: "Europe/Malta" },
+  { label: "Asia/Sanaa (Arabian Standard Time)", value: "Asia/Sanaa" },
+  { label: "Asia/Thimphu (Bhutan Time)", value: "Asia/Thimphu" },
+  { label: "Europe/Riga (Eastern European Time)", value: "Europe/Riga" },
+  { label: "Asia/Chita (Yakutsk Time)", value: "Asia/Chita" },
+  {
+    label: "America/Curacao (Atlantic Standard Time)",
+    value: "America/Curacao",
+  },
 ] as const;
 
 const FormSchema = z.object({
@@ -220,7 +371,7 @@ export function OnboardChallengeForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="zoom">zoom</SelectItem>
+                    <SelectItem value="zoom">Zoom</SelectItem>
                     <SelectItem value="google-meet">Google Meet</SelectItem>
                   </SelectContent>
                 </Select>
@@ -242,7 +393,7 @@ export function OnboardChallengeForm({
                 <Input
                   {...field}
                   placeholder={`Enter ${
-                    meetingPref === "zoom" ? "zoom" : "google-meet"
+                    meetingPref === "zoom" ? "Zoom" : "Google Meet"
                   } url here`}
                 />
                 <FormMessage />

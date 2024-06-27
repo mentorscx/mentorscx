@@ -28,9 +28,17 @@ const OnboardingMentorPage = () => {
             </li>
             <li>
               <p>
-                The best mentors believe in Kaizen, therefore we encourage
-                mentors to also be mentees and we provide free session bookings
-                (one for one model).
+                The best mentors believe in
+                <Button variant="link" asChild className="text-base px-1">
+                  <Link
+                    href="https://kaizen.com/what-is-kaizen/"
+                    target="_blank"
+                  >
+                    Kaizen
+                  </Link>
+                </Button>
+                , therefore we encourage mentors to also be mentees and we
+                provide free session bookings (one for one model).
               </p>
             </li>
             <li>

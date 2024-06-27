@@ -530,7 +530,7 @@ const ProfileInfoPage = () => {
                   disabled={isSubmitting}
                   className="min-w-[100px]"
                 >
-                  <span>Next</span>
+                  <span>Submit</span>
                   <span>
                     {isSubmitting ? (
                       <Loader2 className="animate-spin h-4 w-4 ml-1" />

@@ -204,11 +204,13 @@ export const MentorsCalendar = ({
           </CardDescription>
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1 px-3 md:px-9 py-3 rounded-full border-2">
           <p className="muted !font-semibold">
-            * click or drag to set a timeslot
+            * click or drag to set a time slot
           </p>
-          <p className="muted !font-semibold">* right click to delete event</p>
+          <p className="muted !font-semibold">
+            * click on the event to delete it
+          </p>
         </div>
       </CardHeader>
       <AlertPopup
