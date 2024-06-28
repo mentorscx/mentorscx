@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 
 import {
@@ -17,7 +17,7 @@ const ScheduleSkeleton = () => {
         <CardHeader>
           <CardTitle className="text-2xl">Weekly Recurrence</CardTitle>
           <CardDescription>
-            Set up your recurrent availability - set times repeat weekly
+            Set up your recurrent availability. The set times repeat weekly.
           </CardDescription>
         </CardHeader>
 
@@ -53,17 +53,16 @@ const ScheduleSkeleton = () => {
           <div className="space-y-1.5">
             <CardTitle className="text-2xl">Specific Availability</CardTitle>
             <CardDescription>
-              Add specific dates and times to your calendar
+              Add specific dates and times to your calendar. The set times won't
+              repeat weekly.
             </CardDescription>
           </div>
 
           <div className="space-y-1">
             <p className="muted !font-semibold">
-              * click or drag to set a timeslot
+              * click or drag to set a time slot
             </p>
-            <p className="muted !font-semibold">
-              * right click to delete event
-            </p>
+            <p className="muted !font-semibold">* click to delete event</p>
           </div>
         </CardHeader>
 

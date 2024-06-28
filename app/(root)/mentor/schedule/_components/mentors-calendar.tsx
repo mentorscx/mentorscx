@@ -200,11 +200,12 @@ export const MentorsCalendar = ({
         <div className="space-y-1.5">
           <CardTitle className="text-2xl">Specific Availability</CardTitle>
           <CardDescription>
-            Add specific dates and times to your calendar
+            Add specific dates and times to your calendar. The set times won't
+            repeat weekly.
           </CardDescription>
         </div>
 
-        <div className="space-y-1 px-3 md:px-9 py-3 rounded-full border-2">
+        <div className="space-y-1 px-3 md:px-6 py-2 rounded-full border-2">
           <p className="muted !font-semibold">
             * click or drag to set a time slot
           </p>
