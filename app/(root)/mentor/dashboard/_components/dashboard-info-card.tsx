@@ -15,7 +15,7 @@ type DashboardInfoCardProps = {
 export default function DashboardInfoCard(props: DashboardInfoCardProps) {
   const { title, displayValue, footer } = props;
   return (
-    <Card>
+    <Card className="min-w-[100px]">
       <CardHeader className="pb-2">
         <CardDescription className="font-semibold">{title}</CardDescription>
         <CardTitle className="text-4xl">{displayValue}</CardTitle>

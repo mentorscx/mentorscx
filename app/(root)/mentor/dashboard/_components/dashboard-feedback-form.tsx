@@ -69,9 +69,7 @@ export const DashboardFeedbackForm = ({
   return (
     <Card className="mt-4">
       <CardHeader>
-        <CardTitle>
-          What else would you like to see in your dashboard?
-        </CardTitle>
+        <CardTitle>What would you add or change in your dashboard?</CardTitle>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
