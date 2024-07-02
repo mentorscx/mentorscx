@@ -47,7 +47,9 @@ const ProfileBioPage = ({
                 height={100}
                 className="object-cover"
               />
-              <p className="text-muted-foreground">No Data!</p>
+              <p className="text-muted-foreground text-sm">
+                Share a bit about yourself 🙂
+              </p>
             </div>
           ) : (
             <p className="text-base text-slate-800 whitespace-pre-line">

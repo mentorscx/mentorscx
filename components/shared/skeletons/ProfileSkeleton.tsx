@@ -59,7 +59,7 @@ const ProfileSkeleton = () => {
                       </Skeleton>
                     </div>
                     <Skeleton>
-                      <span className="invisible">Time blocks Available</span>
+                      <span className="invisible">Call duration</span>
                     </Skeleton>
                   </div>
 

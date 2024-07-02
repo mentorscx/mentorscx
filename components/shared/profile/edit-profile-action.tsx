@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useEditProfileStore } from "@/hooks/use-edit-profile-store";
 
 import { useModal } from "@/hooks/use-modal-store";
-import { ImportIcon, PencilIcon, XIcon } from "lucide-react";
-import { UserProfile } from "@clerk/nextjs";
+import { EyeIcon, PencilIcon } from "lucide-react";
 
 interface EditBioActionProps {
   dataType: string;
@@ -36,11 +34,11 @@ export function EditProfileAction() {
     <Button variant="outline" onClick={handleChange}>
       {isActive ? (
         <div className="flex items-center ">
-          <XIcon className="mr-1 w-4 h-4" /> Cancel
+          <EyeIcon className="mr-1 w-4 h-4" /> View profile
         </div>
       ) : (
         <div className="flex items-center ">
-          <PencilIcon className="mr-1 w-4 h-4" /> Edit
+          <PencilIcon className="mr-1 w-4 h-4" /> Edit profile
         </div>
       )}
     </Button>
@@ -71,7 +69,7 @@ export function EditBioAction({ dataType, id, bio }: EditBioActionProps) {
       size="sm"
     >
       <PencilIcon className="w-4 h-4 mr-1" />
-      Edit Bio
+      Edit bio
     </Button>
   );
 }

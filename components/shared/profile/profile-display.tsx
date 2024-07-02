@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/footer";
 
-import { formatMonthYear } from "@/lib/format";
+import { calculatePrice, formatMonthYear } from "@/lib/format";
 import { RequestCallButton } from "./profile-item-action";
 import ProfileSkillList from "./profile-skill-list";
 import {
@@ -41,6 +41,7 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import YouTubeVideo from "./profile-video";
+import NextAvailableSlot from "./next-available-day";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -167,25 +168,20 @@ export const ProfileDisplayPage = async ({
                       <p className="font-bold text-2xl text-green-600">Free</p>
                     ) : (
                       <p className="font-bold text-2xl text-slate-800">
-                        {user.price}$
+                        {calculatePrice(user.duration, user.price)}$
                       </p>
                     )}
-                    <p className="text-sm">Price per hour</p>
+                    <p className="text-sm">Price per session</p>
                   </div>
                   <Separator className="h-[2px] lg:hidden" />
                   <div className="flex flex-col items-center muted">
                     <div className="bg-green-100 text-green-600 px-2 py-1 rounded-full font-semibold text-sm">
                       <p className="text-sm">{user.duration} min</p>
                     </div>
-                    <div>Time blocks Available</div>
+                    <div>Call duration</div>
                   </div>
                   <Separator className="h-[2px] lg:hidden" />
-                  <div className="flex flex-col items-center muted">
-                    <div className="flex items-center">
-                      <p className="text-xl font-bold text-black">Soon.</p>
-                    </div>
-                    <div>Next Available day</div>
-                  </div>
+                  <NextAvailableSlot userId={user.id} />
                 </div>
               </div>
             </div>
@@ -325,12 +321,9 @@ export const ProfileDisplayPage = async ({
           name="Toolkit"
         />
 
+        <div className="h-16"></div>
         {/* <div id="reviews"></div> */}
         {/* <ProfileTestmonialPage title="Reviews (5)" /> */}
-
-        <div className="mt-12">
-          <Footer />
-        </div>
       </div>
     </div>
   );
