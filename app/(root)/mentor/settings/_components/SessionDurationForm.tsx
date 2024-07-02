@@ -52,7 +52,9 @@ const SessionDuration = ({
     <Card>
       <CardHeader>
         <CardTitle>Session Duration</CardTitle>
-        <CardDescription>This is used to set session duration</CardDescription>
+        <CardDescription>
+          This is used to set your sessions duration
+        </CardDescription>
       </CardHeader>
 
       <CardContent>

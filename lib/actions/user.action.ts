@@ -594,16 +594,16 @@ export async function saveUserChallengeById({
 
 interface ISaveUserBasicDetailsById {
   userId: string;
-  city: string;
-  country: string;
-  languages: any;
+  city?: string | undefined;
+  country?: string | undefined;
+  languages?: any | undefined;
 }
 
 export async function saveUserBasicDetailsById({
   userId,
-  city,
-  country,
-  languages,
+  city = undefined,
+  country = undefined,
+  languages = undefined,
 }: ISaveUserBasicDetailsById) {
   try {
     const user = await db.user.update({
@@ -616,18 +616,20 @@ export async function saveUserBasicDetailsById({
       },
     });
 
-    await db.language.deleteMany({
-      where: {
-        userId,
-      },
-    });
+    if (languages) {
+      await db.language.deleteMany({
+        where: {
+          userId,
+        },
+      });
 
-    await db.language.createMany({
-      data: languages.map((language: any) => ({
-        name: language.value,
-        userId,
-      })),
-    });
+      await db.language.createMany({
+        data: languages.map((language: any) => ({
+          name: language.value,
+          userId,
+        })),
+      });
+    }
 
     return user;
   } catch (error) {

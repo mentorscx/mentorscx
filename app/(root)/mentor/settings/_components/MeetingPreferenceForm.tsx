@@ -53,7 +53,9 @@ const MentorSettingsMeetingPreference = ({
       <CardHeader>
         <CardTitle>Meeting Preference</CardTitle>
         <CardDescription>
-          This is used to select the meeting provider during session
+          This is used to select the meeting provider during session. To add
+          your meeting links, go to the{" "}
+          <span className="font-semibold text-slate-800">Integrations</span> tab
         </CardDescription>
       </CardHeader>
 

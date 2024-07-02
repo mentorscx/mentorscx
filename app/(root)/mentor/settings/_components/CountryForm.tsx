@@ -33,36 +33,32 @@ import {
   updateUser,
 } from "@/lib/actions/user.action";
 import { Language } from "@prisma/client";
-import { languageData } from "@/constants/data";
+import { COUNTRIES, languageData } from "@/constants/data";
 
-interface LanguagesFormProps {
+interface CountryFormProps {
   userId: string;
-  languages: Language[];
+  country: string | null;
 }
 
 const FormSchema = z.object({
-  languages: z
-    .array(
-      z.object({
-        label: z.string().min(1, "Language label is required"),
-        value: z.string().min(1, "Language value is required"),
-      })
-    )
-    .min(1, "At least one language must be selected"),
+  country: z.object({
+    label: z.string().min(1, "Country label is required"),
+    value: z.string().min(1, "Country value is required"),
+  }),
 });
 
-const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
+const CountryForm = ({ userId, country }: CountryFormProps) => {
   const router = useRouter();
 
-  const initialLanguages = languages?.map((language) => ({
-    label: language.name,
-    value: language.name,
-  }));
+  let initialLocation = {};
+  if (country !== null) {
+    initialLocation = { label: country, value: country };
+  }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      languages: initialLanguages,
+      country: initialLocation,
     },
   });
 
@@ -72,9 +68,9 @@ const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
     try {
       await saveUserBasicDetailsById({
         userId,
-        languages: values.languages,
+        country: values.country.value,
       });
-      toast.success("Languages updated");
+      toast.success("Country details updated");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -84,7 +80,7 @@ const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
   return (
     <Card className="mt-4">
       <CardHeader>
-        <CardTitle>Languages</CardTitle>
+        <CardTitle>Country </CardTitle>
         <CardDescription>
           This is used to display in your profile and search dashboard.
         </CardDescription>
@@ -95,18 +91,17 @@ const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
           <CardContent>
             <FormField
               control={form.control}
-              name="languages"
+              name="country"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Select
                       {...field}
-                      isMulti={true}
-                      options={languageData}
+                      isMulti={false}
+                      options={COUNTRIES}
                       className="md:w-1/2"
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -126,4 +121,4 @@ const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
   );
 };
 
-export default LanguagesForm;
+export default CountryForm;

@@ -1,5 +1,6 @@
 import React from "react";
 import { UserIcon, BellIcon, ClockIcon, CalendarIcon } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -8,9 +9,12 @@ import PersonalWebsiteForm from "./PersonalWebsiteForm";
 import CalendarTabContent from "./CalendarTabContent";
 import NotificationForm from "./notification-form1";
 
+import { db } from "@/lib/db";
 import { Role } from "@prisma/client";
-import { getCurrentUser } from "@/lib/actions/user.action";
 import { redirect } from "next/navigation";
+import LanguagesForm from "./LanguagesForm";
+import CityForm from "./CityForm";
+import CountryForm from "./CountryForm";
 
 const tabConfig = [
   {
@@ -23,20 +27,34 @@ const tabConfig = [
     label: "Account",
     Icon: UserIcon,
   },
-  {
-    value: "notifications",
-    label: "Notifications",
-    Icon: BellIcon,
-  },
+
   {
     value: "calendar",
-    label: "Calendar Integration",
+    label: "Calendar Integrations",
     Icon: CalendarIcon,
   },
 ] as const;
 
 const MentorSettingsTabs = async () => {
-  const user = await getCurrentUser({ isMentorRoute: true });
+  const { userId: clerkId } = auth();
+  if (!clerkId) {
+    redirect("/login");
+  }
+
+  const user = await db.user.findUnique({
+    where: { clerkId },
+    include: {
+      languages: true,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  if (user.role !== Role.MENTOR) {
+    redirect("/dashboard/search");
+  }
 
   if (!user) {
     return <div>Profile not found</div>;
@@ -60,7 +78,7 @@ const MentorSettingsTabs = async () => {
                 className="flex items-center"
               >
                 <Icon className="mr-1 h-4 w-4 text-blue-600" />
-                <p className="hidden md:block">{label}</p>
+                <p className="hidden sm:block">{label}</p>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -76,10 +94,9 @@ const MentorSettingsTabs = async () => {
             />
           </TabsContent>
           <TabsContent key="account" value="account">
-            <PersonalWebsiteForm
-              id={user.id}
-              portfolioWebsite={user.portfolioWebsite}
-            />
+            <CityForm id={user.id} city={user.city} />
+            <CountryForm userId={user.id} country={user.country} />
+            <LanguagesForm userId={user.id} languages={user?.languages} />
           </TabsContent>
           <TabsContent key="notifications" value="notifications">
             <NotificationForm />

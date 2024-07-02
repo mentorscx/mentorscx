@@ -1,4 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export async function getOauthToken(): Promise<string | undefined> {
   try {
@@ -59,5 +60,27 @@ export async function markOnboardingComplete(clerkId: string) {
       error
     );
     throw new Error("Failed to mark onboarding complete", error);
+  }
+}
+
+export async function isConnectedWithGoogleEvents() {
+  try {
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) {
+      return redirect("/signin");
+    }
+
+    console.log(clerkUser?.externalAccounts);
+
+    const eventsScopeApproved = clerkUser.externalAccounts?.some((e) =>
+      e.approvedScopes.includes(
+        "https://www.googleapis.com/auth/calendar.events"
+      )
+    );
+
+    return eventsScopeApproved;
+  } catch (error: any) {
+    throw new Error("Failed to connect the calendar");
   }
 }

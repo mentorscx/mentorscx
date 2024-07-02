@@ -47,7 +47,7 @@ const PriceForm = ({ id, price }: PriceFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      price: price || undefined,
+      price: price || 0,
     },
   });
 
@@ -66,7 +66,7 @@ const PriceForm = ({ id, price }: PriceFormProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Default hourly rate</CardTitle>
+        <CardTitle>Hourly rate</CardTitle>
         <CardDescription>
           This is used to calculate price per session
         </CardDescription>
@@ -81,14 +81,29 @@ const PriceForm = ({ id, price }: PriceFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    {/* <Input
                       type="number"
                       step="0.01"
                       disabled={isSubmitting}
-                      placeholder="Set a price for your session"
+                      placeholder="0"
                       className="w-32"
                       {...field}
-                    />
+                    /> */}
+
+                    <div className="relative w-32">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-2.5 text-gray-500">
+                        $
+                      </div>
+
+                      <Input
+                        type="number"
+                        step="1"
+                        className="block w-full rounded-md px-8 "
+                        placeholder="0"
+                        disabled={isSubmitting}
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
