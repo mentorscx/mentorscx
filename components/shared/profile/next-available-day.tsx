@@ -81,10 +81,9 @@ const NextAvailableDay = async (props: NextAvailableDayProps) => {
     return true;
   });
 
-  const earliestDate = findEarliestDate(
-    uniqueAvailableTimeSlots,
-    currentUser.timeZone
-  );
+  const earliestDate =
+    findEarliestDate(uniqueAvailableTimeSlots, currentUser.timeZone) ??
+    "No slots";
 
   return (
     <div className="flex flex-col items-center muted">

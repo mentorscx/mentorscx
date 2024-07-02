@@ -93,7 +93,8 @@ export function createTimeSlots(
 export function findEarliestDate(
   events: Event[],
   timezone: string | null
-): string {
+): string | null {
+  if (events.length === 0) return null;
   const earliestDate = min(events.map((event) => event.start));
 
   // Convert the earliest date to the specified timezone, or use UTC by default
