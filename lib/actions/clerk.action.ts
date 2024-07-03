@@ -71,9 +71,7 @@ export async function isConnectedWithGoogleEvents() {
       return redirect("/signin");
     }
 
-    console.log(clerkUser?.externalAccounts);
-
-    const eventsScopeApproved = clerkUser.externalAccounts?.some((e) =>
+    const eventsScopeApproved = clerkUser?.externalAccounts?.some((e) =>
       e.approvedScopes.includes(
         "https://www.googleapis.com/auth/calendar.events"
       )

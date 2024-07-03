@@ -7,50 +7,36 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-import { useIsClient } from "usehooks-ts";
-
-import { redirect, useRouter } from "next/navigation";
-
-const ClerkProfileDialog = (props: { isGoogleCalendarConnected: boolean }) => {
-  const isClient = useIsClient();
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push("/sign-in");
-    redirect("/login");
-  };
-
-  if (!isClient) return null;
-
-  return (
-    <>
-      {props.isGoogleCalendarConnected ? (
-        <Button variant="outline" disabled={true}>
-          Google calendar connected
-        </Button>
-      ) : (
-        <Button onClick={handleClick} variant="secondary">
-          Permissions to Calendar
-        </Button>
-      )}
-    </>
-  );
-};
+import ConnectGoogleCalendarModal from "@/components/modals/connect-google-calendar-modal";
 
 const SyncGoogleCalendar = (props: { isGoogleCalendarConnected: boolean }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleClick = () => setIsDialogOpen(!isDialogOpen);
+
   return (
     <Card>
       <CardHeader className="flex justify-between">
-        <CardTitle>Sync your google calendar</CardTitle>
-        <CardDescription>connect your google calender</CardDescription>
+        <CardTitle>Sync your Google Calendar</CardTitle>
+        <CardDescription>You can connect your Google Calender</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center justify-between">
-        <ClerkProfileDialog
-          isGoogleCalendarConnected={props.isGoogleCalendarConnected}
+        <ConnectGoogleCalendarModal
+          isOpen={isDialogOpen}
+          onClose={handleClick}
         />
+        {!props.isGoogleCalendarConnected ? (
+          <Button variant="outline" disabled={true}>
+            Google Calendar connected
+          </Button>
+        ) : (
+          <Button variant="secondary" onClick={handleClick}>
+            Connect Google Calendar
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

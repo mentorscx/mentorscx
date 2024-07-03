@@ -30,7 +30,7 @@ const tabConfig = [
 
   {
     value: "calendar",
-    label: "Calendar Integrations",
+    label: "Integrations",
     Icon: CalendarIcon,
   },
 ] as const;

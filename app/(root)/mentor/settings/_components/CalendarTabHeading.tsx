@@ -8,16 +8,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const CalendarTabHeading = () => {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Connecting with mentees</CardTitle>
-        <CardDescription>
-          <>
-            <span>You can connect with mentees using Zoom and Google Meet</span>
-          </>
+        <CardDescription className="flex items-center gap-1">
+          <span>You can connect with mentees using Zoom and Google Meet</span>
+          <span>
+            <Button variant="link" asChild className="px-0">
+              <Link href="/docs/communication-tool-links" target="_blank">
+                (Learn More)
+              </Link>
+            </Button>
+          </span>
         </CardDescription>
       </CardHeader>
     </Card>

@@ -94,8 +94,13 @@ export function findEarliestDate(
   events: Event[],
   timezone: string | null
 ): string | null {
-  if (events.length === 0) return null;
-  const earliestDate = min(events.map((event) => event.start));
+  const now = new Date();
+  const currentDate = timezone ? utcToZonedTime(now, timezone) : now;
+
+  const futureEvents = events.filter((event) => event.start >= currentDate);
+  if (futureEvents.length === 0) return null;
+
+  const earliestDate = min(futureEvents.map((event) => event.start));
 
   // Convert the earliest date to the specified timezone, or use UTC by default
   const zonedDate = timezone

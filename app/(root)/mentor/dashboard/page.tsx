@@ -69,7 +69,7 @@ const MentorDashboardPage = async () => {
       <div className="w-full flex flex-col lg:flex-row gap-4 mt-4">
         {/* WELCOME BACK AND STATS*/}
         <Card className="w-full p-3 border shadow rounded-lg bg-background col-start-1 col-span-2">
-          <h1 className="text-2xl font-semibold">Welcome back {username}!</h1>
+          <h1 className="text-2xl font-semibold">Welcome {username}!</h1>
           <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4 my-4 md:px-4">
             <Suspense fallback={<DashboardCardSkelton />}>
               <DashBoardProfileViews userId={id} />

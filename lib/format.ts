@@ -22,6 +22,8 @@ export function calculatePrice(
     return +(price / 4).toFixed(2);
   } else if (duration === 30) {
     return +(price / 2).toFixed(2);
+  } else if (duration === 45) {
+    return +((price * 3) / 4).toFixed(2);
   } else {
     return +price.toFixed(2);
   }
