@@ -3,6 +3,7 @@ import { MentorApplication } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
+import { sendEmailViaBrevoTemplate } from "../brevo";
 
 type TProfileViewCount = {
   profileId: string;
@@ -116,6 +117,14 @@ export async function saveMentorApplication(mentorApplication: any) {
     const application = await db.mentorApplication.create({
       data: mentorApplication as TMentorApplication,
     });
+
+    if (application) {
+      await sendEmailViaBrevoTemplate({
+        templateId: 4,
+        email: mentorApplication.email,
+        name: mentorApplication.name,
+      });
+    }
 
     return application;
   } catch (err: any) {
