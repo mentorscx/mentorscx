@@ -118,7 +118,7 @@ export async function saveMentorApplication(mentorApplication: any) {
       data: mentorApplication as TMentorApplication,
     });
 
-    if (application) {
+    if (application && application.hasEnoughExperience === "yes") {
       await sendEmailViaBrevoTemplate({
         templateId: 4,
         email: mentorApplication.email,
