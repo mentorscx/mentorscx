@@ -28,7 +28,7 @@ const SyncGoogleCalendar = (props: { isGoogleCalendarConnected: boolean }) => {
           isOpen={isDialogOpen}
           onClose={handleClick}
         />
-        {!props.isGoogleCalendarConnected ? (
+        {props.isGoogleCalendarConnected ? (
           <Button variant="outline" disabled={true}>
             Google Calendar connected
           </Button>
