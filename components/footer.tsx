@@ -116,8 +116,9 @@ export default function Footer() {
               </li>
               <li className="mb-2">
                 <a
-                  href="#0"
+                  href="/application/mentor"
                   className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out"
+                  target="_blank"
                 >
                   Become a mentor
                 </a>
