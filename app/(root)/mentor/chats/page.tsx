@@ -9,14 +9,7 @@ export const metadata: Metadata = {
 };
 
 const ChatsPage = () => {
-  return (
-    <div className="min-h-screen flex flex-col ">
-      <div className="flex-1">
-        <ChatLayout />
-        {/* content here */}
-      </div>
-    </div>
-  );
+  return <ChatLayout />;
 };
 
 export default ChatsPage;

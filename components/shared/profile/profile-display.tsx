@@ -42,6 +42,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import YouTubeVideo from "./profile-video";
 import NextAvailableSlot from "./next-available-day";
+import MessageMe from "../message-me";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -60,6 +61,8 @@ export const ProfileDisplayPage = async ({
     redirect("/login");
   }
 
+  console.log(userId);
+
   const user = await db.user.findUnique({
     where: {
       id: profileId,
@@ -73,6 +76,8 @@ export const ProfileDisplayPage = async ({
       toolkit: true,
     },
   });
+
+  console.log(user?.clerkId);
 
   if (!user) {
     return <div>Profile not found!</div>;
@@ -191,10 +196,11 @@ export const ProfileDisplayPage = async ({
           <div className="flex flex-col lg:flex-row items-center justify-between w-full py-4 max-w-3xl mx-auto">
             <div className="flex items-center justify-center w-full space-x-3 lg:justify-start">
               <RequestCallButton id={user.id} />
-              <Button className="rounded-full" variant="outline">
-                <MessageCircleIcon className="w-5 h-5 mr-1" />
-                Message me
-              </Button>
+              <MessageMe
+                currentUserClerkId={userId}
+                otherUserClerkId={user.clerkId}
+                redirectUrl={"/mentor/chats"}
+              />
             </div>
 
             {user.portfolioWebsite && (

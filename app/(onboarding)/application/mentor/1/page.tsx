@@ -30,15 +30,15 @@ const FormSchema = z.object({
   linkedinUrl: z.string().url().optional().or(z.literal("")),
   hasEnoughExperience: z
     .string()
-    .nonempty({ message: "Please select an option." }),
+    .min(1, { message: "Please select an option." }),
 });
 
 const emptyData = {
-  firstname: "",
-  lastname: "",
-  email: "",
-  linkedinUrl: "",
-  hasEnoughExperience: "",
+  firstname: undefined,
+  lastname: undefined,
+  email: undefined,
+  linkedinUrl: undefined,
+  hasEnoughExperience: undefined,
 };
 
 const ProfileInfoPage = () => {
@@ -53,29 +53,23 @@ const ProfileInfoPage = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      firstname: mentorOnboardData?.firstname || "",
-      lastname: mentorOnboardData?.lastname || "",
-      email: mentorOnboardData?.email || "",
-      linkedinUrl: mentorOnboardData?.linkedinUrl || "",
-      hasEnoughExperience: mentorOnboardData?.hasEnoughExperience || "",
+      firstname: mentorOnboardData?.firstname || undefined,
+      lastname: mentorOnboardData?.lastname || undefined,
+      email: mentorOnboardData?.email || undefined,
+      linkedinUrl: mentorOnboardData?.linkedinUrl || undefined,
+      hasEnoughExperience: mentorOnboardData?.hasEnoughExperience || undefined,
     },
   });
-
-  const handleClearStorage = () => {
-    setMentorOnboardData(emptyData);
-    form.reset();
-    router.refresh();
-  };
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setIsSubmitting(true);
     try {
       if (data.hasEnoughExperience === "yes") {
-        await setMentorOnboardData(data); // Update only once here
+        await setMentorOnboardData({ ...mentorOnboardData, ...data }); // Update only once here
         router.push("/application/mentor/2");
       } else {
         await saveMentorApplication({ ...data, applicationStatus: "DECLINED" });
-        await setMentorOnboardData(emptyData); // Clear data on successful submission
+        await setMentorOnboardData(null); // Clear data on successful submission
         toast.success("Application Submitted!");
         router.push("/application/mentor/thankyou");
       }
@@ -246,15 +240,6 @@ const ProfileInfoPage = () => {
                   </span>
                 </Button>
               </div>
-
-              <Button
-                variant="link"
-                onClick={handleClearStorage}
-                type="button"
-                className="hidden"
-              >
-                Clear form
-              </Button>
             </div>
           </form>
         </Form>
