@@ -55,9 +55,10 @@ const ProfileInfoPage = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      currentPosition: mentorOnboardData?.currentPosition || "",
-      motivation: mentorOnboardData?.motivation || "",
-      chargesForMentorship: mentorOnboardData?.chargesForMentorship || "",
+      currentPosition: mentorOnboardData?.currentPosition || undefined,
+      motivation: mentorOnboardData?.motivation || undefined,
+      chargesForMentorship:
+        mentorOnboardData?.chargesForMentorship || undefined,
     },
   });
 
@@ -174,7 +175,7 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("motivation").length} characters (20
+                      {form.getValues("motivation")?.length || 0} characters (20
                       minimum)
                     </FormDescription>
                     <FormMessage />

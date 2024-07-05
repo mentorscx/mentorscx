@@ -397,8 +397,8 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("profileStatement").length} characters (60
-                      minimum)
+                      {form.getValues("profileStatement")?.length || 0}{" "}
+                      characters (60 minimum)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -424,7 +424,8 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("descriptionCustomerExperience").length}{" "}
+                      {form.getValues("descriptionCustomerExperience")
+                        ?.length || 0}{" "}
                       characters (60 minimum)
                     </FormDescription>
                     <FormMessage />
@@ -454,8 +455,8 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("challengeSolved").length} characters (60
-                      minimum)
+                      {form.getValues("challengeSolved")?.length || 0}{" "}
+                      characters (60 minimum)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
