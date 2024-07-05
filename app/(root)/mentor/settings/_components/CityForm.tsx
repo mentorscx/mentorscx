@@ -1,12 +1,9 @@
 "use client";
 
-import * as z from "zod";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
-import Select from "react-select";
-
+import * as z from "zod";
+import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -19,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -26,87 +24,60 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  saveUserBasicDetailsById,
-  updateUser,
-} from "@/lib/actions/user.action";
-import { Language } from "@prisma/client";
-import { languageData } from "@/constants/data";
 
-interface LanguagesFormProps {
-  userId: string;
-  languages: Language[];
-}
+import { updateUser } from "@/lib/actions/user.action";
 
 const FormSchema = z.object({
-  languages: z
-    .array(
-      z.object({
-        label: z.string().min(1, "Language label is required"),
-        value: z.string().min(1, "Language value is required"),
-      })
-    )
-    .min(1, "At least one language must be selected"),
+  city: z.string().min(1, "Please enter city details"),
 });
 
-const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
-  const router = useRouter();
+interface CityFormProps {
+  id: string;
+  city: string | null;
+}
 
-  const initialLanguages = languages?.map((language) => ({
-    label: language.name,
-    value: language.name,
-  }));
+export default function CityForm({ id, city }: CityFormProps) {
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      languages: initialLanguages,
+      city: city || "",
     },
   });
 
   const { isSubmitting, isValid, isDirty } = form.formState;
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      await saveUserBasicDetailsById({
-        userId,
-        languages: values.languages,
-      });
-      toast.success("Languages updated");
+      await updateUser({ ...data, id });
+      toast.success("city updated");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
     }
-  };
+  }
 
   return (
-    <Card className="mt-4">
+    <Card className="mt-6">
       <CardHeader>
-        <CardTitle>Languages</CardTitle>
+        <CardTitle>City</CardTitle>
         <CardDescription>
-          This is used to display in your profile and search dashboard.
+          This will be used to display in the profile.
         </CardDescription>
       </CardHeader>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
             <FormField
               control={form.control}
-              name="languages"
+              name="city"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Select
-                      {...field}
-                      isMulti={true}
-                      options={languageData}
-                      className="md:w-1/2"
-                    />
+                    <Input {...field} className="md:w-1/2" />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -124,6 +95,4 @@ const LanguagesForm = ({ userId, languages }: LanguagesFormProps) => {
       </Form>
     </Card>
   );
-};
-
-export default LanguagesForm;
+}

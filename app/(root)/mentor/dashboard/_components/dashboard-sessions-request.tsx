@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 
 import { SessionCard } from "@/components/shared/sessions/session-card";
+import Image from "next/image";
 
 type TDashBoardSessionsRequest = {
   userId: string;
@@ -54,8 +55,19 @@ const DashboardSessionsRequest = async ({
       <CardContent>
         <div className="w-full grid grid-cols-1 gap-4">
           {sessionRequests.length === 0 && (
-            <div className="flex justify-center items-center h-[150px] border-1 bg-gray-100/50 rounded">
-              <p className="text-xl font-light">No Awaiting Requests</p>
+            <div className="flex justify-center items-center min-h-[150px] border-1 bg-gray-100/50 rounded">
+              <div className="my-3 flex flex-col items-center gap-3">
+                <Image
+                  src="/no_data.svg"
+                  alt="avatar"
+                  width={100}
+                  height={100}
+                  className="object-fit"
+                />
+                <p className="text-muted-foreground">
+                  No recent requested sessions
+                </p>
+              </div>
             </div>
           )}
           {sessionRequests.map((session) => (

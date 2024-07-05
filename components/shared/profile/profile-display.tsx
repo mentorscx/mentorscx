@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/footer";
 
-import { formatMonthYear } from "@/lib/format";
+import { calculatePrice, formatMonthYear } from "@/lib/format";
 import { RequestCallButton } from "./profile-item-action";
 import ProfileSkillList from "./profile-skill-list";
 import {
@@ -41,6 +41,8 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import YouTubeVideo from "./profile-video";
+import NextAvailableSlot from "./next-available-day";
+import MessageMe from "../message-me";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -59,6 +61,8 @@ export const ProfileDisplayPage = async ({
     redirect("/login");
   }
 
+  console.log(userId);
+
   const user = await db.user.findUnique({
     where: {
       id: profileId,
@@ -72,6 +76,8 @@ export const ProfileDisplayPage = async ({
       toolkit: true,
     },
   });
+
+  console.log(user?.clerkId);
 
   if (!user) {
     return <div>Profile not found!</div>;
@@ -167,25 +173,20 @@ export const ProfileDisplayPage = async ({
                       <p className="font-bold text-2xl text-green-600">Free</p>
                     ) : (
                       <p className="font-bold text-2xl text-slate-800">
-                        {user.price}$
+                        {calculatePrice(user.duration, user.price)}$
                       </p>
                     )}
-                    <p className="text-sm">Price per hour</p>
+                    <p className="text-sm">Price per session</p>
                   </div>
                   <Separator className="h-[2px] lg:hidden" />
                   <div className="flex flex-col items-center muted">
                     <div className="bg-green-100 text-green-600 px-2 py-1 rounded-full font-semibold text-sm">
                       <p className="text-sm">{user.duration} min</p>
                     </div>
-                    <div>Time blocks Available</div>
+                    <div>Call duration</div>
                   </div>
                   <Separator className="h-[2px] lg:hidden" />
-                  <div className="flex flex-col items-center muted">
-                    <div className="flex items-center">
-                      <p className="text-xl font-bold text-black">Soon.</p>
-                    </div>
-                    <div>Next Available day</div>
-                  </div>
+                  <NextAvailableSlot userId={user.id} />
                 </div>
               </div>
             </div>
@@ -195,10 +196,11 @@ export const ProfileDisplayPage = async ({
           <div className="flex flex-col lg:flex-row items-center justify-between w-full py-4 max-w-3xl mx-auto">
             <div className="flex items-center justify-center w-full space-x-3 lg:justify-start">
               <RequestCallButton id={user.id} />
-              <Button className="rounded-full" variant="outline">
-                <MessageCircleIcon className="w-5 h-5 mr-1" />
-                Message me
-              </Button>
+              <MessageMe
+                currentUserClerkId={userId}
+                otherUserClerkId={user.clerkId}
+                redirectUrl={"/mentor/chats"}
+              />
             </div>
 
             {user.portfolioWebsite && (
@@ -325,12 +327,9 @@ export const ProfileDisplayPage = async ({
           name="Toolkit"
         />
 
+        <div className="h-16"></div>
         {/* <div id="reviews"></div> */}
         {/* <ProfileTestmonialPage title="Reviews (5)" /> */}
-
-        <div className="mt-12">
-          <Footer />
-        </div>
       </div>
     </div>
   );

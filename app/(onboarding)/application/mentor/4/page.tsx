@@ -2,9 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, ArrowRight } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Select,
@@ -29,7 +29,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import { useLocalStorage, useReadLocalStorage, useIsClient } from "usehooks-ts";
+import { useLocalStorage, useIsClient } from "usehooks-ts";
 
 import { useRouter } from "next/navigation";
 import { Toaster } from "@/components/ui/sonner";
@@ -173,23 +173,35 @@ const ProfileInfoPage = () => {
   const isClient = useIsClient();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isSuccessSubmit, setIsSuccessSubmit] = React.useState(false);
+
   const [mentorOnboardData, setMentorOnboardData] =
     useLocalStorage<TMentor | null>("mentorOnboardingData", null);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      preferVideoSharing: mentorOnboardData?.preferVideoSharing || "",
-      weeklySessions: mentorOnboardData?.weeklySessions?.toString() || "",
+      preferVideoSharing: mentorOnboardData?.preferVideoSharing || undefined,
+      weeklySessions:
+        mentorOnboardData?.weeklySessions?.toString() || undefined,
       priorMentorshipExperience:
-        mentorOnboardData?.priorMentorshipExperience || "",
-      profileStatement: mentorOnboardData?.profileStatement || "",
+        mentorOnboardData?.priorMentorshipExperience || undefined,
+      profileStatement: mentorOnboardData?.profileStatement || undefined,
       descriptionCustomerExperience:
-        mentorOnboardData?.descriptionCustomerExperience || "",
-      challengeSolved: mentorOnboardData?.challengeSolved || "",
-      interests: [],
+        mentorOnboardData?.descriptionCustomerExperience || undefined,
+      challengeSolved: mentorOnboardData?.challengeSolved || undefined,
+      interests: mentorOnboardData?.interests || [],
     },
   });
+
+  const watchedFields = useWatch({ control: form.control });
+
+  useEffect(() => {
+    if (!isSuccessSubmit) {
+      const updatedData = { ...mentorOnboardData, ...watchedFields };
+      setMentorOnboardData(updatedData as TMentor);
+    }
+  }, [watchedFields, isSuccessSubmit]);
 
   const handleClickClearStorage = () => {
     form.reset();
@@ -204,8 +216,10 @@ const ProfileInfoPage = () => {
     try {
       setIsSubmitting(true);
       await saveMentorApplication(applicationData);
+      setIsSuccessSubmit(true);
       form.reset();
       await setMentorOnboardData(null);
+
       toast.success("Application submitted!");
       router.push("/application/mentor/thankyou");
     } catch (error: any) {
@@ -372,7 +386,7 @@ const ProfileInfoPage = () => {
                         If you become a mentor, your response to this question
                         will be added to your mentor profile{" "}
                       </span>
-                      <span>(you’ll be able to edit it later).</span>
+                      <span>(you’ll be able to edit it later). </span>
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
@@ -383,8 +397,8 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("profileStatement").length} characters (60
-                      minimum)
+                      {form.getValues("profileStatement")?.length || 0}{" "}
+                      characters (60 minimum)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -410,7 +424,8 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("descriptionCustomerExperience").length}{" "}
+                      {form.getValues("descriptionCustomerExperience")
+                        ?.length || 0}{" "}
                       characters (60 minimum)
                     </FormDescription>
                     <FormMessage />
@@ -428,7 +443,8 @@ const ProfileInfoPage = () => {
                     <FormLabel className="md:text-base">
                       Share an inventive solution to a challenging problem that
                       you came up with, leaving you with a sense of confidence
-                      and thinking, (I&apos;m pretty good at this!){" "}
+                      and thinking "hey, I&apos;m pretty good at this!" (this
+                      won't be added to your profile){" "}
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
@@ -439,8 +455,8 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("challengeSolved").length} characters (60
-                      minimum)
+                      {form.getValues("challengeSolved")?.length || 0}{" "}
+                      characters (60 minimum)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -516,7 +532,7 @@ const ProfileInfoPage = () => {
                 >
                   <Link
                     href={
-                      mentorOnboardData?.anticipatedSessionRate === "no"
+                      mentorOnboardData?.chargesForMentorship === "no"
                         ? "/application/mentor/2"
                         : "/application/mentor/3"
                     }
@@ -530,7 +546,7 @@ const ProfileInfoPage = () => {
                   disabled={isSubmitting}
                   className="min-w-[100px]"
                 >
-                  <span>Next</span>
+                  <span>Submit</span>
                   <span>
                     {isSubmitting ? (
                       <Loader2 className="animate-spin h-4 w-4 ml-1" />

@@ -2,9 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, ArrowRight } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { infer, z } from "zod";
-import React, { useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -14,14 +14,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useLocalStorage, useReadLocalStorage, useIsClient } from "usehooks-ts";
+import { useLocalStorage, useIsClient } from "usehooks-ts";
 
 import { toast } from "sonner";
 const FormSchema = z.object({
@@ -31,7 +31,7 @@ const FormSchema = z.object({
   motivation: z.string().min(20, {
     message: "Please enter atleast 20 letters.",
   }),
-  anticipatedSessionRate: z.string().min(2, {
+  chargesForMentorship: z.string().min(2, {
     message: "Please choose an option.",
   }),
 });
@@ -39,7 +39,7 @@ const FormSchema = z.object({
 const emptyData = {
   currentPosition: "",
   motivation: "",
-  anticipatedSessionRate: "",
+  chargesForMentorship: "",
 };
 
 const ProfileInfoPage = () => {
@@ -55,27 +55,25 @@ const ProfileInfoPage = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      currentPosition: mentorOnboardData?.currentPosition || "",
-      motivation: mentorOnboardData?.motivation || "",
-      anticipatedSessionRate: mentorOnboardData?.anticipatedSessionRate || "",
+      currentPosition: mentorOnboardData?.currentPosition || undefined,
+      motivation: mentorOnboardData?.motivation || undefined,
+      chargesForMentorship:
+        mentorOnboardData?.chargesForMentorship || undefined,
     },
   });
 
-  const handleClearStorage = () => {
-    setMentorOnboardData({
-      ...mentorOnboardData,
-      ...emptyData,
-    });
+  const watchedFields = useWatch({ control: form.control });
 
-    form.reset();
-  };
+  useEffect(() => {
+    setMentorOnboardData({ ...mentorOnboardData, ...watchedFields });
+  }, [watchedFields]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setIsSubmitting(true);
       setMentorOnboardData({ ...mentorOnboardData, ...data });
-      const anticipatedSessionRate = data?.anticipatedSessionRate;
-      anticipatedSessionRate === "no"
+      const chargesForMentorship = data?.chargesForMentorship;
+      chargesForMentorship === "no"
         ? router.push("/application/mentor/4")
         : router.push("/application/mentor/3");
     } catch (e) {
@@ -177,7 +175,7 @@ const ProfileInfoPage = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      {form.getValues("motivation").length} characters (20
+                      {form.getValues("motivation")?.length || 0} characters (20
                       minimum)
                     </FormDescription>
                     <FormMessage />
@@ -189,7 +187,7 @@ const ProfileInfoPage = () => {
             <div className="card-block ">
               <FormField
                 control={form.control}
-                name="anticipatedSessionRate"
+                name="chargesForMentorship"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="md:text-base">
@@ -256,15 +254,6 @@ const ProfileInfoPage = () => {
                   </span>
                 </Button>
               </div>
-
-              <Button
-                variant="link"
-                onClick={handleClearStorage}
-                type="button"
-                className="hidden"
-              >
-                Clear form
-              </Button>
             </div>
           </form>
         </Form>

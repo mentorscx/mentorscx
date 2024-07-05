@@ -7,6 +7,13 @@ import {
 } from "stream-chat-react";
 import MenuBar from "./MenuBar";
 import UsersMenu from "./UsersMenu";
+import {
+  Avatar,
+  LoadingChannels as LoadingUsers,
+  useChatContext,
+} from "stream-chat-react";
+import { Channel, UserResponse } from "stream-chat";
+import useConversationStore from "@/hooks/use-conversation-store";
 
 interface ChatSidebarProps {
   user: UserResource;
@@ -16,6 +23,7 @@ interface ChatSidebarProps {
 
 export default function ChatSidebar({ user, show, onClose }: ChatSidebarProps) {
   const [usersMenuOpen, setUsersMenuOpen] = useState(false);
+  const { client, setActiveChannel } = useChatContext();
 
   useEffect(() => {
     if (!show) setUsersMenuOpen(false);
@@ -50,7 +58,11 @@ export default function ChatSidebar({ user, show, onClose }: ChatSidebarProps) {
           }}
         />
       )}
-      <MenuBar onUserMenuClick={() => setUsersMenuOpen(true)} />
+      <MenuBar
+        onUserMenuClick={() => setUsersMenuOpen(true)}
+        userName={user.fullName}
+        userImage={user.imageUrl}
+      />
       <ChannelList
         filters={{
           type: "messaging",

@@ -8,81 +8,171 @@ export interface timeZone {
   readonly isDisabled?: boolean;
 }
 
-export const TIMEZONES: readonly timeZone[] = [
-  { value: "-12:00", label: "(GMT -12:00) Eniwetok, Kwajalein" },
-  { value: "-11:00", label: "(GMT -11:00) Midway Island, Samoa" },
-  { value: "-10:00", label: "(GMT -10:00) Hawaii" },
-  { value: "-09:50", label: "(GMT -9:30) Taiohae" },
-  { value: "-09:00", label: "(GMT -9:00) Alaska" },
-  { value: "-08:00", label: "(GMT -8:00) Pacific Time (US & Canada)" },
-  { value: "-07:00", label: "(GMT -7:00) Mountain Time (US & Canada)" },
+export const TIMEZONES = [
+  { label: "America/New_York (Eastern Time)", value: "America/New_York" },
+  { label: "Europe/London (Greenwich Mean Time)", value: "Europe/London" },
+  { label: "Asia/Tokyo (Japan Standard Time)", value: "Asia/Tokyo" },
+  { label: "Europe/Berlin (Central European Time)", value: "Europe/Berlin" },
+  { label: "America/Los_Angeles (Pacific Time)", value: "America/Los_Angeles" },
   {
-    value: "-06:00",
-    label: "(GMT -6:00) Central Time (US & Canada), Mexico City",
+    label: "Australia/Sydney (Australian Eastern Time)",
+    value: "Australia/Sydney",
+  },
+  { label: "Asia/Shanghai (China Standard Time)", value: "Asia/Shanghai" },
+  { label: "Asia/Dubai (Gulf Standard Time)", value: "Asia/Dubai" },
+  { label: "Asia/Kolkata (India Standard Time)", value: "Asia/Kolkata" },
+  { label: "Europe/Moscow (Moscow Standard Time)", value: "Europe/Moscow" },
+  { label: "Asia/Seoul (Korea Standard Time)", value: "Asia/Seoul" },
+  { label: "America/Sao_Paulo (Brasilia Time)", value: "America/Sao_Paulo" },
+  {
+    label: "Africa/Johannesburg (South Africa Standard Time)",
+    value: "Africa/Johannesburg",
+  },
+  { label: "America/Mexico_City (Central Time)", value: "America/Mexico_City" },
+  { label: "Asia/Jakarta (Indonesia Western Time)", value: "Asia/Jakarta" },
+  { label: "Europe/Paris (Central European Time)", value: "Europe/Paris" },
+  { label: "Europe/Istanbul (Turkey Time)", value: "Europe/Istanbul" },
+  { label: "America/Toronto (Eastern Time)", value: "America/Toronto" },
+  { label: "Asia/Singapore (Singapore Time)", value: "Asia/Singapore" },
+  { label: "Europe/Rome (Central European Time)", value: "Europe/Rome" },
+  {
+    label: "America/Buenos_Aires (Argentina Time)",
+    value: "America/Buenos_Aires",
+  },
+  { label: "Europe/Athens (Eastern European Time)", value: "Europe/Athens" },
+  { label: "Asia/Bangkok (Indochina Time)", value: "Asia/Bangkok" },
+  { label: "Africa/Cairo (Eastern European Time)", value: "Africa/Cairo" },
+  { label: "America/Vancouver (Pacific Time)", value: "America/Vancouver" },
+  { label: "Africa/Nairobi (East Africa Time)", value: "Africa/Nairobi" },
+  { label: "Europe/Madrid (Central European Time)", value: "Europe/Madrid" },
+  { label: "Asia/Kuala_Lumpur (Malaysia Time)", value: "Asia/Kuala_Lumpur" },
+  {
+    label: "Europe/Amsterdam (Central European Time)",
+    value: "Europe/Amsterdam",
+  },
+  { label: "Asia/Manila (Philippine Time)", value: "Asia/Manila" },
+  {
+    label: "Europe/Stockholm (Central European Time)",
+    value: "Europe/Stockholm",
+  },
+  { label: "America/Lima (Peru Time)", value: "America/Lima" },
+  { label: "Asia/Hong_Kong (Hong Kong Time)", value: "Asia/Hong_Kong" },
+  { label: "Asia/Taipei (Taiwan Time)", value: "Asia/Taipei" },
+  { label: "America/Bogota (Colombia Time)", value: "America/Bogota" },
+  { label: "Europe/Zurich (Central European Time)", value: "Europe/Zurich" },
+  { label: "America/Denver (Mountain Time)", value: "America/Denver" },
+  { label: "Asia/Beirut (Eastern European Time)", value: "Asia/Beirut" },
+  {
+    label: "Australia/Perth (Australian Western Standard Time)",
+    value: "Australia/Perth",
+  },
+  { label: "Asia/Karachi (Pakistan Standard Time)", value: "Asia/Karachi" },
+  { label: "America/Chicago (Central Time)", value: "America/Chicago" },
+  { label: "Europe/Lisbon (Western European Time)", value: "Europe/Lisbon" },
+  { label: "Asia/Dhaka (Bangladesh Standard Time)", value: "Asia/Dhaka" },
+  { label: "Asia/Riyadh (Arabian Standard Time)", value: "Asia/Riyadh" },
+  { label: "Europe/Oslo (Central European Time)", value: "Europe/Oslo" },
+  { label: "Asia/Tehran (Iran Standard Time)", value: "Asia/Tehran" },
+  { label: "America/Montreal (Eastern Time)", value: "America/Montreal" },
+  {
+    label: "Europe/Brussels (Central European Time)",
+    value: "Europe/Brussels",
+  },
+  { label: "Asia/Amman (Eastern European Time)", value: "Asia/Amman" },
+  { label: "Asia/Ho_Chi_Minh (Indochina Time)", value: "Asia/Ho_Chi_Minh" },
+  {
+    label: "America/Phoenix (Mountain Standard Time)",
+    value: "America/Phoenix",
   },
   {
-    value: "-05:00",
-    label: "(GMT -5:00) Eastern Time (US & Canada), Bogota, Lima",
+    label: "Europe/Helsinki (Eastern European Time)",
+    value: "Europe/Helsinki",
   },
-  { value: "-04:50", label: "(GMT -4:30) Caracas" },
+  { label: "America/Caracas (Venezuela Time)", value: "America/Caracas" },
+  { label: "Asia/Yakutsk (Yakutsk Time)", value: "Asia/Yakutsk" },
+  { label: "Pacific/Auckland (New Zealand Time)", value: "Pacific/Auckland" },
+  { label: "America/Anchorage (Alaska Time)", value: "America/Anchorage" },
+  { label: "Asia/Calcutta (India Standard Time)", value: "Asia/Calcutta" },
+  { label: "Europe/Vienna (Central European Time)", value: "Europe/Vienna" },
+  { label: "America/Halifax (Atlantic Time)", value: "America/Halifax" },
+  { label: "Asia/Muscat (Gulf Standard Time)", value: "Asia/Muscat" },
+  { label: "Europe/Kiev (Eastern European Time)", value: "Europe/Kiev" },
+  { label: "Asia/Magadan (Magadan Time)", value: "Asia/Magadan" },
+  { label: "Europe/Warsaw (Central European Time)", value: "Europe/Warsaw" },
   {
-    value: "-04:00",
-    label: "(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz",
+    label: "America/Guatemala (Central America Time)",
+    value: "America/Guatemala",
   },
-  { value: "-03:50", label: "(GMT -3:30) Newfoundland" },
-  { value: "-03:00", label: "(GMT -3:00) Brazil, Buenos Aires, Georgetown" },
-  { value: "-02:00", label: "(GMT -2:00) Mid-Atlantic" },
-  { value: "-01:00", label: "(GMT -1:00) Azores, Cape Verde Islands" },
+  { label: "Asia/Qatar (Arabian Standard Time)", value: "Asia/Qatar" },
   {
-    value: "+00:00",
-    label: "(GMT) Western Europe Time, London, Lisbon, Casablanca",
+    label: "Europe/Bucharest (Eastern European Time)",
+    value: "Europe/Bucharest",
   },
-  { value: "+01:00", label: "(GMT +1:00) Brussels, Copenhagen, Madrid, Paris" },
-  { value: "+02:00", label: "(GMT +2:00) Kaliningrad, South Africa" },
   {
-    value: "+03:00",
-    label: "(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg",
+    label: "Pacific/Honolulu (Hawaii-Aleutian Standard Time)",
+    value: "Pacific/Honolulu",
   },
-  { value: "+03:50", label: "(GMT +3:30) Tehran" },
-  { value: "+04:00", label: "(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi" },
-  { value: "+04:50", label: "(GMT +4:30) Kabul" },
+  { label: "Africa/Lagos (West Africa Time)", value: "Africa/Lagos" },
+  { label: "Asia/Jerusalem (Israel Standard Time)", value: "Asia/Jerusalem" },
+  { label: "America/Winnipeg (Central Time)", value: "America/Winnipeg" },
+  { label: "Europe/Prague (Central European Time)", value: "Europe/Prague" },
   {
-    value: "+05:00",
-    label: "(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent",
+    label: "America/El_Salvador (Central America Time)",
+    value: "America/El_Salvador",
   },
-  { value: "+05:50", label: "(GMT +5:30) Bombay, Calcutta, Madras, New Delhi" },
-  { value: "+05:75", label: "(GMT +5:45) Kathmandu, Pokhara" },
-  { value: "+06:00", label: "(GMT +6:00) Almaty, Dhaka, Colombo" },
-  { value: "+06:50", label: "(GMT +6:30) Yangon, Mandalay" },
-  { value: "+07:00", label: "(GMT +7:00) Bangkok, Hanoi, Jakarta" },
+  { label: "Asia/Baku (Azerbaijan Standard Time)", value: "Asia/Baku" },
   {
-    value: "+08:00",
-    label: "(GMT +8:00) Beijing, Perth, Singapore, Hong Kong",
+    label: "Europe/Belgrade (Central European Time)",
+    value: "Europe/Belgrade",
   },
-  { value: "+08:75", label: "(GMT +8:45) Eucla" },
+  { label: "America/Regina (Central Standard Time)", value: "America/Regina" },
   {
-    value: "+09:00",
-    label: "(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk",
+    label: "America/Newfoundland (Newfoundland Time)",
+    value: "America/St_Johns",
   },
-  { value: "+09:50", label: "(GMT +9:30) Adelaide, Darwin" },
+  { label: "Asia/Almaty (East Kazakhstan Time)", value: "Asia/Almaty" },
   {
-    value: "+10:00",
-    label: "(GMT +10:00) Eastern Australia, Guam, Vladivostok",
+    label: "Europe/Budapest (Central European Time)",
+    value: "Europe/Budapest",
   },
-  { value: "+10:50", label: "(GMT +10:30) Lord Howe Island" },
+  { label: "America/Santiago (Chile Time)", value: "America/Santiago" },
+  { label: "Asia/Colombo (India Standard Time)", value: "Asia/Colombo" },
   {
-    value: "+11:00",
-    label: "(GMT +11:00) Magadan, Solomon Islands, New Caledonia",
+    label: "Europe/Copenhagen (Central European Time)",
+    value: "Europe/Copenhagen",
   },
-  { value: "+11:50", label: "(GMT +11:30) Norfolk Island" },
+  { label: "America/Panama (Eastern Time)", value: "America/Panama" },
+  { label: "Europe/Oslo (Central European Time)", value: "Europe/Oslo" },
+  { label: "Asia/Ulaanbaatar (Ulaanbaatar Time)", value: "Asia/Ulaanbaatar" },
+  { label: "Asia/Damascus (Eastern European Time)", value: "Asia/Damascus" },
+  { label: "America/Asuncion (Paraguay Time)", value: "America/Asuncion" },
+  { label: "Europe/Dublin (Greenwich Mean Time)", value: "Europe/Dublin" },
+  { label: "Asia/Yerevan (Armenia Time)", value: "Asia/Yerevan" },
   {
-    value: "+12:00",
-    label: "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka",
+    label: "America/Tegucigalpa (Central America Time)",
+    value: "America/Tegucigalpa",
   },
-  { value: "+12:75", label: "(GMT +12:45) Chatham Islands" },
-  { value: "+13:00", label: "(GMT +13:00) Apia, Nukualofa" },
-  { value: "+14:00", label: "(GMT +14:00) Line Islands, Tokelau" },
-];
+  { label: "Asia/Urumqi (China Time)", value: "Asia/Urumqi" },
+  { label: "America/Managua (Central America Time)", value: "America/Managua" },
+  { label: "Asia/Kabul (Afghanistan Time)", value: "Asia/Kabul" },
+  { label: "America/Dominica (Atlantic Time)", value: "America/Dominica" },
+  { label: "Asia/Omsk (Omsk Time)", value: "Asia/Omsk" },
+  {
+    label: "Europe/Luxembourg (Central European Time)",
+    value: "Europe/Luxembourg",
+  },
+  { label: "America/Montevideo (Uruguay Time)", value: "America/Montevideo" },
+  { label: "Asia/Novosibirsk (Novosibirsk Time)", value: "Asia/Novosibirsk" },
+  { label: "Europe/Malta (Central European Time)", value: "Europe/Malta" },
+  { label: "Asia/Sanaa (Arabian Standard Time)", value: "Asia/Sanaa" },
+  { label: "Asia/Thimphu (Bhutan Time)", value: "Asia/Thimphu" },
+  { label: "Europe/Riga (Eastern European Time)", value: "Europe/Riga" },
+  { label: "Asia/Chita (Yakutsk Time)", value: "Asia/Chita" },
+  {
+    label: "America/Curacao (Atlantic Standard Time)",
+    value: "America/Curacao",
+  },
+] as const;
 
 export interface language {
   readonly value: string;
@@ -471,7 +561,7 @@ export const TOOLS: readonly tool[] = [
   },
   {
     value: "FrontApp",
-    label: "Front App",
+    label: "FrontApp",
     filePath: "/assets/toolkit/frontapp.png",
   },
   {
@@ -500,12 +590,12 @@ export const TOOLS: readonly tool[] = [
   { value: "Hiver", label: "Hiver", filePath: "/assets/toolkit/hiver.png" },
   {
     value: "HubSpotServiceHub",
-    label: "HubSpot Service Hub",
+    label: "HubSpotServiceHub",
     filePath: "/assets/toolkit/hubspot.jpeg",
   },
   {
     value: "SalesforceServiceCloud",
-    label: "Salesforce Service Cloud",
+    label: "SalesforceServiceCloud",
     filePath: "/assets/toolkit/salesforce.png",
   },
   {
@@ -518,8 +608,8 @@ export const TOOLS: readonly tool[] = [
     label: "ZohoDesk",
     filePath: "/assets/toolkit/zoho_desk.png",
   },
-  //TODO: GET KAYAKO SVG
-  { value: "Kayako", label: "Kayako", filePath: "/assets/toolkit/kayako.svg" },
+
+  { value: "Kayako", label: "Kayako", filePath: "/assets/toolkit/kayako.webp" },
 
   {
     value: "LiveChat",
@@ -542,7 +632,7 @@ export const TOOLS: readonly tool[] = [
   {
     value: "KnowledgeOwl",
     label: "KnowledgeOwl",
-    filePath: "/assets/toolkit/knowledgeowl.png",
+    filePath: "/assets/toolkit/knowledge_owl.svg",
   },
   {
     value: "Confluence",
@@ -557,7 +647,7 @@ export const TOOLS: readonly tool[] = [
   {
     value: "HelpJuice",
     label: "HelpJuice",
-    filePath: "/assets/toolkit/helpjuice.png",
+    filePath: "/assets/toolkit/help_juice.png",
   },
   { value: "Docebo", label: "Docebo", filePath: "/assets/toolkit/docebo.png" },
   {
@@ -582,9 +672,7 @@ export const TOOLS: readonly tool[] = [
     filePath: "/assets/toolkit/happitu.png",
   },
   { value: "Klaus", label: "Klaus", filePath: "/assets/toolkit/klaus.png" },
-  // TODO: MISSING the WAIZEN Png
-  { value: "Waizen", label: "Waizen", filePath: "/assets/toolkit/waizen.png" },
-  { value: "Loris", label: "Loris", filePath: "/assets/toolkit/loris.png" },
+  { value: "Loris", label: "Loris", filePath: "/assets/toolkit/loris.jpeg" },
   {
     value: "MaestroQA",
     label: "MaestroQA",
@@ -614,17 +702,17 @@ export const TOOLS: readonly tool[] = [
   },
   {
     value: "GenesisCloudCX",
-    label: "Genesis Cloud CX",
+    label: "GenesisCloudCX",
     filePath: "/assets/toolkit/genesis.png",
   },
   {
     value: "NiceCXOne",
-    label: "Nice CXOne",
-    filePath: "/assets/toolkit/nice_cxone.png",
+    label: "NiceCXOne",
+    filePath: "/assets/toolkit/nice_cx_one.png",
   },
   {
     value: "ObserveAi",
-    label: "Observe.ai",
+    label: "ObserveAi",
     filePath: "/assets/toolkit/observe_ai.png",
   },
   {
@@ -634,7 +722,7 @@ export const TOOLS: readonly tool[] = [
   },
   {
     value: "AmazonConnect",
-    label: "Amazon Connect",
+    label: "AmazonConnect",
     filePath: "/assets/toolkit/amazon_connect.png",
   },
   { value: "Avaya", label: "Avaya", filePath: "/assets/toolkit/avaya.png" },
@@ -708,7 +796,7 @@ export const EXPERTISE = [
   {
     label: "User Experience (UX) Design",
     value: "User Experience (UX) Design",
-    filePath: "/assets/expertise/user_experience_ux_design.svg",
+    filePath: "/assets/expertise/user_experience.svg",
   },
   {
     label: "Customer Service and Support",
@@ -723,7 +811,7 @@ export const EXPERTISE = [
   {
     label: "Voice of the Customer (VoC) Programs",
     value: "Voice of the Customer (VoC) Programs",
-    filePath: "/assets/expertise/voice_of_the_customer_voc_programs.svg",
+    filePath: "/assets/expertise/voice_of_the_customer_programs.svg",
   },
   {
     label: "Customer Feedback and Surveys",
@@ -793,7 +881,7 @@ export const EXPERTISE = [
   {
     label: "Customer-led Growth",
     value: "Customer-led Growth",
-    filePath: "/assets/expertise/customer_led_growth.svg",
+    filePath: "/assets/expertise/customer_led_experience.svg",
   },
 ];
 
@@ -1401,7 +1489,7 @@ export const industryData = [
   {
     label: "Fitness and Wellness",
     value: "Fitness and Wellness",
-    filePath: "/assets/industries/fitness_and_wellness.svg",
+    filePath: "/assets/industries/healthcare.svg",
   },
   {
     label: "Food and Beverage",

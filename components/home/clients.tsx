@@ -133,7 +133,7 @@ export default function Clients() {
             </p>
           </div>
           <div className="text-center">
-            <Link href="/subscribe">
+            <Link href="/waitlist">
               <button className="btn group bg-blue-600 text-white hover:bg-blue-700">
                 Get started{" "}
                 <span className="ml-3 text-xl tracking-normal text-white transition-transform duration-150 ease-in-out group-hover:translate-x-0.5">

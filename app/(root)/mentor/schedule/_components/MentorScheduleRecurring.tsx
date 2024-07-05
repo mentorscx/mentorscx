@@ -240,7 +240,7 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
       <CardHeader>
         <CardTitle className="text-2xl">Weekly Recurrence</CardTitle>
         <CardDescription>
-          Set up your recurrent availability - set times repeat weekly
+          Set up your recurrent availability. The set times repeat weekly.
         </CardDescription>
       </CardHeader>
 

@@ -98,9 +98,6 @@ export const MyCalendar = ({ user }: MyCalendarProps) => {
     }
   };
 
-  console.log("rendered again");
-  console.log(showDeleteAlert);
-
   const handleSelectEvent = async (event: Event) => {
     const { id } = event;
     setShowDeleteAlert(true);

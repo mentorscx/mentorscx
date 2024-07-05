@@ -54,21 +54,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { saveUserChallengeById } from "@/lib/actions/user.action";
 import { Input } from "@/components/ui/input";
-
-const timeZones = [
-  { label: "America/New_York (Eastern Time)", value: "America/New_York" },
-  { label: "Europe/London (Greenwich Mean Time)", value: "Europe/London" },
-  { label: "Asia/Tokyo (Japan Standard Time)", value: "Asia/Tokyo" },
-  { label: "Europe/Berlin (Central European Time)", value: "Europe/Berlin" },
-  { label: "America/Los_Angeles (Pacific Time)", value: "America/Los_Angeles" },
-  {
-    label: "Australia/Sydney (Australian Eastern Time)",
-    value: "Australia/Sydney",
-  },
-  { label: "Asia/Shanghai (China Standard Time)", value: "Asia/Shanghai" },
-  { label: "Asia/Dubai (Gulf Standard Time)", value: "Asia/Dubai" },
-  { label: "Asia/Kolkata (India Standard Time)", value: "Asia/Kolkata" },
-] as const;
+import { TIMEZONES } from "@/constants/data";
 
 const FormSchema = z.object({
   timeZone: z.string({
@@ -108,6 +94,8 @@ export function OnboardChallengeForm({
 }: RecommendedByFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const defaultMeetingURL =
     meetingPreference === "zoom" ? zoomLink : googleMeetLink;
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -150,7 +138,7 @@ export function OnboardChallengeForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Time zone</FormLabel>
-              <Popover>
+              <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -161,7 +149,7 @@ export function OnboardChallengeForm({
                       )}
                     >
                       {field.value
-                        ? timeZones.find(
+                        ? TIMEZONES.find(
                             (timeZone) => timeZone.value === field.value
                           )?.label
                         : "select time zone"}
@@ -169,17 +157,17 @@ export function OnboardChallengeForm({
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[400px] p-0">
+                <PopoverContent className="w-[400px] p-0 h-[300px] overflow-y-auto">
                   <Command>
-                    <CommandInput placeholder="Search timeZone..." />
                     <CommandEmpty>No time zone found.</CommandEmpty>
                     <CommandGroup>
-                      {timeZones.map((timeZone) => (
+                      {TIMEZONES.map((timeZone) => (
                         <CommandItem
                           value={timeZone.label}
                           key={timeZone.value}
                           onSelect={() => {
                             form.setValue("timeZone", timeZone.value);
+                            setOpen(false);
                           }}
                         >
                           <Check
@@ -194,6 +182,7 @@ export function OnboardChallengeForm({
                         </CommandItem>
                       ))}
                     </CommandGroup>
+                    <CommandInput placeholder="Search timeZone..." />
                   </Command>
                 </PopoverContent>
               </Popover>
@@ -220,7 +209,7 @@ export function OnboardChallengeForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="zoom">zoom</SelectItem>
+                    <SelectItem value="zoom">Zoom</SelectItem>
                     <SelectItem value="google-meet">Google Meet</SelectItem>
                   </SelectContent>
                 </Select>
@@ -242,7 +231,7 @@ export function OnboardChallengeForm({
                 <Input
                   {...field}
                   placeholder={`Enter ${
-                    meetingPref === "zoom" ? "zoom" : "google-meet"
+                    meetingPref === "zoom" ? "Zoom" : "Google Meet"
                   } url here`}
                 />
                 <FormMessage />

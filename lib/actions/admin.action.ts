@@ -1,6 +1,8 @@
 "use server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import { sendEmailViaBrevoTemplate } from "../brevo";
+import { user } from "@nextui-org/react";
 
 export async function hasAdminAccess() {
   try {
@@ -58,6 +60,13 @@ export async function updateMentorApplicationStatus({
           },
         });
       }
+
+      // send email if the application is approved
+      await sendEmailViaBrevoTemplate({
+        templateId: 5,
+        email: application.email,
+        name: application.firstname,
+      });
     }
 
     return application;

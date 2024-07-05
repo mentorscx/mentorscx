@@ -160,7 +160,7 @@ export default function MobileMenu() {
 
             <li>
               <Link
-                href="/subscribe"
+                href="/waitlist"
                 className="btn-sm text-gray-200 bg-primary hover:bg-gray-800 w-full my-2"
                 onClick={() => setMobileNavOpen(false)}
               >

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { addWeeks, parseISO, formatISO } from "date-fns";
+import { addWeeks, parseISO } from "date-fns";
 
 type ScheduleItem = {
   day: string;

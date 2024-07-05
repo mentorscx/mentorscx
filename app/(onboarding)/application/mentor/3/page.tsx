@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Loader2, ArrowRight } from "lucide-react";
 import { z } from "zod";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -14,13 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useLocalStorage, useReadLocalStorage, useIsClient } from "usehooks-ts";
+import { useLocalStorage, useIsClient } from "usehooks-ts";
 
 const financialMotivationFactorOptions = [
   { label: "1", value: "1" },
@@ -83,6 +82,12 @@ const ProfileInfoPage = () => {
       setIsSubmitting(false);
     }
   }
+
+  const watchedFields = useWatch({ control: form.control });
+
+  useEffect(() => {
+    setMentorOnboardData({ ...mentorOnboardData, ...watchedFields });
+  }, [watchedFields]);
 
   if (!isClient) return null;
 

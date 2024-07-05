@@ -21,7 +21,7 @@ export default function CtaDark() {
               <div>
                 <Link
                   className="btn group bg-blue-600 text-white hover:bg-blue-700"
-                  href="/subscribe"
+                  href="/waitlist"
                 >
                   Get started{" "}
                   <span className="ml-3 text-xl tracking-normal text-white transition-transform duration-150 ease-in-out group-hover:translate-x-0.5">

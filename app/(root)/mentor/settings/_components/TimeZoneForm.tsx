@@ -43,21 +43,7 @@ import { updateUser } from "@/lib/actions/user.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { User } from "@prisma/client";
-
-const timeZones = [
-  { label: "America/New_York (Eastern Time)", value: "America/New_York" },
-  { label: "Europe/London (Greenwich Mean Time)", value: "Europe/London" },
-  { label: "Asia/Tokyo (Japan Standard Time)", value: "Asia/Tokyo" },
-  { label: "Europe/Berlin (Central European Time)", value: "Europe/Berlin" },
-  { label: "America/Los_Angeles (Pacific Time)", value: "America/Los_Angeles" },
-  {
-    label: "Australia/Sydney (Australian Eastern Time)",
-    value: "Australia/Sydney",
-  },
-  { label: "Asia/Shanghai (China Standard Time)", value: "Asia/Shanghai" },
-  { label: "Asia/Dubai (Gulf Standard Time)", value: "Asia/Dubai" },
-  { label: "Asia/Kolkata (India Standard Time)", value: "Asia/Kolkata" },
-] as const;
+import { TIMEZONES } from "@/constants/data";
 
 const FormSchema = z.object({
   timeZone: z.string({
@@ -71,6 +57,7 @@ interface TimeZoneProps {
 }
 
 export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const [valueChanged, setValueChange] = useState(false);
 
@@ -109,7 +96,7 @@ export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
               name="timeZone"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <Popover>
+                  <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
@@ -121,7 +108,7 @@ export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
                           )}
                         >
                           {field.value
-                            ? timeZones.find(
+                            ? TIMEZONES.find(
                                 (timeZone) => timeZone.value === field.value
                               )?.label
                             : "Select timeZone"}
@@ -129,18 +116,19 @@ export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[400px] p-0">
+                    <PopoverContent className="w-[400px] p-0 max-h-[300px] overflow-y-auto">
                       <Command>
                         <CommandInput placeholder="Search timeZone..." />
                         <CommandEmpty>No time zone found.</CommandEmpty>
                         <CommandGroup>
-                          {timeZones.map((timeZone) => (
+                          {TIMEZONES.map((timeZone) => (
                             <CommandItem
                               value={timeZone.label}
                               key={timeZone.value}
                               onSelect={() => {
                                 form.setValue("timeZone", timeZone.value);
                                 setValueChange(true);
+                                setOpen(false);
                               }}
                             >
                               <Check

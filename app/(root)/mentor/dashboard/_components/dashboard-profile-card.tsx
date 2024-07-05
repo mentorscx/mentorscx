@@ -29,7 +29,7 @@ const DashBoardProfileCard = ({
   reviews,
 }: DashBoardProfileCardProps) => {
   return (
-    <section className="lg:mt-4 p-6 border shadow rounded-lg bg-background md:pl-6 col-span-1">
+    <section className="p-6 border shadow rounded-lg bg-background md:pl-6 col-span-1 min-h-[250px] h-full">
       <div className="flex items-center justify-center flex-col gap-1">
         <Avatar className="w-20 h-20">
           <AvatarImage src={userImage} alt={userName} />
