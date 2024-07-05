@@ -532,7 +532,7 @@ const ProfileInfoPage = () => {
                 >
                   <Link
                     href={
-                      mentorOnboardData?.anticipatedSessionRate === "no"
+                      mentorOnboardData?.chargesForMentorship === "no"
                         ? "/application/mentor/2"
                         : "/application/mentor/3"
                     }
