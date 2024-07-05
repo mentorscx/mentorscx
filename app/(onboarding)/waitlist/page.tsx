@@ -22,10 +22,10 @@ export default function AuthenticationPage() {
         <div className="max-md:container sm:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-4 ">
-              <h1 className="text-3xl font-bold text-center tracking-tight sm:text-4xl">
+              <h1 className="text-2xl font-bold text-center tracking-tight sm:text-3xl">
                 The CX community that grows your career
               </h1>
-              <p className="text-sm text-muted-foreground text-start">
+              <p className="text-sm text-muted-foreground">
                 Whether you&apos;re a seasoned professional eager to share your
                 knowledge or someone hungry for insights, our platform is your
                 gateway to a community that thrives on learning and growth.

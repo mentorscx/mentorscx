@@ -7,7 +7,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/chatgpt",
   "/blog",
   "/blog/(.*)",
-  "/subscribe",
+  "/waitlist",
   "/support",
   "/docs/(.*)",
   "/dashboard/profile/(.*)",
