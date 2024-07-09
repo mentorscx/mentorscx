@@ -16,7 +16,8 @@ const MessageMe = (props: MessageMeProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  console.table(props);
+  const isDisabled =
+    isLoading || props.currentUserClerkId === props.currentUserClerkId;
 
   const setActiveUsers = useConversationStore((state) => state.activeUsers);
 
@@ -38,7 +39,7 @@ const MessageMe = (props: MessageMeProps) => {
         className="rounded-full"
         variant="outline"
         onClick={handleClick}
-        disabled={isLoading}
+        disabled={isDisabled}
       >
         {isLoading ? (
           <Loader2Icon className="w-5 h-5 mr-1" />

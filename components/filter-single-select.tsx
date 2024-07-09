@@ -3,7 +3,7 @@
 import qs from "query-string";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Select from "react-select";
 
 interface FilterProps {
@@ -64,9 +64,10 @@ const FilterSingleSelect: React.FC<FilterProps> = ({
         <Select
           options={data}
           className="w-full"
-          onChange={(data) => onSelect(data.label)}
+          onChange={(data) => onSelect(data?.label)}
           defaultValue={getDefaultValues()}
           placeholder={placeholder}
+          isClearable={true}
         />
       </div>
     </div>

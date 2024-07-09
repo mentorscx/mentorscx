@@ -100,7 +100,6 @@ export async function getUsersWithProfileFilters(searchParams: any) {
     const priceFilter: string = searchParams.price;
     const sortFilter: string = searchParams.sort;
     const searchQuery: string = searchParams.search;
-    console.log("searchParams", searchParams);
 
     let query: any = {};
     const filters: any = [];
@@ -206,6 +205,12 @@ export async function getUsersWithProfileFilters(searchParams: any) {
       sortBy = {
         price: "asc",
       };
+    } else if (sortFilter === "Total sessions") {
+      sortBy = {
+        sessionsGiven: {
+          _count: "desc",
+        },
+      };
     }
 
     // Search
@@ -225,6 +230,16 @@ export async function getUsersWithProfileFilters(searchParams: any) {
           },
           {
             shortBio: {
+              search: searchQuery,
+            },
+          },
+          {
+            position: {
+              search: searchQuery,
+            },
+          },
+          {
+            organization: {
               search: searchQuery,
             },
           },

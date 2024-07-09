@@ -3,19 +3,7 @@ import FilterSingleSelect from "@/components/filter-single-select";
 import Filter from "@/components/filter-button";
 
 import React from "react";
-
-interface CategoryPageProps {
-  params: {
-    categoryId: string;
-  };
-  searchParams: {
-    countries: string;
-    industries: string;
-    languages: string;
-    skills: string;
-    price: string;
-  };
-}
+import { Card } from "@/components/ui/card";
 
 export interface Billboard {
   id: string;
@@ -227,34 +215,48 @@ const expertise: Skill[] = [
   },
 ];
 
-const ProfileFilters = () => {
+interface Option {
+  id: string;
+  label: string;
+  value: string;
+}
+
+type ProfileFilters = {
+  tools: Option[];
+  industries: Option[];
+  expertise: Option[];
+  countries: Option[];
+  languages: Option[];
+};
+
+const ProfileFilters = (props: ProfileFilters) => {
   return (
-    <div className="bg-white min-h-screen w-[250px] rounded border shadow">
+    <Card className="min-h-screen w-[250px]">
       <div className="hidden lg:block px-3">
         <FilterSingleSelect
           valueKey="countries"
           name="Country"
-          data={countries}
+          data={props.countries}
         />
         <FilterMultiSelect
           valueKey="languages"
           name="Languages"
-          data={languages}
+          data={props.languages}
         />
         <FilterMultiSelect
           valueKey="industries"
           name="Industries"
-          data={industries}
+          data={props.industries}
         />
         <FilterMultiSelect
           valueKey="expertise"
           name="Expertise"
-          data={expertise}
+          data={props.expertise}
         />
-        <FilterMultiSelect valueKey="tools" name="Tools" data={skills} />
+        <FilterMultiSelect valueKey="tools" name="Tools" data={props.tools} />
         <Filter data={prices} name="Price" valueKey="price" />
       </div>
-    </div>
+    </Card>
   );
 };
 
