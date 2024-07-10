@@ -4,6 +4,7 @@ import { getUsersWithProfileFilters } from "@/lib/actions/user.action";
 import ProfileSearchFilters from "./_components/profile-search-filters";
 
 import type { Metadata } from "next";
+import ProfileEmptyList from "./_components/profile-empty-list";
 
 export const metadata: Metadata = {
   title: "Search Mentors | Mentors CX",
@@ -107,6 +108,7 @@ const searchPage = async ({ searchParams }: ProfilesPageProps) => {
             />
           </section>
           <section className="mt-6">
+            {users.length === 0 && <ProfileEmptyList />}
             {users.length > 0 ? (
               <ProfileList users={JSON.stringify(users)} />
             ) : null}

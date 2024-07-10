@@ -216,31 +216,33 @@ export async function getUsersWithProfileFilters(searchParams: any) {
     // Search
     let search = {};
     if (searchQuery) {
+      const searchTerm = searchQuery.trim().replaceAll(" ", " & ");
+
       search = {
         OR: [
           {
             username: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
           {
             bio: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
           {
             shortBio: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
           {
             position: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
           {
             organization: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
         ],
