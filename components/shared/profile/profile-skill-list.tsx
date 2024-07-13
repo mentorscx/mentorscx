@@ -32,7 +32,7 @@ const ProfileSkillList = ({
     <Card className="max-w-4xl mx-auto mt-4">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <h3 className="text-xl">{name}</h3>
+          <div className="text-xl">{name}</div>
           {canEdit && <AddItemAction dataType={dataType} />}
         </CardTitle>
       </CardHeader>

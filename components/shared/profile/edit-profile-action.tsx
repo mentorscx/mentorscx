@@ -5,6 +5,7 @@ import { useEditProfileStore } from "@/hooks/use-edit-profile-store";
 
 import { useModal } from "@/hooks/use-modal-store";
 import { EyeIcon, PencilIcon } from "lucide-react";
+import { useIsClient } from "usehooks-ts";
 
 interface EditBioActionProps {
   dataType: string;

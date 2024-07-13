@@ -1,3 +1,4 @@
+"use client";
 import {
   Channel,
   ChannelHeader,
@@ -7,10 +8,9 @@ import {
   Window,
 } from "stream-chat-react";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useChatContext } from "stream-chat-react";
 import useConversationStore from "@/hooks/use-conversation-store";
-import { channel } from "diagnostics_channel";
 
 interface ChatChannelProps {
   show: boolean;
@@ -20,6 +20,7 @@ interface ChatChannelProps {
 const ActiveChannelSetter = () => {
   const { client, setActiveChannel } = useChatContext();
   const activeUsers = useConversationStore((state) => state.users);
+  const clearUsers = useConversationStore((state) => state.clearUsers);
 
   useEffect(() => {
     if (activeUsers.length > 1) {
@@ -28,6 +29,10 @@ const ActiveChannelSetter = () => {
       });
       setActiveChannel(channel);
     }
+
+    return () => {
+      clearUsers();
+    };
   }, []);
 
   return null;
@@ -39,8 +44,8 @@ export default function ChatChannel({
 }: ChatChannelProps) {
   return (
     <div className={`h-full w-full ${show ? "block" : "hidden"}`}>
-      <ActiveChannelSetter />
       <Channel>
+        <ActiveChannelSetter />
         <Window hideOnThread={hideChannelOnThread}>
           <ChannelHeader />
           <MessageList />

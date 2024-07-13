@@ -30,7 +30,8 @@ const ProfileBioPage = ({
       <Card className="max-w-4xl mx-auto mt-4">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <h3 className="text-xl">Bio</h3>
+            <div className="text-xl">Bio</div>
+
             {canEdit && <EditBioAction id={id} bio={bio} dataType={dataType} />}
           </CardTitle>
         </CardHeader>
