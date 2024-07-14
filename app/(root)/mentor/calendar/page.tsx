@@ -7,8 +7,8 @@ import type { Metadata } from "next";
 import { db } from "@/lib/db";
 
 import { Role } from "@prisma/client";
-import BookingCalendarDetails from "@/components/shared/booking-calendar-details";
-import BookingCalendarMain from "@/components/shared/booking-calendar-main";
+import BookingCalendarDetails from "@/components/shared/calendar/booking-calendar-details";
+import BookingCalendarMain from "@/components/shared/calendar/booking-calendar-main";
 import { generateEventsForNextYear } from "@/lib/helpers/recurring";
 
 export const metadata: Metadata = {
@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 };
 
 const CalendarPage = async () => {
-  // Get clerk Auth return if nothing
   const { userId } = auth();
   if (!userId) {
     redirect("/login");
@@ -38,11 +37,19 @@ const CalendarPage = async () => {
       duration: true,
       price: true,
       weeklyAvailability: true,
+      maxSessions: true,
       role: true,
       isOnboarded: true,
       expertise: {
         select: {
           name: true,
+        },
+      },
+      sessionsGiven: {
+        select: {
+          start: true,
+          end: true,
+          status: true,
         },
       },
       events: {
@@ -132,6 +139,8 @@ const CalendarPage = async () => {
               mentorId={user.id}
               price={user.price}
               expertise={user.expertise}
+              sessions={user.sessionsGiven}
+              maxSessions={user.maxSessions}
             />
           </div>
         </div>
