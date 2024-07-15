@@ -19,16 +19,31 @@ const isPublicRoute = createRouteMatcher([
   "/application/mentor/(.*)",
 ]);
 
+const isWaitlistRoute = createRouteMatcher(["/waitlist"]);
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isMentorRoute = createRouteMatcher(["/mentor(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   // Only protect non-public routes
-  if (!isPublicRoute(req)) {
-    // Apply additional protection based on routes
+  const { userId, sessionClaims, redirectToSignIn } = auth();
 
-    auth().protect();
+  // For users visiting /onboarding, don't try to redirect
+  if (isWaitlistRoute(req)) {
+    return NextResponse.next();
+  }
+
+  // If the user isn't signed in and the route is private, redirect to sign-in
+  if (!userId && !isPublicRoute(req)) return redirectToSignIn();
+
+  // Apply additional protection based on routes
+  if (!isPublicRoute(req)) auth().protect();
+
+  // Catch users who do not have `hasAccess: true` in their publicMetadata
+  const claims = sessionClaims as any;
+  if (!userId || !claims?.metadata?.hasAccess) {
+    const waitlistUrl = new URL("/waitlist", req.url);
+    return NextResponse.redirect(waitlistUrl);
   }
 });
 
