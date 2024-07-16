@@ -4,6 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
+import { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,6 +39,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
     resolver: zodResolver(formUserSchema),
     defaultValues: {
       email: "",
+      role: undefined,
     },
   });
 
@@ -45,13 +50,19 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formUserSchema>) {
     try {
-      console.log(values);
       const result = await addSubscribeUser(values.email, values.role);
 
       if (!result) {
         toast.error("Something went wrong. Please try again.");
       } else {
-        toast.success("You have been added to the waitlist!");
+        withReactContent(Swal).fire({
+          title: "Added to the waitlist!",
+          text: "You have been added. we will get back to you shortly.",
+          icon: "success",
+          confirmButtonText: "Got it!",
+          confirmButtonColor: "#3b82f6",
+        });
+        form.reset();
         router.push("/");
       }
     } catch (error) {
