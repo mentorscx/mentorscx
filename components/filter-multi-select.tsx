@@ -65,7 +65,7 @@ const FilterMultiSelect: React.FC<FilterProps> = ({
 
   const getDefaultValues = () => {
     const params = searchParams.get(valueKey)?.split(",");
-    const defaultValues = data.filter((item) => params?.includes(item.value));
+    const defaultValues = data?.filter((item) => params?.includes(item.value));
     return defaultValues;
   };
 

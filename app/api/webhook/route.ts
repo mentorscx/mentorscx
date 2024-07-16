@@ -1,6 +1,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
 
@@ -57,6 +58,7 @@ export async function POST(req: Request) {
     const applicationData = await db.mentorApplication.findUnique({
       where: {
         email: email_addresses[0].email_address,
+        applicationStatus: "ACCEPTED",
       },
     });
 
@@ -71,6 +73,12 @@ export async function POST(req: Request) {
           linkedinProfile: applicationData?.linkedinUrl,
           maxSessions: Number(applicationData?.weeklySessions) || 5,
           role: "MENTOR",
+        },
+      });
+
+      await clerkClient.users.updateUserMetadata(id, {
+        publicMetadata: {
+          hasAccess: true,
         },
       });
     } else {

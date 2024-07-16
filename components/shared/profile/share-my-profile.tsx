@@ -22,6 +22,7 @@ const ShareOwnProfile = ({ path, title }: ShareOwnProfileProps) => {
       },
     });
   };
+
   return (
     <div>
       <Button variant="secondary" onClick={handleClick}>

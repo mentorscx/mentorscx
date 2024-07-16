@@ -116,10 +116,11 @@ export function splitEventToSessions(
 
 export function getInitials(fullName: string): string {
   // Split the name into parts based on spaces
+
   const parts = fullName.trim().split(" ");
 
   // Ensure there are at least two parts for first and last name
-  if (parts.length < 2) {
+  if (parts.length < 1) {
     throw new Error("Please provide both first and last names.");
   }
 

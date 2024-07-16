@@ -37,7 +37,7 @@ model User {
   city                String?
   country             String?
   location            String?
-  role                Role?        @default(MENTOR)
+  role                Role?        @default(MENTEE)
   languages           Language[]
   expertise           Expertise[]
   toolkit             Tool[]

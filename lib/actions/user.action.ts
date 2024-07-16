@@ -100,7 +100,6 @@ export async function getUsersWithProfileFilters(searchParams: any) {
     const priceFilter: string = searchParams.price;
     const sortFilter: string = searchParams.sort;
     const searchQuery: string = searchParams.search;
-    console.log("searchParams", searchParams);
 
     let query: any = {};
     const filters: any = [];
@@ -206,26 +205,44 @@ export async function getUsersWithProfileFilters(searchParams: any) {
       sortBy = {
         price: "asc",
       };
+    } else if (sortFilter === "Total sessions") {
+      sortBy = {
+        sessionsGiven: {
+          _count: "desc",
+        },
+      };
     }
 
     // Search
     let search = {};
     if (searchQuery) {
+      const searchTerm = searchQuery.trim().replaceAll(" ", " & ");
+
       search = {
         OR: [
           {
             username: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
           {
             bio: {
-              search: searchQuery,
+              search: searchTerm,
             },
           },
           {
             shortBio: {
-              search: searchQuery,
+              search: searchTerm,
+            },
+          },
+          {
+            position: {
+              search: searchTerm,
+            },
+          },
+          {
+            organization: {
+              search: searchTerm,
             },
           },
         ],

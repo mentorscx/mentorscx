@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2Icon, MessageCircleIcon } from "lucide-react";
 import useConversationStore from "@/hooks/use-conversation-store";
 import { redirect, useRouter } from "next/navigation";
+import { useIsClient } from "usehooks-ts";
 
 type MessageMeProps = {
   currentUserClerkId: string | null;
@@ -14,9 +15,11 @@ type MessageMeProps = {
 
 const MessageMe = (props: MessageMeProps) => {
   const router = useRouter();
+  const isClient = useIsClient();
   const [isLoading, setIsLoading] = useState(false);
 
-  console.table(props);
+  const isDisabled =
+    isLoading || props.currentUserClerkId === props.otherUserClerkId;
 
   const setActiveUsers = useConversationStore((state) => state.activeUsers);
 
@@ -32,13 +35,15 @@ const MessageMe = (props: MessageMeProps) => {
     router.push(props.redirectUrl);
   };
 
+  if (!isClient) return null;
+
   return (
     <div>
       <Button
         className="rounded-full"
         variant="outline"
         onClick={handleClick}
-        disabled={isLoading}
+        disabled={isDisabled}
       >
         {isLoading ? (
           <Loader2Icon className="w-5 h-5 mr-1" />

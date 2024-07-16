@@ -4,6 +4,7 @@ import { SearchInput } from "./search-input";
 import FilterSingleSelect from "@/components/filter-single-select";
 import MobileFilters from "@/components/mobile-filters";
 import { industryData, languageData } from "@/constants/data";
+import { Card } from "@/components/ui/card";
 
 interface Option {
   id?: string;
@@ -25,6 +26,10 @@ const sortData: Option[] = [
   {
     value: "desc",
     label: "Price: high to low",
+  },
+  {
+    value: "Total sessions",
+    label: "Total sessions",
   },
 ];
 
@@ -143,28 +148,29 @@ const industries: Option[] = [
   },
 ];
 
-interface ProfileSearchFiltersProps {
-  searchParams: {
-    query?: string;
-    sort?: string;
-  };
-}
+type ProfileSearchFiltersProps = {
+  tools: Option[];
+  industries: Option[];
+  expertise: Option[];
+  countries: Option[];
+  languages: Option[];
+};
 
-const ProfileSearchFilters = () => {
+const ProfileSearchFilters = (props: ProfileSearchFiltersProps) => {
   return (
-    <div className=" max-w-[1100px] mx-3 md:mx-6 bg-white  mt-3 md:mt-6 p-3 rounded border shadow">
+    <Card className=" max-w-[1100px] mx-3 md:mx-6 mt-3 md:mt-6 p-3">
       <div className="md:flex items-center justify-between space-y-3">
         <div className="w-full md:w-[400px]">
           <SearchInput />
         </div>
         <div className="flex md:block justify-between items-center p-1 h-fit ">
           <MobileFilters
-            languages={languageData}
-            countries={countries}
-            expertise={expertise}
-            skills={skills}
+            languages={props.languages}
+            countries={props.countries}
+            expertise={props.expertise}
+            skills={props.tools}
             prices={prices}
-            industries={industryData}
+            industries={props.industries}
           />
 
           <div className="w-[200px]">
@@ -178,7 +184,7 @@ const ProfileSearchFilters = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -246,8 +246,8 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => (
-          <CardContent>
-            <section className="flex gap-4 flex-wrap" key={field.id}>
+          <CardContent key={field.id}>
+            <section className="flex gap-4 flex-wrap">
               <Controller
                 control={control}
                 name={`schedule.${index}.day`}

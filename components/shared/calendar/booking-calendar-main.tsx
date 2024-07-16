@@ -6,13 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { SessionDetailsForm } from "./session-details-form";
+import { SessionDetailsForm } from "../session-details-form";
 import { formatAMPM } from "@/lib/format";
-import {
-  convertEventsToTimezone,
-  createTimeSlots,
-  getDisabledDays,
-} from "@/lib/helpers/calendar";
+import { getDisabledDays } from "@/lib/helpers/calendar";
+import { Session } from "@prisma/client";
+import { getAvailableSlots } from "./calendar-server";
 
 type Event = {
   start: Date;
@@ -27,6 +25,8 @@ type BookingCalendarMainProps = {
   price: number;
   mentorId: string;
   expertise: { name: string }[];
+  maxSessions: number | null;
+  sessions: Pick<Session, "start" | "end" | "status">[];
 };
 
 type CalanderSidebarProps = {
@@ -126,59 +126,22 @@ const CalanderSidebar = ({
   );
 };
 
-const BookingCalendarMain = ({
-  individualEvents,
-  timeZone,
-  weeklyEvents,
-  price,
-  duration,
-  mentorId,
-  expertise,
-}: BookingCalendarMainProps) => {
+const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const [date, setDate] = React.useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = React.useState<Event | null>(null);
   const [openForm, setOpenForm] = React.useState(false);
 
-  const today = utcToZonedTime(new Date(), timeZone); // Getting today's date
+  const today = utcToZonedTime(new Date(), props.timeZone); // Getting today's date
   const threeMonthsLater = new Date(); // Copying today's date
   threeMonthsLater.setMonth(today.getMonth() + 3); // Setting it to three months from now
 
-  const handleOpenForm = () => {
-    setOpenForm(!openForm);
-  };
+  const handleOpenForm = () => setOpenForm(!openForm);
 
-  const handleSelectSlot = (slot: Event) => {
-    setSelectedSlot(slot);
-  };
+  const handleSelectSlot = (slot: Event) => setSelectedSlot(slot);
 
-  // Convert events to the specified timezone
-  const convertedIndividualEvents = convertEventsToTimezone(
-    individualEvents,
-    timeZone
-  );
+  const uniqueAvailableSlots = getAvailableSlots(props);
 
-  const convertedWeeklyEvents = convertEventsToTimezone(weeklyEvents, timeZone);
-
-  const allAvailableEvents = [
-    ...convertedIndividualEvents,
-    ...convertedWeeklyEvents,
-  ];
-
-  const disabledDays = getDisabledDays(convertedIndividualEvents);
-  const availableTimeSlots = createTimeSlots(allAvailableEvents, duration);
-
-  // Remove duplicate slots in available time slots
-  const uniqueSlots = new Set<string>();
-  const uniqueAvailableTimeSlots = availableTimeSlots.filter((slot) => {
-    const slotStr = `${slot.start.getTime()}-${slot.end.getTime()}`;
-    if (uniqueSlots.has(slotStr)) {
-      return false;
-    }
-    uniqueSlots.add(slotStr);
-    return true;
-  });
-
-  const eventSlots = filterTimeSlotsByDate(uniqueAvailableTimeSlots, date);
+  const eventSlots = filterTimeSlotsByDate(uniqueAvailableSlots, date);
   const availableSlots = [...eventSlots];
 
   const handleSelectDate = (selectedDate: Date) => {
@@ -186,7 +149,7 @@ const BookingCalendarMain = ({
   };
 
   // Disabled dates for next 3months, which are not in the timeslots
-  const disabledDates = getDisabledDays(uniqueAvailableTimeSlots);
+  const disabledDates = getDisabledDays(uniqueAvailableSlots);
 
   return (
     <div className="w-full">
@@ -225,15 +188,15 @@ const BookingCalendarMain = ({
               category: "",
               outcome: "",
               menteeId: "",
-              mentorId,
+              mentorId: props.mentorId,
               start: selectedSlot?.start || new Date(),
               end: selectedSlot?.end || new Date(),
-              price,
-              duration,
+              price: props.price,
+              duration: props.duration,
               acceptTerms: false,
             }}
-            timeZone={timeZone}
-            expertise={expertise}
+            timeZone={props.timeZone}
+            expertise={props.expertise}
           />
         </div>
       )}

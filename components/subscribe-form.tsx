@@ -4,6 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
+import { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,6 +39,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
     resolver: zodResolver(formUserSchema),
     defaultValues: {
       email: "",
+      role: undefined,
     },
   });
 
@@ -45,13 +50,19 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formUserSchema>) {
     try {
-      console.log(values);
       const result = await addSubscribeUser(values.email, values.role);
 
       if (!result) {
         toast.error("Something went wrong. Please try again.");
       } else {
-        toast.success("You have been added to the waitlist!");
+        withReactContent(Swal).fire({
+          title: "Added to the waitlist!",
+          text: "You have been added. We will get back to you shortly.",
+          icon: "success",
+          confirmButtonText: "Cool!",
+          confirmButtonColor: "#3b82f6",
+        });
+        form.reset();
         router.push("/");
       }
     } catch (error) {
@@ -71,7 +82,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="example@mentors.cx" {...field} />
+                  <Input placeholder="example@mentorscx.com" {...field} />
                 </FormControl>
                 <FormDescription>
                   Please enter your email address.
@@ -85,7 +96,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>I interested in being a</FormLabel>
+                <FormLabel>I'm interested in being a</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -102,7 +113,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  select a role you are interested in
+                  Select a role you are interested in.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
