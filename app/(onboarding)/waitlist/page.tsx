@@ -29,13 +29,18 @@ export default function AuthenticationPage() {
                 The CX community that grows your career
               </h1>
               <p className="text-sm text-muted-foreground text-start">
+                Mentors CX is a customer experience mentorship platform where
+                you can book 1:1 calls with industry professionals to advance
+                your career or grow your business.
+              </p>
+              <p className="text-sm text-muted-foreground text-start">
                 Whether you&apos;re a seasoned professional eager to share your
                 knowledge or someone hungry for insights, our customer
                 experience mentorship platform is your gateway to a community
                 that thrives on learning and growth.
               </p>
               <p className="text-sm font-bold text-start">
-                Join the waitlist now and be part of the CX transformative wave.
+                Join the waitlist now and be part of the transformative CX wave.
               </p>
             </div>
             <SubscribeForm />

@@ -57,9 +57,9 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
       } else {
         withReactContent(Swal).fire({
           title: "Added to the waitlist!",
-          text: "You have been added. we will get back to you shortly.",
+          text: "You have been added. We will get back to you shortly.",
           icon: "success",
-          confirmButtonText: "Got it!",
+          confirmButtonText: "Cool!",
           confirmButtonColor: "#3b82f6",
         });
         form.reset();
