@@ -23,13 +23,17 @@ const isWaitlistRoute = createRouteMatcher(["/waitlist"]);
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isMentorRoute = createRouteMatcher(["/mentor(.*)"]);
+const isMentorApplicationRoute = createRouteMatcher([
+  "/application/mentor",
+  "/application/mentor/(.*)",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
   // Only protect non-public routes
   const { userId, sessionClaims, redirectToSignIn } = auth();
 
   // For users visiting /onboarding, don't try to redirect
-  if (isWaitlistRoute(req)) {
+  if (isWaitlistRoute(req) || isMentorApplicationRoute(req)) {
     return NextResponse.next();
   }
 
