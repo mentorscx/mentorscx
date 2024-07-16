@@ -82,7 +82,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="example@mentors.cx" {...field} />
+                  <Input placeholder="example@mentorscx.com" {...field} />
                 </FormControl>
                 <FormDescription>
                   Please enter your email address.
@@ -96,7 +96,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>I interested in being a</FormLabel>
+                <FormLabel>I'm interested in being a</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -113,7 +113,7 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  select a role you are interested in
+                  Select a role you are interested in.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
