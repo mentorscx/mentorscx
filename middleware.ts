@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/",
-  "/api/webhook",
-  "/api/chatgpt",
   "/blog",
   "/blog/(.*)",
   "/waitlist",
@@ -14,7 +12,6 @@ const isPublicRoute = createRouteMatcher([
   "/privacy",
   "/about",
   "/pricing",
-  "/api/uploadthing",
   "/application/mentor",
   "/application/mentor/(.*)",
 ]);
@@ -27,13 +24,22 @@ const isMentorApplicationRoute = createRouteMatcher([
   "/application/mentor",
   "/application/mentor/(.*)",
 ]);
+const isAPIRoute = createRouteMatcher([
+  "/api/webhook",
+  "/api/chatgpt",
+  "/api/uploadthing",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
   // Only protect non-public routes
   const { userId, sessionClaims, redirectToSignIn } = auth();
 
   // For users visiting /onboarding, don't try to redirect
-  if (isWaitlistRoute(req) || isMentorApplicationRoute(req)) {
+  if (
+    isWaitlistRoute(req) ||
+    isMentorApplicationRoute(req) ||
+    isAPIRoute(req)
+  ) {
     return NextResponse.next();
   }
 
