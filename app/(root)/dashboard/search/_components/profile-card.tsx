@@ -11,19 +11,13 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
 import { formatMonthYear } from "@/lib/format";
+import RequestSessionButton from "@/components/shared/request-session-button";
 
 interface ProfileCardProps {
   user: string;
@@ -243,10 +237,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           <Button asChild variant="outline" size="lg">
             <Link href={`/dashboard/profile/${id}`}>View profile</Link>
           </Button>
-
-          <Button size="lg" asChild>
-            <Link href={`/dashboard/schedule/${id}`}>Book session</Link>
-          </Button>
+          <RequestSessionButton mentorId={id} />
         </div>
       </div>
     </Card>

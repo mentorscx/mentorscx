@@ -10,6 +10,7 @@ import { Role } from "@prisma/client";
 import BookingCalendarDetails from "@/components/shared/calendar/booking-calendar-details";
 import BookingCalendarMain from "@/components/shared/calendar/booking-calendar-main";
 import { generateEventsForNextYear } from "@/lib/helpers/recurring";
+import { fetchExternalEvents } from "@/lib/actions/clerk.action";
 
 export const metadata: Metadata = {
   title: "Calendar | Mentors CX",
@@ -31,6 +32,7 @@ const CalendarPage = async () => {
     select: {
       id: true,
       imageUrl: true,
+      clerkId: true,
       username: true,
       timeZone: true,
       meetingPreference: true,
@@ -89,6 +91,8 @@ const CalendarPage = async () => {
   //TODO: SET DEFAULT TIMEZONE IN PRISMA
   const timeZone = user?.timeZone || "America/New_York";
 
+  const calendarEvents = await fetchExternalEvents(user.clerkId);
+
   return (
     <div className="pt-[80px] min-h-screen p-3">
       <div className="w-full mt-4 max-w-5xl mx-auto p-3 border shadow rounded bg-background md:pl-6">
@@ -133,6 +137,7 @@ const CalendarPage = async () => {
           <div className="w-full basis-3/4">
             <BookingCalendarMain
               individualEvents={individualEvents}
+              externalEvents={calendarEvents}
               weeklyEvents={weeklyEvents}
               timeZone={timeZone}
               duration={user.duration}

@@ -4,6 +4,7 @@ import { MentorApplication } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
 import { sendEmailViaBrevoTemplate } from "../brevo";
+import { auth } from "@clerk/nextjs/server";
 
 type TProfileViewCount = {
   profileId: string;
@@ -140,3 +141,24 @@ export async function saveMentorApplication(mentorApplication: any) {
     throw err;
   }
 }
+
+export const hasPremiumAccess = async () => {
+  try {
+    const { userId: clerkId } = await auth();
+
+    if (!clerkId) {
+      return null;
+    }
+
+    // Add field condition of premium
+    const user = await db.user.findUnique({
+      where: {
+        clerkId,
+      },
+    });
+    console.log(user);
+    return user;
+  } catch (err) {
+    console.log("Unexpected error in hasPremiumAccess", err);
+  }
+};

@@ -50,7 +50,7 @@ const MentorScheduleMain = async () => {
     email.endsWith("@gmail.com")
   );
 
-  let externalEvents = await listEvents(googleConnectedEmails);
+  let externalEvents = await listEvents(googleConnectedEmails, clerkUser.id);
   const weeklyAvailability = user?.weeklyAvailability || {};
   const { schedule } = JSON.parse(JSON.stringify(weeklyAvailability)) || [];
   const events = generateEventsForNextYear(schedule);

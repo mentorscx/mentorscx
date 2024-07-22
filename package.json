@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.1.5",
+    "@date-fns/utc": "^1.2.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.2",
@@ -80,7 +81,7 @@
     "react": "^18",
     "react-big-calendar": "^1.8.5",
     "react-confetti": "^6.1.0",
-    "react-day-picker": "^8.9.1",
+    "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-draft-wysiwyg": "^1.15.0",
     "react-hook-form": "^7.48.2",

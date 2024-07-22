@@ -53,7 +53,7 @@ model User {
   recommendedBy       String?
   otherRecommendation String?
   companySize         String?
-  timeZone            String?
+  timeZone            String?      @default("America/New_York")
   weeklyAvailability  Json?
 
   calendarEmails String[] // Used to sync calendars

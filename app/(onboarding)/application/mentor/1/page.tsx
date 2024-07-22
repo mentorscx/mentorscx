@@ -79,7 +79,7 @@ const ProfileInfoPage = () => {
             title: "Thank you for your interest in becoming a mentor.",
             text: "Currently, we are seeking applicants with a minimum of 5 years of experience in customer experience, customer support, startups, or tech companies.",
             icon: "info",
-            confirmButtonText: "I will come back later!",
+            confirmButtonText: "I'll come back later!",
             confirmButtonColor: "#3b82f6",
           })
           .then((result) => {

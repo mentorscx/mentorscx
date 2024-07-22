@@ -6,51 +6,6 @@ type Event = {
   end: Date;
 };
 
-export function getDisabledDays(events: Event[]): Date[] {
-  const toDateString = (date: Date) => date.toISOString().split("T")[0];
-
-  // Define the 6 months period
-  const today = new Date();
-  const sixMonthsLater = new Date(today);
-  sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 4);
-
-  const enabledDates = new Set<string>();
-
-  // Populate enabledDates with dates from all events, adjusted to the 6 months range
-  events.forEach((event) => {
-    const eventStart = new Date(
-      Math.max(event.start.getTime(), today.getTime())
-    ); // Ensure event starts today or in the future
-    const eventEnd = new Date(
-      Math.min(event.end.getTime(), sixMonthsLater.getTime())
-    ); // Limit to 6 months range
-
-    for (
-      let d = new Date(eventStart);
-      d <= eventEnd;
-      d = new Date(d.setDate(d.getDate() + 1))
-    ) {
-      enabledDates.add(toDateString(d));
-    }
-  });
-
-  // Iterate through the 6 month period to find disabled dates
-  const disabledDates: Date[] = [];
-  for (
-    let d = new Date(today);
-    d <= sixMonthsLater;
-    d = new Date(d.setDate(d.getDate() + 1))
-  ) {
-    const dateString = toDateString(d);
-
-    if (!enabledDates.has(dateString)) {
-      disabledDates.push(new Date(d));
-    }
-  }
-
-  return disabledDates;
-}
-
 export function convertEventsToTimezone(
   events: Event[],
   timezone: string
