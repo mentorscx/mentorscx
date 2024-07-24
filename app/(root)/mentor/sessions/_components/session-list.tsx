@@ -18,7 +18,7 @@ const SessionList = ({ sessions }: SessionListProps) => {
         <div key={session.id}>
           <SessionCard
             session={session}
-            currUser={session.mentor}
+            currentUser={session.mentor}
             otherUser={session.mentee}
           />
         </div>

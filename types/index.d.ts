@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, Session } from "@prisma/client";
 import type { Icon } from "lucide-react";
 
 import { Icons } from "@/components/icons";
@@ -43,3 +43,9 @@ export interface SidebarLink {
   route: string;
   label: string;
 }
+
+export type TSession = {
+  session: Session;
+  otherUser: Pick<User, "username" | "imageUrl">;
+  currentUser: Pick<User, "id" | "role" | "timeZone">;
+};
