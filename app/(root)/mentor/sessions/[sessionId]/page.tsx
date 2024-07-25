@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { Role } from "@prisma/client";
 import SessionDetailsCard from "@/components/shared/sessions/session-details-card";
 import SessionHeader from "@/components/shared/sessions/session-header";
+import SessionChat from "@/components/shared/sessions/session-chat";
 
 interface SessionPageProps {
   params: {
@@ -33,6 +34,7 @@ const SessionPage = async ({ params }: SessionPageProps) => {
           imageUrl: true,
           position: true,
           organization: true,
+          clerkId: true,
         },
       },
       mentor: {
@@ -66,6 +68,9 @@ const SessionPage = async ({ params }: SessionPageProps) => {
         otherUser={session.mentee}
         currentUser={session.mentor}
       />
+
+      {/* SESSION CHAT*/}
+      <SessionChat otherId={session.mentee.clerkId} />
     </div>
   );
 };

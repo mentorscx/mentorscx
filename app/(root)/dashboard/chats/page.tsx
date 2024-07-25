@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 };
 
 const ChatsPage = () => {
-  return <MentorRedirectDialog isOpen={true} />;
-  // return <ChatLayout />;
+  return <ChatLayout />;
 };
 
 export default ChatsPage;
