@@ -22,8 +22,8 @@ const fetchSessionsData = async (clerkId: string): Promise<TSession[]> => {
     include: {
       sessionsReceived: {
         include: {
-          mentor: { select: { id: true, role: true, timeZone: true } },
-          mentee: { select: { username: true, imageUrl: true } },
+          mentee: { select: { id: true, role: true, timeZone: true } },
+          mentor: { select: { username: true, imageUrl: true } },
         },
       },
     },
@@ -32,8 +32,8 @@ const fetchSessionsData = async (clerkId: string): Promise<TSession[]> => {
   return (
     userWithSessions?.sessionsReceived.map((session) => ({
       session,
-      otherUser: session.mentee,
-      currentUser: session.mentor,
+      otherUser: session.mentor,
+      currentUser: session.mentee,
     })) || []
   );
 };

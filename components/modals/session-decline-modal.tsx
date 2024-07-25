@@ -30,6 +30,7 @@ import { useModal } from "@/hooks/use-modal-store";
 import { updateSession } from "@/lib/actions/session.action";
 import useInitializeChatChannel from "../chats/useInitializeChatChannel";
 import useChatStore from "@/hooks/use-chat-client-store";
+import { delay } from "@/lib/utils";
 
 const formSchema = z.object({
   reason: z.string().min(10, {
@@ -56,33 +57,86 @@ export const DeclineSessionModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const { reason } = values;
       const sessionId = session?.id;
       const sessionStatus = session?.status;
-      const { reason } = values;
 
-      toast.loading("Declining the session...");
       onClose();
 
-      const result = await updateSession({
-        id: sessionId,
-        status: sessionStatus,
-        declineReason: reason,
+      // Promise function that handles session update and message sending
+      const declineSessionPromise = async () => {
+        try {
+          // Update session details
+          const result = await updateSession({
+            id: sessionId,
+            status: sessionStatus,
+            declineReason: reason,
+          });
+
+          // Send message if channel is active
+          if (activeChannel) {
+            await activeChannel.sendMessage({
+              text: reason,
+            });
+          }
+
+          // Return result for toast promise handling
+          if (result) {
+            return true;
+          } else {
+            throw new Error("Decline failed");
+          }
+        } catch (error) {
+          console.error("Error updating session:", error);
+          throw new Error("Failed to update session");
+        }
+      };
+
+      toast.promise(declineSessionPromise(), {
+        loading: "Declining the session...",
+        success: (data) => {
+          // Reset form and refresh router on success
+          form.reset();
+          router.refresh();
+
+          return "Declined the session";
+        },
+        error: "Failed to decline the session. Try again!",
       });
-      await activeChannel?.sendMessage({ text: reason });
-
-      form.reset();
-      router.refresh();
-
-      if (result) {
-        toast.success("Declined the session");
-      } else {
-        toast.error("Failed to update");
-      }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to update");
+      console.error("Error in session-decline-modal" + error);
     }
   };
+
+  // const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  //   try {
+  //     const sessionId = session?.id;
+  //     const sessionStatus = session?.status;
+  //     const { reason } = values;
+
+  //     toast.loading("Declining the session...");
+  //     onClose();
+
+  //     const result = await updateSession({
+  //       id: sessionId,
+  //       status: sessionStatus,
+  //       declineReason: reason,
+  //     });
+  //     await activeChannel?.sendMessage({ text: reason });
+
+  //     form.reset();
+  //     router.refresh();
+
+  //     if (result) {
+  //       toast.success("Declined the session");
+  //     } else {
+  //       toast.error("Failed to update");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Failed to update");
+  //   }
+  // };
 
   const handleClose = () => {
     form.reset();

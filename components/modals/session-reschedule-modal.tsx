@@ -28,6 +28,8 @@ import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { useModal } from "@/hooks/use-modal-store";
 import { updateSession } from "@/lib/actions/session.action";
+import useChatStore from "@/hooks/use-chat-client-store";
+import { delay } from "@/lib/utils";
 
 const formSchema = z.object({
   reason: z.string().min(10, {
@@ -37,6 +39,7 @@ const formSchema = z.object({
 
 export const RescheduleSessionModal = () => {
   const { isOpen, onClose, type, data } = useModal();
+  const activeChannel = useChatStore((state) => state.channel);
   const router = useRouter();
 
   const isModalOpen = isOpen && type === "rescheduleSession";
@@ -53,32 +56,56 @@ export const RescheduleSessionModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const { reason } = values;
       const sessionId = session?.id;
       const sessionStatus = session?.status;
       const declinedBy = session?.declinedBy;
-      const { reason } = values;
 
-      toast.loading("Rescheduling the session...");
       onClose();
 
-      const result = await updateSession({
-        id: sessionId,
-        status: sessionStatus,
-        declineReason: reason,
-        declinedBy,
+      // Promise function that handles session update and message sending
+      const rescheduleSessionPromise = async () => {
+        try {
+          // Update session details
+          const result = await updateSession({
+            id: sessionId,
+            status: sessionStatus,
+            declineReason: reason,
+            declinedBy,
+          });
+
+          // Send message if channel is active
+          if (activeChannel) {
+            await activeChannel.sendMessage({
+              text: reason,
+            });
+          }
+
+          // Return result for toast promise handling
+          if (result) {
+            return true;
+          } else {
+            throw new Error("Decline failed");
+          }
+        } catch (error) {
+          console.error("Error updating session:", error);
+          throw new Error("Failed to update session");
+        }
+      };
+
+      toast.promise(rescheduleSessionPromise(), {
+        loading: "Rescheduling the session...",
+        success: (data) => {
+          // Reset form and refresh router on success
+          form.reset();
+          router.refresh();
+
+          return "Rescheduled the session";
+        },
+        error: "Failed to reschedule the session. Try again!",
       });
-
-      form.reset();
-      router.refresh();
-
-      if (result) {
-        toast.success("Rescheduled the session");
-      } else {
-        toast.error("Failed to update");
-      }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to update");
+      console.error("Error in session-reschedule-modal" + error);
     }
   };
 
