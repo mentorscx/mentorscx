@@ -58,6 +58,7 @@ const SessionPage = async ({ params }: SessionPageProps) => {
         role={Role.MENTEE}
         status={session.status}
         declinedBy={session.declinedBy}
+        otherUserId={session.mentor.clerkId}
       />
 
       {/* SESSION DETAILS */}

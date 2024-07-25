@@ -1,9 +1,6 @@
 "use client";
 import React from "react";
 
-import { useState, useEffect } from "react";
-import type { User, Channel as StreamChannel } from "stream-chat";
-import useInitializeChatClient from "./useInitializeChatClient";
 import {
   Chat,
   Channel,
@@ -13,26 +10,13 @@ import {
   Thread,
   Window,
 } from "stream-chat-react";
+import useInitializeChatChannel from "./useInitializeChatChannel";
 
 const SessionChatLayout = (props: { otherId: string }) => {
-  const chatClient = useInitializeChatClient();
-  const [channel, setChannel] = useState<StreamChannel>();
-
-  useEffect(() => {
-    if (!chatClient) return;
-
-    const currentUserID = chatClient._user?.id;
-    const otherUserID = props.otherId;
-    if (!currentUserID) return;
-    const members = [currentUserID, otherUserID];
-
-    const channel = chatClient.channel("messaging", {
-      members: members,
-    });
-    setChannel(channel);
-  }, [chatClient]);
+  const [chatClient, channel] = useInitializeChatChannel(props.otherId);
 
   if (!chatClient) return <div>Setting up connection...</div>;
+  if (!channel) return <div>setting up channel...</div>;
 
   return (
     <Chat client={chatClient}>

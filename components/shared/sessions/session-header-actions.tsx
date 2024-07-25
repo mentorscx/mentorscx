@@ -9,12 +9,14 @@ import { Role, SessionStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { updateSession } from "@/lib/actions/session.action";
 import { useModal } from "@/hooks/use-modal-store";
+import useInitializeChatChannel from "@/components/chats/useInitializeChatChannel";
 
 type Props = {
   sessionId: string;
   role: Role;
   status: SessionStatus;
   buttonStyles: string;
+  otherUserId: string;
 };
 
 export const SessionHeaderActions = ({
@@ -22,11 +24,13 @@ export const SessionHeaderActions = ({
   role,
   status,
   buttonStyles,
+  otherUserId,
 }: Props) => {
   const router = useRouter();
   const { onOpen } = useModal();
 
   const [disabled, setDisabled] = useState(false);
+  const [chatClient, channel] = useInitializeChatChannel(otherUserId);
 
   const showReschedule: Boolean =
     status === SessionStatus.ACCEPTED || status === SessionStatus.AWAITING_HOST;

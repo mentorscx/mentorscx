@@ -28,6 +28,8 @@ import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { useModal } from "@/hooks/use-modal-store";
 import { updateSession } from "@/lib/actions/session.action";
+import useInitializeChatChannel from "../chats/useInitializeChatChannel";
+import useChatStore from "@/hooks/use-chat-client-store";
 
 const formSchema = z.object({
   reason: z.string().min(10, {
@@ -38,6 +40,7 @@ const formSchema = z.object({
 export const DeclineSessionModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
+  const activeChannel = useChatStore((state) => state.channel);
 
   const isModalOpen = isOpen && type === "declineSession";
   const session = data?.session;
@@ -65,6 +68,7 @@ export const DeclineSessionModal = () => {
         status: sessionStatus,
         declineReason: reason,
       });
+      await activeChannel?.sendMessage({ text: reason });
 
       form.reset();
       router.refresh();

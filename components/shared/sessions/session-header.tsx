@@ -126,6 +126,7 @@ type Props = {
   role: Role;
   status: SessionStatus;
   declinedBy: Role | null;
+  otherUserId: string;
 };
 
 const gradientColors: {
@@ -152,7 +153,13 @@ const buttonColors: {
     "text-danger-500 border-danger-500 hover:text-danger-500/80 hover:bg-danger-500/10",
 };
 
-const SessionHeader = ({ sessionId, role, status, declinedBy }: Props) => {
+const SessionHeader = ({
+  sessionId,
+  role,
+  status,
+  declinedBy,
+  otherUserId,
+}: Props) => {
   const details = getContentForSessionHeader(role, status, declinedBy);
 
   const theme: string = details?.theme || "slate";
@@ -181,6 +188,7 @@ const SessionHeader = ({ sessionId, role, status, declinedBy }: Props) => {
           role={role}
           status={status}
           buttonStyles={buttonStyles}
+          otherUserId={otherUserId}
         />
       </div>
     </section>
