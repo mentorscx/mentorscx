@@ -87,7 +87,7 @@ const searchPage = async ({ searchParams }: ProfilesPageProps) => {
   const languagesFilters = getOptions(languagesArray);
 
   return (
-    <div className="max-w-7xl mx-auto pt-[80px] px-3">
+    <div className="max-w-7xl mx-auto pt-16 px-3">
       {/* <MentorRedirectDialog isOpen={true} /> */}
 
       <div className="flex">

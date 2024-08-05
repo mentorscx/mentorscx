@@ -50,7 +50,7 @@ const SessionCard = ({ session }: SessionCardProps) => {
     try {
       await updateSession({
         id,
-        status: SessionStatus.REJECTED,
+        status: SessionStatus.DECLINED,
         mentorId,
       });
       toast.success("Declined the session");

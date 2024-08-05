@@ -12,6 +12,7 @@ import {
 import { db } from "@/lib/db";
 import { SessionCard } from "@/components/shared/sessions/session-card";
 import Image from "next/image";
+import { Role } from "@prisma/client";
 
 type TDashBoardSessionsUpcoming = {
   userId: string;
@@ -70,6 +71,7 @@ const DashboardSessionsUpcoming = async ({
               session={session}
               currentUser={session.mentor}
               otherUser={session.mentee}
+              currentView={Role.MENTOR}
             />
           </div>
         ))}

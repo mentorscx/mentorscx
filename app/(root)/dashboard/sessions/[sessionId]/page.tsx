@@ -51,7 +51,7 @@ const SessionPage = async ({ params }: SessionPageProps) => {
   }
 
   return (
-    <div className="mx-auto h-full max-w-5xl p-3 md:p-6 mt-[80px]">
+    <div className="mx-auto h-full max-w-5xl p-3 md:p-6 mt-16">
       {/* SESSION HEADER */}
       <SessionHeader
         sessionId={session.id}
@@ -70,7 +70,7 @@ const SessionPage = async ({ params }: SessionPageProps) => {
         currentUser={session.mentee}
       />
 
-      <SessionChatLayout otherId={session.mentor.clerkId} />
+      <SessionChatLayout otherUserId={session.mentor.clerkId} />
     </div>
   );
 };

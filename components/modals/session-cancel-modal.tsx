@@ -121,7 +121,7 @@ export const CancelSessionModal = () => {
           <DialogTitle>Cancel Session</DialogTitle>
           <DialogDescription>
             Please provide a reason for cancelling the session. This will be
-            sent to the mentee.
+            sent to the user.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

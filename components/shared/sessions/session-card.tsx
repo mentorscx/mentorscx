@@ -6,25 +6,21 @@ import { utcToZonedTime } from "date-fns-tz";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { Session, User } from "@prisma/client";
+import { Role, Session, User } from "@prisma/client";
 import { getInitials } from "@/lib/utils";
 import { formatDateToWeekDDMonth, formatDateToHHMMToHHMM } from "@/lib/format";
 import { TSession } from "@/types";
 
-type CurrentPage = "MENTOR_DASHBOARD" | "MENTOR_SESSION" | "MENTEE_SESSIONS";
-
 type SessionCardProps = TSession & {
-  currPage?: CurrentPage;
+  currentView: Role;
 };
 
 const StatusStyles: {
@@ -33,9 +29,11 @@ const StatusStyles: {
   AWAITING_HOST: "text-yellow-600 border-yellow-500 bg-yellow-100",
   ACCEPTED: "text-blue-600 border-blue-500 bg-blue-100",
   RESCHEDULED: "text-danger-600 border-danger-500 bg-danger-100",
-  REJECTED: "text-slate-600 border-slate-500 bg-slate-200",
+  DECLINED: "text-slate-600 border-slate-500 bg-slate-200",
   CANCELLED: "text-slate-600 border-slate-500 bg-slate-200",
   COMPLETED: "text-green-600 border-green-500 bg-green-100",
+  DONE: "text-orange-600 border-orange-500 bg-orange-100",
+  REVIEWED: "text-sky-600 border-sky-500 bg-sky-100",
 };
 
 const SessionCardContent = (props: {
@@ -96,6 +94,7 @@ export const SessionCardHeader = (props: {
   username: string;
   objective: string;
   category: string;
+  redirectURL: string;
 }) => {
   return (
     <>
@@ -116,7 +115,7 @@ export const SessionCardHeader = (props: {
           </div>
           <div className="hidden md:flex flex-col gap-4">
             <Button asChild variant="outline" className="min-w-[150px]">
-              <Link href={`/mentor/sessions/${props.session_id}`}>
+              <Link href={`${props.redirectURL}/${props.session_id}`}>
                 View <ChevronRight className="w-4 h-4 ml-1" />
               </Link>
             </Button>
@@ -127,12 +126,15 @@ export const SessionCardHeader = (props: {
   );
 };
 
-const SessionCardFooter = (props: { session_id: string }) => {
+const SessionCardFooter = (props: {
+  session_id: string;
+  redirectURL: string;
+}) => {
   return (
     <div>
       <div className="flex md:hidden gap-4">
         <Button asChild variant="outline" className="min-w-[150px]">
-          <Link href={`/mentor/session/${props.session_id}`}>
+          <Link href={`${props.redirectURL}/${props.session_id}`}>
             View <ChevronRight className="w-4 h-4 ml-1" />
           </Link>
         </Button>
@@ -142,15 +144,21 @@ const SessionCardFooter = (props: { session_id: string }) => {
 };
 
 export const SessionCard = (props: SessionCardProps) => {
+  const redirectURL =
+    props.currentView === Role.MENTOR
+      ? "/mentor/sessions"
+      : "/dashboard/sessions";
+
   return (
     <Card className="w-full">
-      <CardHeader>
+      <CardHeader className="py-3">
         <SessionCardHeader
           session_id={props.session.id}
           imageUrl={props.otherUser.imageUrl}
           username={props.otherUser.username}
           objective={props.session.objective}
           category={props.session.category}
+          redirectURL={redirectURL}
         />
       </CardHeader>
 
@@ -166,7 +174,10 @@ export const SessionCard = (props: SessionCardProps) => {
       <Separator className="w-full md:hidden my-3" />
 
       <CardFooter className="block md:hidden">
-        <SessionCardFooter session_id={props.session.id} />
+        <SessionCardFooter
+          session_id={props.session.id}
+          redirectURL={redirectURL}
+        />
       </CardFooter>
     </Card>
   );

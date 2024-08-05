@@ -151,7 +151,8 @@ export const DeclineSessionModal = () => {
         <DialogHeader>
           <DialogTitle>Decline Session</DialogTitle>
           <DialogDescription>
-            Please provide a reason for declining the session
+            Please provide a reason for declining the session. This will be sent
+            to the user.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

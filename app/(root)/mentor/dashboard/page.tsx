@@ -64,7 +64,7 @@ const MentorDashboardPage = async () => {
   const { id, imageUrl, username } = user;
 
   return (
-    <div className="max-w-5xl mx-auto pt-[80px] p-3">
+    <div className="max-w-5xl mx-auto pt-16 p-3">
       {/* PAGE TITLE */}
       <div className="w-full flex flex-col lg:flex-row gap-4 mt-4">
         {/* WELCOME BACK AND STATS*/}

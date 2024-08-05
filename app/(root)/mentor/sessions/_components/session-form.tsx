@@ -138,7 +138,7 @@ export function SessionForm({ session, user, menteeEmail }: SessionFormProps) {
     try {
       await updateSession({
         id: sessionId,
-        status: SessionStatus.REJECTED,
+        status: SessionStatus.DECLINED,
         mentorId: userId,
       });
       toast.success("Declined the session");

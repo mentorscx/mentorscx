@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 
 import { db } from "@/lib/db";
-import { SessionStatus } from "@prisma/client";
+import { Role, SessionStatus } from "@prisma/client";
 import SessionMain from "@/components/shared/sessions/session-main";
 import { TSession } from "@/types";
 
@@ -60,17 +60,22 @@ const MenteeSessionsPage = async () => {
   const sessionTypes = {
     requested: filterSessionsByStatus(sessions, [SessionStatus.AWAITING_HOST]),
     upcoming: filterSessionsByStatus(sessions, [SessionStatus.ACCEPTED]),
-    completed: filterSessionsByStatus(sessions, [SessionStatus.COMPLETED]),
-    cancelled: filterSessionsByStatus(sessions, [
-      SessionStatus.REJECTED,
+    completed: filterSessionsByStatus(sessions, [
+      SessionStatus.COMPLETED,
+      SessionStatus.DONE,
+      SessionStatus.REVIEWED,
+    ]),
+    archived: filterSessionsByStatus(sessions, [
+      SessionStatus.DECLINED,
       SessionStatus.CANCELLED,
+      SessionStatus.RESCHEDULED,
     ]),
   };
 
   return (
-    <div className="mx-auto max-w-5xl pt-[80px]">
+    <div className="mx-auto max-w-5xl pt-16">
       <section>
-        <SessionMain sessions={sessionTypes} />
+        <SessionMain sessions={sessionTypes} currentView={Role.MENTOR} />
       </section>
     </div>
   );

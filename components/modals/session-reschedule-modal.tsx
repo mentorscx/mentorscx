@@ -122,7 +122,8 @@ export const RescheduleSessionModal = () => {
         <DialogHeader>
           <DialogTitle>Reschedule Session</DialogTitle>
           <DialogDescription>
-            Please provide a reason for rescheduling the session
+            Please provide a reason for rescheduling the session. This will be
+            sent to the user.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 
 export default function Loading() {
   return (
-    <div className="max-w-5xl mx-auto pt-[80px] p-3">
+    <div className="max-w-5xl mx-auto pt-16 p-3">
       {/* PAGE TITLE */}
       <div className="w-full flex flex-col lg:flex-row gap-4">
         {/* WELCOME  AND STATS*/}

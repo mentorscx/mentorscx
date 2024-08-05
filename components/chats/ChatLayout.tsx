@@ -46,7 +46,7 @@ export default function ChatLayout() {
 
   return (
     <div className="h-screen">
-      <div className="h-full w-full pt-[80px] lg:flex lg:items-center lg:justify-center">
+      <div className="h-full w-full pt-16 lg:flex lg:items-center lg:justify-center">
         <div className="m-auto flex h-full lg:h-[80%] lg:w-[80%] min-w-[350px] max-w-[1600px] flex-col shadow-sm  ">
           <Chat client={chatClient}>
             <div className="flex justify-center border-b border-b-[#DBDDE1] md:hidden lg:rounded-lg p-3">

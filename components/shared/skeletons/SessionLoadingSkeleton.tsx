@@ -4,7 +4,7 @@ import { Loader2Icon } from "lucide-react";
 
 const SessionLoadingSkelton = () => {
   return (
-    <div className="mx-auto max-w-5xl pt-[80px]">
+    <div className="mx-auto max-w-5xl pt-16">
       <div className="p-6 w-full">
         {/*TABS SKELETON*/}
         <div className="w-full ">
@@ -12,7 +12,7 @@ const SessionLoadingSkelton = () => {
             <div>
               <Loader2Icon className="w-16 h-16 text-primary rounded-full animate-spin" />
             </div>
-            <p className="text-center text-lg mt-6">Loading your sessions...</p>
+            <p className="text-center text-lg mt-6">Loading your session...</p>
           </div>
         </div>
       </div>

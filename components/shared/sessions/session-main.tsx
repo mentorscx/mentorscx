@@ -5,8 +5,9 @@ import { EmptyBookingsCard } from "@/components/shared/empty-bookings-card";
 import { SessionList } from "./session-list";
 
 import { TSession } from "@/types";
+import { Role } from "@prisma/client";
 
-type SessionTypeKey = "requested" | "upcoming" | "completed" | "cancelled";
+type SessionTypeKey = "requested" | "upcoming" | "completed" | "archived";
 
 interface SessionTypeInfo {
   type: SessionTypeKey;
@@ -22,6 +23,7 @@ type SessionMainProps = {
   sessions: {
     [key in SessionTypeKey]: TSession[];
   };
+  currentView: Role;
 };
 
 const sessionConfig: SessionTypeInfo[] = [
@@ -56,7 +58,7 @@ const sessionConfig: SessionTypeInfo[] = [
     },
   },
   {
-    type: "cancelled",
+    type: "archived",
     icon: <XCircle className="mr-1 h-4 w-4 text-red-700" />,
     label: "Archived",
     emptyMessage: {
@@ -67,7 +69,7 @@ const sessionConfig: SessionTypeInfo[] = [
   },
 ];
 
-const SessionMain = ({ sessions }: SessionMainProps) => (
+const SessionMain = (props: SessionMainProps) => (
   <Tabs defaultValue="upcoming" className="p-6">
     <TabsList>
       {sessionConfig.map(({ type, icon, label }) => (
@@ -79,10 +81,13 @@ const SessionMain = ({ sessions }: SessionMainProps) => (
     </TabsList>
     {sessionConfig.map(({ type, emptyMessage }) => (
       <TabsContent key={type} value={type}>
-        {sessions[type].length === 0 ? (
+        {props.sessions[type].length === 0 ? (
           <EmptyBookingsCard {...emptyMessage} />
         ) : (
-          <SessionList sessions={sessions[type]} />
+          <SessionList
+            sessions={props.sessions[type]}
+            currentView={props.currentView}
+          />
         )}
       </TabsContent>
     ))}

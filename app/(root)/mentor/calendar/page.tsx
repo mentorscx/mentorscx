@@ -94,7 +94,7 @@ const CalendarPage = async () => {
   const calendarEvents = await fetchExternalEvents(user.clerkId);
 
   return (
-    <div className="pt-[80px] min-h-screen p-3">
+    <div className="pt-16 min-h-screen p-3">
       <div className="w-full mt-4 max-w-5xl mx-auto p-3 border shadow rounded bg-background md:pl-6">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex gap-4">

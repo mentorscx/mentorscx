@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { SessionCard } from "@/components/shared/sessions/session-card";
 import Image from "next/image";
+import { Role } from "@prisma/client";
 
 type TDashBoardSessionsRequest = {
   userId: string;
@@ -66,6 +67,7 @@ const DashboardSessionsRequest = async ({
               session={session}
               currentUser={session.mentor}
               otherUser={session.mentee}
+              currentView={Role.MENTOR}
             />
           </div>
         ))}

@@ -4,11 +4,13 @@ import {
   LucideIcon,
   Mail,
   AlertCircle,
+  CheckCircleIcon,
+  PartyPopperIcon,
 } from "lucide-react";
-
 import { Role, SessionStatus } from "@prisma/client";
 import { SessionHeaderActions } from "./session-header-actions";
 
+// Define the response interface
 interface SessionHeaderResponse {
   header: string;
   content: string;
@@ -16,132 +18,18 @@ interface SessionHeaderResponse {
   theme: string;
 }
 
-const getContentForSessionHeader = (
-  currentRole: Role,
-  status: SessionStatus,
-  declinedBy: Role | null
-): SessionHeaderResponse | undefined => {
-  if (currentRole === Role.MENTOR) {
-    if (status === SessionStatus.AWAITING_HOST) {
-      return {
-        header: "New session request received",
-        content:
-          "Please read the details of the request and select an option below.",
-        Icon: Mail,
-        theme: "yellow",
-      };
-    } else if (status === SessionStatus.ACCEPTED) {
-      return {
-        header: "You accepted this session",
-        content:
-          "Ensure you’re ready to join the video call at the scheduled time. If needed, you can reschedule or cancel the call 24hrs before. Read more about it here",
-        Icon: HeartHandshake,
-        theme: "blue",
-      };
-    } else if (status === SessionStatus.REJECTED) {
-      return {
-        header: "You declined this session",
-        content:
-          "You already explained to the mentee why you decided not to accept this call. If you’d like to encourage them to book again, shoot them a message.",
-        Icon: AlertCircle,
-        theme: "slate",
-      };
-    } else if (status === SessionStatus.CANCELLED) {
-      return {
-        header: "You cancelled this session",
-        content:
-          "You already explained to the mentee why you decided to cancel this call. If you’d like to encourage them to book again, shoot them a message.",
-        Icon: Clock,
-        theme: "slate",
-      };
-    } else if (status === SessionStatus.RESCHEDULED) {
-      if (declinedBy === Role.MENTOR) {
-        return {
-          header: "You asked the mentee to reschedule",
-          content:
-            "The mentee will choose a new time from the availability set in your calendar. Please wait and confirm the requested time works in a timely manner.",
-          Icon: Clock,
-          theme: "danger",
-        };
-      }
-    }
-  } else if (currentRole === Role.MENTEE) {
-    if (status === SessionStatus.AWAITING_HOST) {
-      return {
-        header: "Your session request was sent successfully",
-        content:
-          "Now you just need to wait for the mentor’s response. Questions about responsiveness? Read more here. ",
-        Icon: Mail,
-        theme: "yellow",
-      };
-    } else if (status === SessionStatus.ACCEPTED) {
-      return {
-        header: "Your session request was accepted",
-        content:
-          "The mentor accepted! Ensure you’re ready to join the video call at the scheduled time.  If needed, you can reschedule or cancel the call 24hrs before. Read more about it here",
-        Icon: HeartHandshake,
-        theme: "blue",
-      };
-    } else if (status === SessionStatus.REJECTED) {
-      return {
-        header: "The mentor declined this session",
-        content:
-          "The mentor explained why they decided not to accept this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
-        Icon: Clock,
-        theme: "slate",
-      };
-    } else if (status === SessionStatus.CANCELLED) {
-      return {
-        header: "The mentor cancelled this session",
-        content:
-          "The mentor explained why they decided to cancel this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
-        Icon: Clock,
-        theme: "slate",
-      };
-    } else if (status === SessionStatus.RESCHEDULED) {
-      if (declinedBy === Role.MENTOR) {
-        return {
-          header: "The mentor rescheduled this session",
-          content:
-            "The mentor explained why they decided to reschedule this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
-          Icon: Clock,
-          theme: "slate",
-        };
-      }
-      if (declinedBy === Role.MENTEE) {
-        return {
-          header: "The mentor rescheduled this session",
-          content:
-            "The mentor explained why they decided to reschedule this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
-          Icon: Clock,
-          theme: "slate",
-        };
-      }
-    }
-  }
-};
-
-type Props = {
-  sessionId: string;
-  role: Role;
-  status: SessionStatus;
-  declinedBy: Role | null;
-  otherUserId: string;
-};
-
-const gradientColors: {
-  [key: string]: string;
-} = {
+// Define theme mappings
+const gradientColors: { [key: string]: string } = {
   green: "from-green-200/60 to-white text-green-500",
   yellow: "from-yellow-200/60 to-white text-yellow-500",
   blue: "from-blue-300/60 to-white text-blue-500",
   slate: "from-slate-300/60 to-white text-slate-500",
   danger: "from-danger-200/60 to-white text-danger-500",
+  orange: "from-orange-200/60 to-white text-orange-500",
+  sky: "from-sky-200/60 to-white text-sky-500",
 };
 
-const buttonColors: {
-  [key: string]: string;
-} = {
+const buttonColors: { [key: string]: string } = {
   green:
     "text-green-500 border-green-500 hover:text-green-500/80 hover:bg-green-500/10",
   yellow:
@@ -151,24 +39,163 @@ const buttonColors: {
     "text-slate-500 border-slate-500 hover:text-slate-500/80 hover:bg-slate-500/10",
   danger:
     "text-danger-500 border-danger-500 hover:text-danger-500/80 hover:bg-danger-500/10",
+  orange:
+    "text-orange-500 border-orange-500 hover:text-orange-500/80 hover:bg-orange-500/10",
+  sky: "text-sky-500 border-sky-500 hover:text-sky-500/80 hover:bg-sky-500/10",
 };
 
-const SessionHeader = ({
-  sessionId,
-  role,
-  status,
-  declinedBy,
-  otherUserId,
-}: Props) => {
-  const details = getContentForSessionHeader(role, status, declinedBy);
+// Function to get session header content
+const getSessionHeaderContent = (
+  currentRole: Role,
+  status: SessionStatus,
+  declinedBy: Role | null
+): SessionHeaderResponse | undefined => {
+  const headerContent: { [key: string]: SessionHeaderResponse } = {
+    [`${Role.MENTOR}-${SessionStatus.AWAITING_HOST}`]: {
+      header: "New session request received",
+      content:
+        "Please read the details of the request and select an option below.",
+      Icon: Mail,
+      theme: "yellow",
+    },
+    [`${Role.MENTOR}-${SessionStatus.ACCEPTED}`]: {
+      header: "You accepted this session",
+      content:
+        "Ensure you’re ready to join the video call at the scheduled time. If needed, you can reschedule or cancel the call 24hrs before. Read more about it here",
+      Icon: HeartHandshake,
+      theme: "blue",
+    },
+    [`${Role.MENTOR}-${SessionStatus.DECLINED}`]: {
+      header: "You declined this session",
+      content:
+        "You already explained to the mentee why you decided not to accept this call. If you’d like to encourage them to book again, shoot them a message.",
+      Icon: AlertCircle,
+      theme: "slate",
+    },
+    [`${Role.MENTOR}-${SessionStatus.CANCELLED}`]: {
+      header: "You cancelled this session",
+      content:
+        "You already explained to the mentee why you decided to cancel this call. If you’d like to encourage them to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTOR}-${SessionStatus.RESCHEDULED}-${Role.MENTOR}`]: {
+      header: "You asked the mentee to reschedule",
+      content:
+        "The mentee will choose a new time from the availability set in your calendar. Please wait and confirm the requested time works in a timely manner.",
+      Icon: Clock,
+      theme: "danger",
+    },
+    [`${Role.MENTEE}-${SessionStatus.AWAITING_HOST}`]: {
+      header: "Your session request was sent successfully",
+      content:
+        "Now you just need to wait for the mentor’s response. Questions about responsiveness? Read more here.",
+      Icon: Mail,
+      theme: "yellow",
+    },
+    [`${Role.MENTEE}-${SessionStatus.ACCEPTED}`]: {
+      header: "Your session request was accepted",
+      content:
+        "The mentor accepted! Ensure you’re ready to join the video call at the scheduled time. If needed, you can reschedule or cancel the call 24hrs before. Read more about it here",
+      Icon: HeartHandshake,
+      theme: "blue",
+    },
+    [`${Role.MENTEE}-${SessionStatus.DECLINED}`]: {
+      header: "The mentor declined this session",
+      content:
+        "The mentor explained why they decided not to accept this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTEE}-${SessionStatus.CANCELLED}`]: {
+      header: "The mentor cancelled this session",
+      content:
+        "The mentor explained why they decided to cancel this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTEE}-${SessionStatus.RESCHEDULED}-${Role.MENTOR}`]: {
+      header: "The mentor rescheduled this session",
+      content:
+        "The mentor explained why they decided to reschedule this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTEE}-${SessionStatus.RESCHEDULED}-${Role.MENTEE}`]: {
+      header: "The mentor rescheduled this session",
+      content:
+        "The mentor explained why they decided to reschedule this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTOR}-${SessionStatus.DONE}`]: {
+      header: "Pending confirmation ",
+      content: "The mentee has to confirm the call.",
+      Icon: CheckCircleIcon,
+      theme: "orange",
+    },
+    [`${Role.MENTEE}-${SessionStatus.DONE}`]: {
+      header: "Did you have the call?",
+      content:
+        "According to our system, you should have completed this session already. If that’s the case, please hit confirm below.",
+      Icon: CheckCircleIcon,
+      theme: "orange",
+    },
+    [`${Role.MENTOR}-${SessionStatus.COMPLETED}`]: {
+      header: "Ask the mentee for a review",
+      content:
+        "Looks like you completed the call. Please ask mentee for a review. Send a message to ask for one.",
+      Icon: CheckCircleIcon,
+      theme: "green",
+    },
+    [`${Role.MENTEE}-${SessionStatus.COMPLETED}`]: {
+      header: "You completed the session",
+      content:
+        "Amazing. You completed the call. To encourage the mentor. Please leave a rating",
+      Icon: CheckCircleIcon,
+      theme: "green",
+    },
+    [`${Role.MENTOR}-${SessionStatus.REVIEWED}`]: {
+      header: "The mentee left a review for you",
+      content:
+        "Looks like you completed the call and the mentee took the time to leave a review for you. Please share with others.",
+      Icon: PartyPopperIcon,
+      theme: "sky",
+    },
+    [`${Role.MENTEE}-${SessionStatus.REVIEWED}`]: {
+      header: "You left a review",
+      content:
+        "Looks like you took the time to leave a review for each other after completing the call. Great job in promoting kindness.Please share with others.",
+      Icon: PartyPopperIcon,
+      theme: "sky",
+    },
+  };
 
-  const theme: string = details?.theme || "slate";
-  const gradientClass: string = gradientColors[theme];
+  const key = `${currentRole}-${status}${declinedBy ? `-${declinedBy}` : ""}`;
+  return headerContent[key];
+};
+
+// SessionHeader component
+type Props = {
+  sessionId: string;
+  role: Role;
+  status: SessionStatus;
+  declinedBy: Role | null;
+  otherUserId: string;
+};
+
+const SessionHeader = (props: Props) => {
+  const details = getSessionHeaderContent(
+    props.role,
+    props.status,
+    props.declinedBy
+  );
 
   if (!details) return null;
 
+  const theme = details.theme || "slate";
+  const gradientClass = gradientColors[theme];
   const buttonThemeClasses = buttonColors[theme];
-
   const buttonStyles = `rounded-full hover:bg-background border-1 font-semibold ${buttonThemeClasses}`;
 
   return (
@@ -182,13 +209,12 @@ const SessionHeader = ({
         </h3>
         <p className="px-3 md:px-24 text-center">{details.content}</p>
 
-        {/* SESSION ACTIONS */}
         <SessionHeaderActions
-          sessionId={sessionId}
-          role={role}
-          status={status}
+          sessionId={props.sessionId}
+          role={props.role}
+          status={props.status}
           buttonStyles={buttonStyles}
-          otherUserId={otherUserId}
+          otherUserId={props.otherUserId}
         />
       </div>
     </section>

@@ -10,7 +10,7 @@ import {
 
 const SettingsSkelton = () => {
   return (
-    <div className="mx-auto max-w-5xl pt-[80px]">
+    <div className="mx-auto max-w-5xl pt-16">
       <div className="my-4 lg:my-8 p-3 border shadow rounded bg-background">
         <div className="px-6 mt-4 flex">
           <Skeleton className="h-8 w-1/2" />

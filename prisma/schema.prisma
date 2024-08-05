@@ -152,13 +152,17 @@ model Event {
 }
 
 enum SessionStatus {
-  AVAILABLE     @map("AVAILABLE")
-  CANCELLED     @map("CANCELLED")
-  ACCEPTED      @map("ACCEPTED")
-  AWAITING_HOST @map("AWAITING_HOST")
-  REJECTED      @map("REJECTED")
-  COMPLETED     @map("COMPLETED")
-  RESCHEDULED   @map("RESCHEDULED")
+  AVAILABLE       @map("AVAILABLE")
+  AWAITING_HOST   @map("AWAITING_HOST")
+  CANCELLED       @map("CANCELLED")
+  ACCEPTED        @map("ACCEPTED")
+  RESCHEDULED     @map("RESCHEDULED")
+  REJECTED        @map("REJECTED")
+  DECLINED        @map("DECLINED")
+  DONE            @map("DONE")
+  COMPLETED       @map("COMPLETED")
+  AWAITING_REVIEW @map("AWAITING_REVIEW")
+  REVIEWED        @map("REVIEWED")
 }
 
 model Session {
@@ -186,7 +190,22 @@ model Session {
   declineReason String? @db.Text
   declinedBy    Role?
 
+  review Review?
+
   @@index([mentorId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  feedback  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessionId String  @unique
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId])
 }
 
 model Subscribe {

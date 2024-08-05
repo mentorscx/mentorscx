@@ -5,7 +5,7 @@ import type { StreamChat, Channel, DefaultGenerics } from "stream-chat";
 import useChatStore from "@/hooks/use-chat-client-store";
 
 const useInitializeChatChannel = (
-  otherId: string
+  otherUserId: string
 ): [
   StreamChat<DefaultGenerics> | null,
   Channel<DefaultGenerics> | undefined,
@@ -16,13 +16,13 @@ const useInitializeChatChannel = (
   const clearActiveChannel = useChatStore((state) => state.clearChannel);
 
   useEffect(() => {
-    if (!chatClient || !chatClient._user || !otherId) return;
+    if (!chatClient || !chatClient._user || !otherUserId) return;
 
     const currentUserID = chatClient._user.id;
     if (!currentUserID) return;
 
     const initChannel = chatClient.channel("messaging", {
-      members: [currentUserID, otherId],
+      members: [currentUserID, otherUserId],
     });
 
     setChannel(initChannel);
@@ -31,7 +31,7 @@ const useInitializeChatChannel = (
     return () => {
       clearActiveChannel();
     };
-  }, [chatClient, otherId]);
+  }, [chatClient, otherUserId]);
 
   return [chatClient, channel];
 };

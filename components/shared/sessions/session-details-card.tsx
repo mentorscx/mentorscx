@@ -44,9 +44,11 @@ const StatusStyles: {
   AWAITING_HOST: "text-yellow-600 border-yellow-500 bg-yellow-100",
   ACCEPTED: "text-blue-600 border-blue-500 bg-blue-100",
   RESCHEDULED: "text-danger-600 border-danger-500 bg-danger-100",
-  REJECTED: "text-slate-600 border-slate-500 bg-slate-100",
+  DECLINED: "text-slate-600 border-slate-500 bg-slate-100",
   CANCELLED: "text-slate-600 border-slate-500 bg-slate-100",
   COMPLETED: "text-green-600 border-green-500 bg-green-100",
+  DONE: "text-orange-600 border-orange-500 bg-orange-100",
+  REVIEWED: "text-sky-600 border-sky-500 bg-sky-100",
 };
 
 const SessionDetailsCard = (props: Props) => {

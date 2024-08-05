@@ -40,7 +40,7 @@ const BookingCalendarTemplate = async (props: BookingCalendarTemplateProps) => {
   const calendarEvents = await fetchExternalEvents(props.mentor.clerkId);
 
   return (
-    <div className="pt-[80px] min-h-screen p-3">
+    <div className="pt-16 min-h-screen p-3">
       <BookingCalendarHeader />
 
       <div className="w-full mt-4 max-w-5xl mx-auto p-3 bg-background rounded border shadow">

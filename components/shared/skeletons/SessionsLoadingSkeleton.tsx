@@ -37,7 +37,7 @@ const sessionConfig: SessionTypeInfo[] = [
 
 const SessionsLoadingSkelton = () => {
   return (
-    <div className="mx-auto max-w-5xl pt-[80px]">
+    <div className="mx-auto max-w-5xl pt-16">
       <div className="p-6 w-full">
         {/*TABS SKELETON*/}
         <div className="w-full ">

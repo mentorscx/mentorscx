@@ -49,3 +49,22 @@ export type TSession = {
   otherUser: Pick<User, "username" | "imageUrl">;
   currentUser: Pick<User, "id" | "role" | "timeZone">;
 };
+
+declare module "react-rating" {
+  import * as React from "react";
+
+  interface RatingProps {
+    initialRating?: number;
+    onChange?: (value: number) => void;
+    onBlur?: () => void;
+    emptySymbol?: React.ReactNode | string;
+    fullSymbol?: React.ReactNode | string;
+    readonly?: boolean;
+    fractions?: number;
+    placeholderRating?: number;
+    placeholderSymbol?: React.ReactNode | string;
+  }
+
+  class Rating extends React.Component<RatingProps> {}
+  export default Rating;
+}
