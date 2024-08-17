@@ -17,11 +17,10 @@ import React, { Fragment, useState, useCallback, useMemo } from "react";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { addEvent, deleteEvent } from "@/lib/actions/event.action";
 import { isEventInThePast, isEventOverlapping } from "@/lib/utils";
-import { m } from "framer-motion";
+
 import { formattedStringToDDMonthYearTime } from "@/lib/format";
-import { Alert } from "@/components/ui/alert";
+
 import { AlertPopup } from "@/components/shared/alert-popup";
-import { set } from "mongoose";
 
 const now = new Date();
 

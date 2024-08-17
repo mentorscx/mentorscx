@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, Session } from "@prisma/client";
 import type { Icon } from "lucide-react";
 
 import { Icons } from "@/components/icons";
@@ -42,4 +42,29 @@ export interface SidebarLink {
   imgURL: string;
   route: string;
   label: string;
+}
+
+export type TSession = {
+  session: Session;
+  otherUser: Pick<User, "username" | "imageUrl">;
+  currentUser: Pick<User, "id" | "role" | "timeZone">;
+};
+
+declare module "react-rating" {
+  import * as React from "react";
+
+  interface RatingProps {
+    initialRating?: number;
+    onChange?: (value: number) => void;
+    onBlur?: () => void;
+    emptySymbol?: React.ReactNode | string;
+    fullSymbol?: React.ReactNode | string;
+    readonly?: boolean;
+    fractions?: number;
+    placeholderRating?: number;
+    placeholderSymbol?: React.ReactNode | string;
+  }
+
+  class Rating extends React.Component<RatingProps> {}
+  export default Rating;
 }

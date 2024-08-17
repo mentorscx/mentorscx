@@ -19,7 +19,7 @@ export const generateEventsForNextYear = (
   schedule: ScheduleItem[] = []
 ): Event[] => {
   const events: Event[] = [];
-  const numberOfWeeks = 52; // Approximate number of weeks in a year
+  const numberOfWeeks = 16; // Approximate number of weeks in a year
 
   schedule.forEach((item) => {
     // Parsing ISO strings to Date objects

@@ -9,12 +9,13 @@ import {
 import { Sidebar } from "./sidebar";
 
 export const MobileSidebar = () => {
+  // TODO: Close the sheet when clicked on the routes
   return (
     <Sheet>
       <SheetTrigger className="md:hidden pr-4 hover:opacity-75 transition">
         <Menu />
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 bg-blue-950">
+      <SheetContent side="left" className="p-0 ">
         <SheetClose asChild>
           <Sidebar />
         </SheetClose>

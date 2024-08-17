@@ -7,7 +7,7 @@ import ScheduleSkeleton from "@/components/shared/skeletons/ScheduleSkeleton";
 
 const MentorSchedulePage = async () => {
   return (
-    <div className="max-w-5xl mx-auto pt-[80px] p-3">
+    <div className="max-w-5xl mx-auto pt-16 p-3">
       <MentorCalendarHeader />
       <Suspense fallback={<ScheduleSkeleton />}>
         <MentorScheduleMain />

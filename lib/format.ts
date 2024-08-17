@@ -57,9 +57,11 @@ export function formatDateToHHMMToHHMM(start: Date, end: Date): string {
   return formattedRangeString;
 }
 
-export function formatAMPM(date: Date): string {
-  let hours = date.getHours();
-  const minutes = date.getMinutes();
+export function formatAMPM(date: Date, timeZone?: string): string {
+  let currentDate = date;
+
+  let hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
   hours = hours || 12; // the hour '0' should be '12'

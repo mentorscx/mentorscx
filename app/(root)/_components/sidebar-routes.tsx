@@ -17,6 +17,7 @@ import { usePathname } from "next/navigation";
 import { SidebarItem } from "./sidebar-item";
 
 import { Montserrat } from "next/font/google";
+import SidebarFooter from "./sidebar-footer";
 
 const poppins = Montserrat({ weight: "600", subsets: ["latin"] });
 
@@ -100,7 +101,7 @@ export const SidebarRoutes = () => {
   const routes = isMentorPage ? mentorRoutes : guestRoutes;
 
   return (
-    <div className="">
+    <div className="h-full  flex flex-col justify-between">
       {/* <div className="px-3 py-2 flex-1">
         <Link href="/" className="flex items-center pl-3 mb-14">
           <h1
@@ -126,6 +127,10 @@ export const SidebarRoutes = () => {
             color={route.color}
           />
         ))}
+      </div>
+
+      <div>
+        <SidebarFooter />
       </div>
     </div>
   );

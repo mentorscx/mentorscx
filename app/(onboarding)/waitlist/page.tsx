@@ -35,9 +35,8 @@ export default function AuthenticationPage() {
               </p>
               <p className="text-sm text-muted-foreground text-start">
                 Whether you&apos;re a seasoned professional eager to share your
-                knowledge or someone hungry for insights, our customer
-                experience mentorship platform is your gateway to a community
-                that thrives on learning and growth.
+                knowledge or someone hungry for insights, Mentors CX is your
+                gateway to a community that thrives on learning and growth.
               </p>
               <p className="text-sm font-bold text-start">
                 Join the waitlist now and be part of the transformative CX wave.

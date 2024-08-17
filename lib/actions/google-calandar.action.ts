@@ -8,12 +8,15 @@ import { OAuth2Client, Credentials } from "google-auth-library";
  * Lists the next 10 events on the specified calendars.
  * @param {string[] | undefined} emails An array of email addresses or undefined.
  */
-export async function listEvents(emails: string[] | undefined) {
+export async function listEvents(
+  emails: string[] | undefined,
+  clerkId: string
+) {
   if (emails?.length === 0 || !emails) {
     return [];
   }
 
-  const auth = await getOauthToken();
+  const auth = await getOauthToken(clerkId);
   if (!auth) {
     console.error("Failed to retrieve OAuth token.");
     return [];

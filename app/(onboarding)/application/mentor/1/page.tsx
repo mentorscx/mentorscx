@@ -5,6 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 import {
   Form,
   FormControl,
@@ -70,8 +73,21 @@ const ProfileInfoPage = () => {
       } else {
         await saveMentorApplication({ ...data, applicationStatus: "DECLINED" });
         await setMentorOnboardData(null); // Clear data on successful submission
-        toast.success("Application Submitted!");
-        router.push("/application/mentor/thankyou");
+
+        withReactContent(Swal)
+          .fire({
+            title: "Thank you for your interest in becoming a mentor.",
+            text: "Currently, we are seeking applicants with a minimum of 5 years of experience in customer experience, customer support, startups, or tech companies.",
+            icon: "info",
+            confirmButtonText: "I'll come back later!",
+            confirmButtonColor: "#3b82f6",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              router.push("/");
+            }
+          });
+        form.reset();
       }
     } catch (error: any) {
       toast.error(error?.message || "Submission Failed!");

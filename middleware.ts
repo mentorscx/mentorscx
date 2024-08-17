@@ -28,6 +28,7 @@ const isAPIRoute = createRouteMatcher([
   "/api/webhook",
   "/api/chatgpt",
   "/api/uploadthing",
+  "/api/liveblocks-auth",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

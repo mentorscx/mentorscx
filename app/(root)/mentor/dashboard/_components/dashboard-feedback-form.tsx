@@ -67,7 +67,7 @@ export const DashboardFeedbackForm = ({
   };
 
   return (
-    <Card className="mt-4">
+    <Card className="mt-4 md:mt-8">
       <CardHeader>
         <CardTitle>What would you add or change in your dashboard?</CardTitle>
       </CardHeader>

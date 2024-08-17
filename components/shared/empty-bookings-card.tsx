@@ -11,7 +11,7 @@ export const EmptyBookingsCard = ({
   description,
 }: EmptyBookingsCardProps) => {
   return (
-    <div className="flex w-full select-none flex-col items-center justify-center rounded-lg p-7 lg:p-20 border border-dashed mt-6">
+    <div className="bg-background flex w-full select-none flex-col items-center justify-center rounded-lg p-7 lg:p-20 border border-dashed mt-3">
       <div>
         <Calendar className="w-16 h-16 text-primary " />
       </div>
