@@ -26,6 +26,7 @@ const isMentorApplicationRoute = createRouteMatcher([
 ]);
 const isAPIRoute = createRouteMatcher([
   "/api/webhook",
+  "/api/webhook/stripe",
   "/api/chatgpt",
   "/api/uploadthing",
   "/api/liveblocks-auth",

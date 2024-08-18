@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 
 generator client {
   provider        = "prisma-client-js"
@@ -67,12 +66,16 @@ model User {
   sessionsGiven    Session[] @relation("sessionsGiven")
   sessionsReceived Session[] @relation("sessionsReceived")
 
+  Subscription     Subscription?
+
   joinedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([id])
   @@index([clerkId])
 }
+
+
 
 model Language {
   id   String @id @default(uuid())
@@ -163,6 +166,21 @@ enum SessionStatus {
   COMPLETED       @map("COMPLETED")
   AWAITING_REVIEW @map("AWAITING_REVIEW")
   REVIEWED        @map("REVIEWED")
+}
+
+
+model Subscription {
+  stripeSubscriptionId String   @id @unique
+  interval            String
+  status               String
+  planId               String
+  currentPeriodStart   Int
+  currentPeriodEnd     Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id])
+  userId               String   @unique
+  credits Int @default(0)
 }
 
 model Session {
@@ -305,3 +323,6 @@ model MentorApplication {
 
   @@map("mentor_applications")
 }
+
+
+

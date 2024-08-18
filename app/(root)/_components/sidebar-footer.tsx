@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 const SidebarFooter = () => (
   // TODO: Add Messages here
@@ -21,8 +22,8 @@ const SidebarFooter = () => (
         </CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0">
-        <Button size="sm" className="w-full">
-          Upgrade
+        <Button size="sm" className="w-full" asChild>
+          <Link href="/dashboard/credits">Upgrade</Link>
         </Button>
       </CardContent>
     </Card>
