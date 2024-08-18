@@ -23,7 +23,7 @@ const SidebarFooter = () => (
       </CardHeader>
       <CardContent className="p-4 pt-0">
         <Button size="sm" className="w-full" asChild>
-          <Link href="/dashboard/credits">Upgrade</Link>
+          <Link href="/dashboard/billing">Upgrade</Link>
         </Button>
       </CardContent>
     </Card>
