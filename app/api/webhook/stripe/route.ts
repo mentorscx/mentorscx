@@ -9,20 +9,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   const body = await req.text();
-
-  const signature = req.headers.get("Stripe-Signature") as string;
+  const sig = req.headers.get("stripe-signature") as string;
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET as string
-    );
+    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    console.log("I am not even here");
   } catch (error: unknown) {
     console.error(error);
-    return new Response("webhook error", { status: 400 });
+    return new Response("stripe webhook error", { status: 400 });
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
