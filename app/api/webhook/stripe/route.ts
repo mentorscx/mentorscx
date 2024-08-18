@@ -16,7 +16,6 @@ export async function POST(req: Request) {
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
-    console.log("I am not even here");
   } catch (error: unknown) {
     console.error(error);
     return new Response("stripe webhook error", { status: 400 });
