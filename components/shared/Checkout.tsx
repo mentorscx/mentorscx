@@ -60,10 +60,7 @@ const Checkout = ({
   const onCheckout = async () => {
     const subscriptionUrl = await getStripeSession({
       customerId: buyerId,
-      domainUrl:
-        process.env.NODE_ENV == "production"
-          ? (process.env.PRODUCTION_URL as string)
-          : (process.env.NEXT_PUBLIC_WEBSITE_URL as string),
+      domainUrl: process.env.NEXT_PUBLIC_WEBSITE_URL as string,
       priceId: priceId,
       credits: credits,
       email: email,
