@@ -159,7 +159,9 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const handleSelectSlot = (slot: Event) => setSelectedSlot(slot);
   const handleSelectDate = (selectedDate: Date) => {
     const currentDay = format(new Date(selectedDate), "yyyy-MM-dd");
+    console.log(currentDay);
     const localDate = moment.tz(currentDay, props.timeZone).toDate();
+    console.log(localDate);
     setDate(selectedDate);
     setLocalDate(localDate);
   };
@@ -186,9 +188,12 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
     uniqueAvailableSlots,
     props.timeZone
   );
+  console.log(disabledDays);
   const disabledDates = disabledDays.map((d) => {
-    return moment.tz(d, "America/New_York").toDate();
+    return moment.tz(d, props.timeZone).toDate();
   });
+
+  console.log(disabledDates);
 
   return (
     <div className="w-full">
