@@ -158,10 +158,10 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const handleOpenForm = () => setOpenForm(!openForm);
   const handleSelectSlot = (slot: Event) => setSelectedSlot(slot);
   const handleSelectDate = (selectedDate: Date) => {
-    const currentDay = format(new Date(selectedDate), "yyyy-MM-dd");
-    console.log(currentDay);
-    const localDate = moment.tz(currentDay, props.timeZone).toDate();
-    console.log(localDate);
+    // Create a moment object from the selected date and explicitly set it to UTC
+    const utcDate = moment.utc(selectedDate);
+    // Set the localDate to 12:00 AM in the specified timezone
+    const localDate = utcDate.tz(props.timeZone).startOf("day").toDate();
     setDate(selectedDate);
     setLocalDate(localDate);
   };
@@ -169,7 +169,9 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   // Get today's date in timezone and convert to ET 12:00AM
   const today = moment.tz(new Date(), props.timeZone);
   const todayDate = today.format("YYYY-MM-DD");
-  const todayDateToET = moment.tz(todayDate, "America/New_York").toDate();
+
+  const [year, month, dayOfMonth] = todayDate.split("-").map(Number);
+  const todayDateToET = new Date(year, month - 1, dayOfMonth);
 
   // Get today's date at 12:00 AM in the specified timezone
   const todayAtMidnight = moment().tz(props.timeZone).startOf("day").toDate();
@@ -188,12 +190,12 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
     uniqueAvailableSlots,
     props.timeZone
   );
-  console.log(disabledDays);
-  const disabledDates = disabledDays.map((d) => {
-    return moment.tz(d, props.timeZone).toDate();
-  });
 
-  console.log(disabledDates);
+  // Convert disabledDays strings to Date objects
+  const disabledDates = disabledDays.map((day) => {
+    const [year, month, dayOfMonth] = day.split("-").map(Number);
+    return new Date(year, month - 1, dayOfMonth);
+  });
 
   return (
     <div className="w-full">
