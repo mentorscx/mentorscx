@@ -183,7 +183,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
               expertise.map((expertise: any) => (
                 <Badge
                   variant="outline"
-                  className="text-muted-foreground"
+                  className="text-muted-foreground mr-2"
                   key={expertise.name}
                 >
                   {expertise.name}

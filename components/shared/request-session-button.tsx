@@ -3,62 +3,73 @@ import React, { useState } from "react";
 import { Loader2Icon, VideoIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-
-import { hasPremiumAccess } from "@/lib/actions/helper.action";
+import { isProUser } from "@/lib/utils";
+import { getUserSubscription } from "@/lib/actions/helper.action";
+import SubscribeProModal from "../modals/subscribe-pro-modal";
 
 type RequestSessionButtonProps = {
   mentorId: string;
 };
+
 const RequestSessionButton = (props: RequestSessionButtonProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Disable if the user is self
-  // Check if the user has premium access
-  // Pop up the pricing modal if the user tries to book the call
-  // If try to book call with himself, throw a dialog
+  const handleClose = () => setIsDialogOpen(!isDialogOpen);
 
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      const user = (await hasPremiumAccess()) as any;
+
+      const user = await getUserSubscription();
 
       if (!user) {
         redirect("/sign-in");
       }
 
-      const selfUser = user?.id === props.mentorId ? true : false;
+      const proUser = isProUser(user.Subscription);
+
+      const selfUser = user.id === props.mentorId;
       if (selfUser) {
         withReactContent(Swal).fire({
-          title: "You cannot book self session!",
-          text: "Please try booking session with the other mentors",
+          title: "You cannot book a session with yourself!",
+          text: "Please try booking a session with another mentor.",
           icon: "warning",
           confirmButtonText: "Got it!",
           confirmButtonColor: "#3b82f6",
         });
         return;
       }
+
+      if (!proUser) {
+        setIsDialogOpen(true);
+        setIsLoading(false);
+        return;
+      }
+
       router.push(`/dashboard/calendar/${props.mentorId}`);
     } catch (err) {
-    } finally {
-      setIsLoading(false);
+      console.error(err);
     }
   };
 
   return (
-    <Button onClick={handleClick}>
-      <>
+    <>
+      <SubscribeProModal isDialogOpen={isDialogOpen} onClose={handleClose} />
+      <Button onClick={handleClick} disabled={isLoading}>
         {isLoading ? (
-          <Loader2Icon className="w-5 h-5 mr-1" />
+          <Loader2Icon className="w-5 h-5 mr-1 animate-spin" />
         ) : (
           <VideoIcon className="w-5 h-5 mr-1" />
         )}
         Book session
-      </>
-    </Button>
+      </Button>
+    </>
   );
 };
 

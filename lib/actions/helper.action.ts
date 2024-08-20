@@ -142,7 +142,7 @@ export async function saveMentorApplication(mentorApplication: any) {
   }
 }
 
-export const hasPremiumAccess = async () => {
+export const getUserSubscription = async () => {
   try {
     const { userId: clerkId } = await auth();
 
@@ -155,10 +155,13 @@ export const hasPremiumAccess = async () => {
       where: {
         clerkId,
       },
+      include: {
+        Subscription: true,
+      },
     });
-    console.log(user);
+
     return user;
   } catch (err) {
-    console.log("Unexpected error in hasPremiumAccess", err);
+    console.error("Unexpected error in hasPremiumAccess", err);
   }
 };

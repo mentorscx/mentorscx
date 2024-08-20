@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Subscription } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -182,3 +183,28 @@ export function getUserColor(userId: string) {
   const colorIndex = sum % brightColors.length;
   return brightColors[colorIndex];
 }
+
+export const isProUser = (
+  subscription: Subscription | null | undefined
+): boolean => {
+  if (!subscription) return false;
+
+  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+  return (
+    subscription.status === "active" &&
+    subscription.currentPeriodEnd > currentTime
+  );
+};
+
+export const hasCredits = (
+  subscription: Subscription | null | undefined
+): boolean => {
+  if (!subscription) return false;
+
+  if (subscription.status !== "active") return false;
+  if (subscription.credits < 0) return false;
+  const currentTime = Math.floor(Date.now() / 1000);
+  if (subscription.currentPeriodEnd <= currentTime) return false;
+
+  return subscription.credits > 0;
+};

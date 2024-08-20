@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import React from "react";
 import Select from "react-select";
+import { useIsClient } from "usehooks-ts";
 
 interface FilterProps {
   data: any[];
@@ -23,6 +24,7 @@ const FilterSingleSelect: React.FC<FilterProps> = ({
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const isClient = useIsClient();
 
   const selectedValue = searchParams.get(valueKey);
 
@@ -54,6 +56,8 @@ const FilterSingleSelect: React.FC<FilterProps> = ({
     const defaultValues = data.filter((item) => params?.includes(item.value));
     return defaultValues;
   };
+
+  if (!isClient) return null;
 
   return (
     <div className="mb-3 p-2">
