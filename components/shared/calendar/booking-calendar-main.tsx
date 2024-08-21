@@ -6,7 +6,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import moment from "moment-timezone";
-import { format } from "date-fns";
 
 import { SessionDetailsForm } from "../session-details-form";
 
@@ -158,10 +157,18 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const handleOpenForm = () => setOpenForm(!openForm);
   const handleSelectSlot = (slot: Event) => setSelectedSlot(slot);
   const handleSelectDate = (selectedDate: Date) => {
-    // Create a moment object from the selected date and explicitly set it to UTC
-    const utcDate = moment.utc(selectedDate);
-    // Set the localDate to 12:00 AM in the specified timezone
-    const localDate = utcDate.tz(props.timeZone).startOf("day").toDate();
+    // Ensure the date selected is stripped of its time component, to start at midnight
+
+    const momentDate = moment(selectedDate);
+
+    // Create a moment object from the date with no time and convert it to the specified timezone
+
+    const localDate = momentDate
+      .tz(props.timeZone, true)
+      .startOf("day")
+      .toDate();
+
+    // Assuming setDate and setLocalDate are hooks to set state
     setDate(selectedDate);
     setLocalDate(localDate);
   };
@@ -169,7 +176,6 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   // Get today's date in timezone and convert to ET 12:00AM
   const today = moment.tz(new Date(), props.timeZone);
   const todayDate = today.format("YYYY-MM-DD");
-
   const [year, month, dayOfMonth] = todayDate.split("-").map(Number);
   const todayDateToET = new Date(year, month - 1, dayOfMonth);
 
