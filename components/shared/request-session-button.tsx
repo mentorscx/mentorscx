@@ -43,6 +43,7 @@ const RequestSessionButton = (props: RequestSessionButtonProps) => {
           confirmButtonText: "Got it!",
           confirmButtonColor: "#3b82f6",
         });
+        setIsLoading(false);
         return;
       }
 

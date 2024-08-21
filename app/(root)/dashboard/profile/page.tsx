@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 const MenteeProfilePage = async () => {
   return (
     <>
-      <MentorRedirectDialog isOpen={true} />
       <Suspense fallback={<ProfileSkeleton />}>
         <ProfileDisplayPage isMentorRoute={false} isOwnProfile={true} />
       </Suspense>
