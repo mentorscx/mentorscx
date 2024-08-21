@@ -28,9 +28,8 @@ import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { useModal } from "@/hooks/use-modal-store";
 import { updateSession } from "@/lib/actions/session.action";
-import useInitializeChatChannel from "../chats/useInitializeChatChannel";
+
 import useChatStore from "@/hooks/use-chat-client-store";
-import { delay } from "@/lib/utils";
 
 const formSchema = z.object({
   reason: z.string().min(10, {
@@ -74,7 +73,7 @@ export const DeclineSessionModal = () => {
           });
 
           // Send message if channel is active
-          if (activeChannel) {
+          if (activeChannel && activeChannel.id) {
             await activeChannel.sendMessage({
               text: reason,
             });

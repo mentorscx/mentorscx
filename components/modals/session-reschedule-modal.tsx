@@ -75,7 +75,7 @@ export const RescheduleSessionModal = () => {
           });
 
           // Send message if channel is active
-          if (activeChannel) {
+          if (activeChannel && activeChannel.id) {
             await activeChannel.sendMessage({
               text: reason,
             });
