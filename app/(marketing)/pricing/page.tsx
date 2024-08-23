@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import PricingDiscount from "@/components/home/pricing-discount";
-import PricingTables from "@/components/home/pricing-table";
+import PricingTables from "@/components/shared/pricing/pricing-tables";
 
 export const metadata: Metadata = {
   title: "Pricing | Mentors CX",

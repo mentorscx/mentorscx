@@ -1,7 +1,7 @@
 "use client";
 
 import { loadStripe } from "@stripe/stripe-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { redirect } from "next/navigation";
@@ -9,15 +9,17 @@ import { redirect } from "next/navigation";
 import { getStripeSession } from "@/lib/actions/stripe.action";
 
 import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 
 type CheckoutProps = {
   plan: string;
   amount: number;
   credits: number;
-  buyerId: string;
+  buyerId?: string;
   planEnabled: boolean;
   priceId: string;
-  email: string;
+  email?: string;
+  buttonLabel?: string;
 };
 
 const Checkout = ({
@@ -28,8 +30,10 @@ const Checkout = ({
   planEnabled,
   priceId,
   email,
+  buttonLabel,
 }: CheckoutProps) => {
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -58,15 +62,21 @@ const Checkout = ({
   }, []);
 
   const onCheckout = async () => {
-    const subscriptionUrl = await getStripeSession({
-      customerId: buyerId,
-      domainUrl: process.env.NEXT_PUBLIC_WEBSITE_URL as string,
-      priceId: priceId,
-      credits: credits,
-      email: email,
-    });
+    try {
+      const subscriptionUrl = await getStripeSession({
+        customerId: buyerId,
+        domainUrl: process.env.NEXT_PUBLIC_WEBSITE_URL as string,
+        priceId: priceId,
+        credits: credits,
+        email: email,
+      });
 
-    return redirect(subscriptionUrl);
+      return redirect(subscriptionUrl);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -75,10 +85,15 @@ const Checkout = ({
         <Button
           type="submit"
           role="link"
-          className="w-full rounded-full bg-blue-gradient text-blue-500 bg-cover hover:text-white"
+          className=" bg-blue-600 hover:bg-blue-700 w-full hover:text-white mt-4"
           disabled={!planEnabled}
+          onClick={() => setIsLoading(true)}
         >
-          Buy Credit
+          {isLoading ? (
+            <Loader2Icon className="w-5 h-5 animate-spin" />
+          ) : (
+            buttonLabel
+          )}
         </Button>
       </section>
     </form>
