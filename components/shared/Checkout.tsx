@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getStripeSession } from "@/lib/actions/stripe.action";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type CheckoutProps = {
   plan: string;
@@ -29,6 +30,7 @@ const Checkout = ({
   buttonLabel,
 }: CheckoutProps) => {
   const { toast } = useToast();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -68,8 +70,7 @@ const Checkout = ({
         email: email,
       });
 
-      // Use window.location.href for client-side navigation
-      window.location.href = subscriptionUrl;
+      router.push(subscriptionUrl);
     } catch (error) {
       setIsLoading(false);
       console.error(error);
