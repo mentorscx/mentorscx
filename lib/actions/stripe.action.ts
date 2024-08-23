@@ -119,7 +119,8 @@ export const getStripeSession = async ({
       }
 
       email = dbUser.email;
-      customerId = await createOrRetrieveCustomer(email, dbUser.id);
+      await createOrRetrieveCustomer(email, dbUser.id);
+      customerId = dbUser.id;
     }
 
     // Create the Stripe session

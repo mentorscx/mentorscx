@@ -2,12 +2,8 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
-
 import { useToast } from "@/components/ui/use-toast";
-import { redirect } from "next/navigation";
-
 import { getStripeSession } from "@/lib/actions/stripe.action";
-
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
 
@@ -62,6 +58,7 @@ const Checkout = ({
   }, []);
 
   const onCheckout = async () => {
+    setIsLoading(true);
     try {
       const subscriptionUrl = await getStripeSession({
         customerId: buyerId,
@@ -71,32 +68,30 @@ const Checkout = ({
         email: email,
       });
 
-      return redirect(subscriptionUrl);
+      // Use window.location.href for client-side navigation
+      window.location.href = subscriptionUrl;
     } catch (error) {
-      console.error(error);
-    } finally {
       setIsLoading(false);
+      console.error(error);
     }
   };
 
   return (
-    <form action={onCheckout} method="POST">
-      <section>
-        <Button
-          type="submit"
-          role="link"
-          className=" bg-blue-600 hover:bg-blue-700 w-full hover:text-white mt-4"
-          disabled={!planEnabled}
-          onClick={() => setIsLoading(true)}
-        >
-          {isLoading ? (
-            <Loader2Icon className="w-5 h-5 animate-spin" />
-          ) : (
-            buttonLabel
-          )}
-        </Button>
-      </section>
-    </form>
+    <section>
+      <Button
+        type="submit"
+        role="link"
+        className=" bg-blue-600 hover:bg-blue-700 w-full hover:text-white mt-4"
+        disabled={!planEnabled}
+        onClick={onCheckout}
+      >
+        {isLoading ? (
+          <Loader2Icon className="w-5 h-5 animate-spin" />
+        ) : (
+          buttonLabel
+        )}
+      </Button>
+    </section>
   );
 };
 
