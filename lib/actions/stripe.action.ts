@@ -58,7 +58,6 @@ const createStripeSession = async ({
     customer: customerId,
     mode: "subscription",
     billing_address_collection: "auto",
-    customer_email: email,
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${domainUrl}/dashboard/payment/success`,
     cancel_url: `${domainUrl}/dashboard/payment/cancelled`,
@@ -69,16 +68,6 @@ const createOrRetrieveCustomer = async (
   email: string,
   userId: string
 ): Promise<string> => {
-  // First, attempt to find an existing customer in Stripe using the userId stored in metadata
-  const existingCustomersByUserId = await stripe.customers.search({
-    query: `metadata['userId']:'${userId}'`,
-  });
-
-  if (existingCustomersByUserId.data.length > 0) {
-    // Return the ID of the existing customer found by userId
-    return existingCustomersByUserId.data[0].id;
-  }
-
   // If no customer is found by userId, fallback to searching by email
   const existingCustomersByEmail = await stripe.customers.list({
     email,
@@ -93,6 +82,8 @@ const createOrRetrieveCustomer = async (
       return customer.id;
     }
   }
+
+  console.log("existingCustomersByEmail");
 
   // If no customer is found, or the email matches a different userId, create a new customer
   const newCustomer = await stripe.customers.create({
