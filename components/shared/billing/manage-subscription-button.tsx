@@ -26,7 +26,7 @@ const ManageSubscriptionButton = ({
       variant="outline"
       role="link"
       onClick={handleManageSubscription}
-      className="min-w-[250px]"
+      className="min-w-[250px] mt-4"
     >
       Manage my subscription
     </Button>

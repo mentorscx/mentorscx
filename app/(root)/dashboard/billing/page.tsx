@@ -56,9 +56,10 @@ const Credits = async () => {
             buttonLabel: "cool!",
           }}
           annual={false}
-        />
-
-        <ManageSubscriptionButton email={user.email} userId={user.id} />
+          showPricing={false}
+        >
+          <ManageSubscriptionButton email={user.email} userId={user.id} />
+        </PricingTable>
       </div>
     );
   }

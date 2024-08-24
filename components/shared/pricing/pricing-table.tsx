@@ -20,6 +20,8 @@ export type PricingPlan = {
 type PricingTableProps = {
   plan: PricingPlan;
   annual: boolean;
+  showPricing?: boolean;
+  children?: React.ReactNode;
 };
 
 const PricingFeatures = ({ features }: { features: string[] }) => {
@@ -44,20 +46,26 @@ const PricingFeatures = ({ features }: { features: string[] }) => {
 const PricingDetails = ({
   plan,
   annual,
+  showPricing = true,
 }: {
   plan: PricingPlan;
   annual: boolean;
+  showPricing?: boolean;
 }) => {
   return (
     <div className="mb-4">
       <div className="text-lg font-bold mb-1">{plan.name}</div>
-      <div className="inline-flex items-baseline mb-2">
-        <span className="text-3xl font-bold">$</span>
-        <span className="text-4xl font-bold">
-          {annual ? plan.annualPrice : plan.monthlyPrice}
-        </span>
-        <span className="text-gray-600 pl-2">/month</span>
-      </div>
+      {showPricing && (
+        <div className="inline-flex items-baseline mb-2">
+          <span className="text-3xl font-bold">$</span>
+
+          <span className="text-4xl font-bold">
+            {annual ? plan.annualPrice : plan.monthlyPrice}
+          </span>
+
+          <span className="text-gray-600 pl-2">/month</span>
+        </div>
+      )}
       <div className="text-lg text-gray-800">{plan.description}</div>
     </div>
   );
@@ -87,7 +95,12 @@ type CheckoutProps = {
   email?: string;
 };
 
-const PricingTable = ({ plan, annual }: PricingTableProps) => {
+const PricingTable = ({
+  plan,
+  annual,
+  showPricing = true,
+  children,
+}: PricingTableProps) => {
   return (
     <div
       className={`relative flex flex-col h-full py-5 px-6 rounded shadow-xl border-2 ${
@@ -97,17 +110,20 @@ const PricingTable = ({ plan, annual }: PricingTableProps) => {
       data-aos-delay="450"
     >
       {plan.highlight && <PricingHighlightBadge />}
-      <PricingDetails plan={plan} annual={annual} />
+      <PricingDetails plan={plan} annual={annual} showPricing={showPricing} />
       <PricingFeatures features={plan.features} />
 
-      <Checkout
-        plan={plan.name}
-        amount={annual ? plan.annualPrice : plan.monthlyPrice}
-        credits={plan.credits}
-        priceId={annual ? plan.annualPriceId : plan.monthlyPriceId}
-        buttonLabel={plan.buttonLabel}
-        planEnabled={!plan.comingSoon}
-      />
+      {showPricing && (
+        <Checkout
+          plan={plan.name}
+          amount={annual ? plan.annualPrice : plan.monthlyPrice}
+          credits={plan.credits}
+          priceId={annual ? plan.annualPriceId : plan.monthlyPriceId}
+          buttonLabel={plan.buttonLabel}
+          planEnabled={!plan.comingSoon}
+        />
+      )}
+      {children}
     </div>
   );
 };

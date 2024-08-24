@@ -1,13 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { SidebarRoutes } from "./sidebar-routes";
-import { useState, useEffect } from "react";
-import { Sheet } from "lucide-react";
-import { SheetClose } from "@/components/ui/sheet";
+
 import { useIsClient } from "usehooks-ts";
-import SidebarFooter from "./sidebar-footer";
 
 export const Sidebar = () => {
   const isClient = useIsClient();

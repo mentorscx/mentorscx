@@ -11,6 +11,7 @@ import {
   CalendarCheck,
   User2,
   Search,
+  CreditCardIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -45,6 +46,12 @@ const guestRoutes = [
     label: "Profile",
     href: "/dashboard/profile",
     color: "text-neutral-600",
+  },
+  {
+    icon: CreditCardIcon,
+    label: "Billing",
+    href: "/dashboard/billing",
+    color: "text-blue-600",
   },
 ];
 
