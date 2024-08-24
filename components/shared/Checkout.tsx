@@ -63,7 +63,7 @@ const Checkout = ({
     setIsLoading(true);
     try {
       const subscriptionUrl = await getStripeSession({
-        customerId: buyerId,
+        buyerId: buyerId,
         domainUrl: process.env.NEXT_PUBLIC_WEBSITE_URL as string,
         priceId: priceId,
         credits: credits,

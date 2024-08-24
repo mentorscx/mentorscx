@@ -15,6 +15,7 @@ type GetStripeSessionParams = {
   customerId?: string;
   credits: number;
   email?: string;
+  buyerId?: string;
 };
 
 type CreateStripeSessionParams = {
@@ -23,6 +24,7 @@ type CreateStripeSessionParams = {
   customerId: string;
   credits: number;
   email: string;
+  userId: string;
 };
 
 export async function createCustomerPortal(email: string, userId: string) {
@@ -43,15 +45,17 @@ const createStripeSession = async ({
   customerId,
   credits,
   email,
+  userId,
 }: CreateStripeSessionParams): Promise<
   Stripe.Response<Stripe.Checkout.Session>
 > => {
   return await stripe.checkout.sessions.create({
     metadata: {
-      buyerId: customerId,
+      buyerId: userId,
       credits: credits.toString(),
       email: email,
     },
+    customer: customerId,
     mode: "subscription",
     billing_address_collection: "auto",
     customer_email: email,
@@ -104,7 +108,7 @@ const createOrRetrieveCustomer = async (
 export const getStripeSession = async ({
   priceId,
   domainUrl,
-  customerId,
+  buyerId,
   credits,
   email,
 }: GetStripeSessionParams): Promise<string> => {
@@ -117,7 +121,7 @@ export const getStripeSession = async ({
     }
 
     // If the email or customerId is not provided, we need to get it from the database
-    if (!email || !customerId) {
+    if (!email || !buyerId) {
       const dbUser = await db.user.findUnique({
         where: {
           clerkId: clerkId,
@@ -133,9 +137,11 @@ export const getStripeSession = async ({
       }
 
       email = dbUser.email;
-      await createOrRetrieveCustomer(email, dbUser.id);
-      customerId = dbUser.id;
+
+      buyerId = dbUser.id;
     }
+
+    const customerId = await createOrRetrieveCustomer(email, buyerId);
 
     // Create the Stripe session
     const session = await createStripeSession({
@@ -144,6 +150,7 @@ export const getStripeSession = async ({
       customerId,
       credits,
       email,
+      userId: buyerId,
     });
 
     // Return the URL of the Stripe session
