@@ -9,7 +9,14 @@ import MobileMenu from "./mobile-menu";
 import { siteConfig } from "@/config/site";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
+import {
+  SignedOut,
+  UserButton,
+  SignInButton,
+  ClerkLoading,
+  SignedIn,
+} from "@clerk/nextjs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Header() {
   const [top, setTop] = useState<boolean>(true);
@@ -96,7 +103,7 @@ export default function Header() {
             </ul>
 
             {/* Desktop sign in links */}
-            <ul className="flex grow justify-end flex-wrap items-center space-x-3">
+            <ul className="flex grow justify-end flex-wrap items-center gap-4">
               <li>
                 <SignedOut>
                   <SignInButton>
@@ -116,8 +123,15 @@ export default function Header() {
                   </Button>
                 </Link>
               </li>
-              <li>
-                <UserButton />
+              <li className="h-full pt-2">
+                <ClerkLoading>
+                  <Avatar>
+                    <AvatarFallback></AvatarFallback>
+                  </Avatar>
+                </ClerkLoading>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
               </li>
             </ul>
           </nav>
