@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const SettingsSkelton = () => {
+export const SettingsSkelton = () => {
   return (
     <div className="mx-auto max-w-5xl pt-16">
       <div className="my-4 lg:my-8 p-3 border shadow rounded bg-background">
@@ -87,4 +87,22 @@ const SettingsSkelton = () => {
   );
 };
 
-export default SettingsSkelton;
+export const IntegrationSkeleton = ({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) => {
+  return (
+    <Card>
+      <CardHeader className="flex justify-between">
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex items-center justify-between">
+        <Skeleton className="h-10 w-48" />
+      </CardContent>
+    </Card>
+  );
+};

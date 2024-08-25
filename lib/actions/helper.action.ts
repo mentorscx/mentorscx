@@ -4,7 +4,7 @@ import { MentorApplication } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
 import { sendEmailViaBrevoTemplate } from "../brevo";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 type TProfileViewCount = {
   profileId: string;
@@ -179,5 +179,25 @@ export async function fetchStripeConnectAccount(
   } catch (error) {
     console.error("Error fetching Stripe Connect account:", error);
     return false;
+  }
+}
+
+export async function isConnectedWithGoogleEvents() {
+  try {
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) {
+      throw new Error("User not found");
+    }
+
+    const eventsScopeApproved = clerkUser?.externalAccounts?.some((e) =>
+      e.approvedScopes.includes(
+        "https://www.googleapis.com/auth/calendar.events"
+      )
+    );
+
+    return eventsScopeApproved;
+  } catch (error: any) {
+    throw new Error("Failed to connect the calendar");
   }
 }

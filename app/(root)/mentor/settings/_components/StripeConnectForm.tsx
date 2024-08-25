@@ -7,26 +7,34 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 import { fetchStripeConnectAccount } from "@/lib/actions/helper.action";
 import { createStripeAccountLink } from "@/lib/actions/stripe.action";
-import { delay } from "framer-motion";
+
 import { useRouter } from "next/navigation";
 
-const StripeConnectForm = async ({ userId }: { userId: string }) => {
+const StripeConnectForm = ({ userId }: { userId: string }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const isStripeConnected = await fetchStripeConnectAccount(userId);
+  const [isStripeConnected, setIsStripeConnected] = useState(false);
+
+  useEffect(() => {
+    const checkStripeConnection = async () => {
+      const connected = await fetchStripeConnectAccount(userId);
+      setIsStripeConnected(connected);
+    };
+
+    checkStripeConnection();
+  }, [userId]);
 
   const handleClick = async () => {
     setIsLoading(true);
 
     try {
       const stripeUrl = await createStripeAccountLink(userId);
-
       router.push(stripeUrl);
     } catch (error) {
       console.error("Error creating Stripe account link:", error);
@@ -42,8 +50,8 @@ const StripeConnectForm = async ({ userId }: { userId: string }) => {
       </CardHeader>
       <CardContent className="flex items-center justify-between">
         {isStripeConnected ? (
-          <Button variant="outline" disabled={true}>
-            Stripe Connected
+          <Button variant="outline" disabled>
+            Stripe connected
           </Button>
         ) : (
           <Button
