@@ -30,6 +30,12 @@ const guestRoutes = [
     color: "text-blue-500",
   },
   {
+    icon: LayoutDashboard,
+    label: "Dashboard",
+    href: "/dashboard/dashboard",
+    color: "text-neutral-600",
+  },
+  {
     icon: Clock,
     label: "Sessions",
     href: "/dashboard/sessions",

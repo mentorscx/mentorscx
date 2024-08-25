@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -14,14 +15,15 @@ type DashboardInfoCardProps = {
 
 export default function DashboardInfoCard(props: DashboardInfoCardProps) {
   const { title, displayValue, footer } = props;
+
   return (
     <Card className="min-w-[100px]">
       <CardHeader className="pb-2">
         <CardDescription className="font-semibold">{title}</CardDescription>
-        <CardTitle className="text-4xl">{displayValue}</CardTitle>
+        <CardTitle className="flex gap-1 text-4xl ">{displayValue}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-xs text-muted-foreground">{footer}</div>
+        <div className="text-xs text-muted-foreground flex">{footer}</div>
       </CardContent>
     </Card>
   );
