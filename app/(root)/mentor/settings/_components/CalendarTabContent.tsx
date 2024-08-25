@@ -5,6 +5,7 @@ import GoogleMeetLinkForm from "./GoogleMeetLinkForm";
 import CalendarTabHeading from "./CalendarTabHeading";
 import SyncGoogleCalendar from "./SyncGoogleCalendar";
 import { isConnectedWithGoogleEvents } from "@/lib/actions/clerk.action";
+import StripeConnectForm from "./StripeConnectForm";
 
 type CalendarTabContentProps = {
   id: string;
@@ -25,6 +26,7 @@ const CalendarTabContent = async ({
       <SyncGoogleCalendar
         isGoogleCalendarConnected={isGoogleCalendarConnected}
       />
+      <StripeConnectForm userId={id} />
       <ZoomLinkForm id={id} zoomLink={zoomLink} />
       <GoogleMeetLinkForm id={id} googleMeetLink={googleMeetLink} />
     </div>

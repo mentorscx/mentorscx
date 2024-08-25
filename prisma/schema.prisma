@@ -66,13 +66,23 @@ model User {
   sessionsGiven    Session[] @relation("sessionsGiven")
   sessionsReceived Session[] @relation("sessionsReceived")
 
+ 
   Subscription     Subscription?
+  stripeConnectedAccount StripeConnectedAccount?
 
   joinedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([id])
   @@index([clerkId])
+}
+
+model StripeConnectedAccount {
+  connectedAccountId    String  @unique
+  stripeConnectedLinked Boolean @default(false)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 

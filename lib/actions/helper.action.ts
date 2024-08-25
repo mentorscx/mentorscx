@@ -165,3 +165,19 @@ export const getUserSubscription = async () => {
     console.error("Unexpected error in hasPremiumAccess", err);
   }
 };
+
+export async function fetchStripeConnectAccount(
+  userId: string
+): Promise<boolean> {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { stripeConnectedAccount: true },
+    });
+
+    return user?.stripeConnectedAccount?.stripeConnectedLinked ?? false;
+  } catch (error) {
+    console.error("Error fetching Stripe Connect account:", error);
+    return false;
+  }
+}

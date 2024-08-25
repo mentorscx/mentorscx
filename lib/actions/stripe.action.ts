@@ -151,3 +151,88 @@ export const getStripeSession = async ({
     throw new Error("Failed to create Stripe session. Please try again.");
   }
 };
+
+export async function createStripeAccountLink(userId: string) {
+  try {
+    // Authenticate the user
+    const { userId: clerkId } = auth();
+    if (!clerkId) {
+      throw new Error("User is not authenticated");
+    }
+
+    // Fetch user data from the database
+    const user = await db.user.findUnique({
+      where: { clerkId, id: userId },
+      select: {
+        id: true,
+        email: true,
+        stripeConnectedAccount: {
+          select: {
+            stripeConnectedLinked: true,
+            connectedAccountId: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    let stripeConnectID = user.stripeConnectedAccount?.connectedAccountId;
+
+    if (!stripeConnectID) {
+      // TODO: Add the ability to create a new Stripe account
+      // TODO: Using the best industry standards
+      const account = await stripe.accounts.create({
+        email: user.email as string,
+
+        controller: {
+          losses: {
+            payments: "application",
+          },
+          fees: {
+            payer: "application",
+          },
+          stripe_dashboard: {
+            type: "express",
+          },
+        },
+      });
+
+      // Save the new Stripe account ID to the database
+      const updatedUser = await db.stripeConnectedAccount.create({
+        data: {
+          connectedAccountId: account.id,
+          userId: user.id,
+        },
+      });
+
+      stripeConnectID = updatedUser.connectedAccountId;
+    }
+
+    // Determine the appropriate URLs based on the environment
+    const baseUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+    // Create a Stripe account link
+    const accountLink = await stripe.accountLinks.create({
+      account: stripeConnectID,
+      refresh_url: `${baseUrl}/mentor/settings`,
+      return_url: `${baseUrl}/mentor/settings`,
+      type: "account_onboarding",
+    });
+
+    // Redirect to the Stripe onboarding page
+    return accountLink.url;
+  } catch (error) {
+    console.error("Error creating Stripe account link:", error);
+    // Handle specific error types
+    if (error instanceof Error) {
+      throw new Error(`Failed to create Stripe account link: ${error.message}`);
+    }
+    // Generic error
+    throw new Error(
+      "An unexpected error occurred while creating Stripe account link"
+    );
+  }
+}
