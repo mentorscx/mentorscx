@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_CONNECT_WEBHOOK_SECRET as string
     );
   } catch (error: unknown) {
-    return new Response("webhook error", { status: 400 });
+    return new Response("stripe connect webhook error!", { status: 400 });
   }
 
   switch (event.type) {
@@ -48,5 +48,5 @@ export async function POST(req: Request) {
     }
   }
 
-  return new Response(null, { status: 200 });
+  return new Response("stripe connect webhook!", { status: 200 });
 }
