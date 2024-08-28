@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import {
   AcceptApplicationButton,
   RejectApplicationButton,
+  SkipInterviewButton,
 } from "../../_components/application-actions";
 
 type TMentorApplicationPageProps = {
@@ -97,6 +98,9 @@ const MentorApplicationPage = async ({
       <div className="flex items-center justify-center gap-4 mt-8 border-slate-400 px-6 py-3 border-1 rounded">
         {application.applicationStatus !== "ACCEPTED" && (
           <AcceptApplicationButton id={application.id} />
+        )}
+        {application.applicationStatus !== "ACCEPTED" && (
+          <SkipInterviewButton id={application.id} />
         )}
         {application.applicationStatus !== "DECLINED" && (
           <RejectApplicationButton id={application.id} />

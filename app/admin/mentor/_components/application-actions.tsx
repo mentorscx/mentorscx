@@ -18,6 +18,7 @@ export const AcceptApplicationDropdownItem = ({ id }: { id: number }) => {
         await updateMentorApplicationStatus({
           id,
           applicationStatus: "ACCEPTED",
+          templateId: 5,
         });
         toast.success("Application accepted");
         router.refresh();
@@ -40,9 +41,11 @@ export const RejectApplicationDropDownItem = ({ id }: { id: number }) => {
   const handleRejectApplication = () =>
     startTransition(async () => {
       try {
+        // TODO: the template id for declined
         await updateMentorApplicationStatus({
           id,
           applicationStatus: "DECLINED",
+          templateId: 20,
         });
         toast.success("Application declined");
         router.refresh();
@@ -58,6 +61,33 @@ export const RejectApplicationDropDownItem = ({ id }: { id: number }) => {
   );
 };
 
+export const SkipInterviewDropDownItem = ({ id }: { id: number }) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleAcceptApplication = () =>
+    startTransition(async () => {
+      try {
+        await updateMentorApplicationStatus({
+          id,
+          applicationStatus: "ACCEPTED",
+          templateId: 15,
+        });
+        toast.success("Application accepted & skip interview email sent");
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        toast.error("Error accepting application");
+      }
+    });
+
+  return (
+    <DropdownMenuItem disabled={isPending} onClick={handleAcceptApplication}>
+      Skip interview
+    </DropdownMenuItem>
+  );
+};
+
 export const AcceptApplicationButton = ({ id }: { id: number }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -68,6 +98,7 @@ export const AcceptApplicationButton = ({ id }: { id: number }) => {
         await updateMentorApplicationStatus({
           id,
           applicationStatus: "ACCEPTED",
+          templateId: 5,
         });
         toast.success("Application accepted");
         router.refresh();
@@ -89,15 +120,44 @@ export const AcceptApplicationButton = ({ id }: { id: number }) => {
   );
 };
 
+export const SkipInterviewButton = ({ id }: { id: number }) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleAcceptApplication = () =>
+    startTransition(async () => {
+      try {
+        await updateMentorApplicationStatus({
+          id,
+          applicationStatus: "ACCEPTED",
+          templateId: 15,
+        });
+        toast.success("Application accepted and onboard link sent");
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        toast.error("Error accepting application");
+      }
+    });
+
+  return (
+    <Button disabled={isPending} onClick={handleAcceptApplication} size="lg">
+      Skip interview
+    </Button>
+  );
+};
+
 export const RejectApplicationButton = ({ id }: { id: number }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const handleRejectApplication = () =>
     startTransition(async () => {
       try {
+        // TODO: the template id for declined
         await updateMentorApplicationStatus({
           id,
           applicationStatus: "DECLINED",
+          templateId: 20,
         });
         toast.success("Application declined");
         router.refresh();

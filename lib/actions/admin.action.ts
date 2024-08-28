@@ -21,9 +21,11 @@ export async function hasAdminAccess() {
 export async function updateMentorApplicationStatus({
   id,
   applicationStatus,
+  templateId,
 }: {
   id: number;
   applicationStatus: string;
+  templateId: number;
 }) {
   try {
     const isAdmin = await hasAdminAccess();
@@ -63,7 +65,7 @@ export async function updateMentorApplicationStatus({
 
       // send email if the application is approved
       await sendEmailViaBrevoTemplate({
-        templateId: 5,
+        templateId: templateId,
         email: application.email,
         name: application.firstname,
       });
