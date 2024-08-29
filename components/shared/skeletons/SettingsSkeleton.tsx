@@ -106,3 +106,77 @@ export const IntegrationSkeleton = ({
     </Card>
   );
 };
+
+export const MenteeSettingsSkeleton = () => {
+  return (
+    <div className="mx-auto max-w-5xl">
+      <div className="space-y-4 mt-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-2 w-1/2" />
+            </CardTitle>
+            <CardDescription className="pt-2">
+              <Skeleton className="h-3 w-1/2" />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Skeleton className="h-8 w-16" />
+          </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-2 w-1/2" />
+            </CardTitle>
+            <CardDescription className="pt-2">
+              <Skeleton className="h-3 w-1/2" />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Skeleton className="h-8 w-16" />
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-2 w-1/2" />
+            </CardTitle>
+            <CardDescription className="pt-2">
+              <Skeleton className="h-3 w-1/2" />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Skeleton className="h-8 w-16" />
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-2 w-1/2" />
+            </CardTitle>
+            <CardDescription className="pt-2">
+              <Skeleton className="h-3 w-1/2" />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Skeleton className="h-8 w-16" />
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  );
+};

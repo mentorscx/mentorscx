@@ -12,9 +12,9 @@ import NotificationForm from "./notification-form1";
 import { db } from "@/lib/db";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
-import LanguagesForm from "./LanguagesForm";
-import CityForm from "./CityForm";
-import CountryForm from "./CountryForm";
+import LanguagesForm from "@/components/shared/settings/LanguagesForm";
+import CityForm from "@/components/shared/settings/CityForm";
+import CountryForm from "@/components/shared/settings/CountryForm";
 
 const tabConfig = [
   {

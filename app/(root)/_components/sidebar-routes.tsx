@@ -54,6 +54,12 @@ const guestRoutes = [
     color: "text-neutral-600",
   },
   {
+    icon: Settings,
+    label: "Settings",
+    href: "/dashboard/settings",
+    color: "text-neutral-600",
+  },
+  {
     icon: CreditCardIcon,
     label: "Billing",
     href: "/dashboard/billing",

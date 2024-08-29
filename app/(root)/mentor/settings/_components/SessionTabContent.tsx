@@ -4,7 +4,7 @@ import PriceForm from "./PriceForm";
 import MaxSessions from "./MaxSessionsForm";
 import SessionDuration from "./SessionDurationForm";
 import MeetingPreference from "./MeetingPreferenceForm";
-import TimeZone from "./TimeZoneForm";
+import TimeZone from "@/components/shared/settings/TimeZoneForm";
 
 interface SessionTabContentProps {
   id: string;
