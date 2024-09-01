@@ -26,8 +26,8 @@ export const OnboardingChecklistActions = ({
     if (isChecked) return;
     if (route === "mentor/dashboard") {
       await router.push(`/mentor/profile`);
-    } else if (route === "/dashboard/dashboard") {
-      await router.push(`/dashboard/profile`);
+    } else if (route === "/dashboard") {
+      await router.push(`/profile`);
     }
 
     if (dataType === "industry") onOpen("addIndustry");

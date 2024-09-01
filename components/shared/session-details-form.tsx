@@ -4,8 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import { loadStripe } from "@stripe/stripe-js";
+import { AddCardModal } from "@/components/modals/add-card-modal";
+import { getCustomerCards } from "@/lib/actions/stripe.action";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 import {
   Form,
@@ -23,11 +30,22 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 import { Session } from "@prisma/client";
 import { createSession } from "@/lib/actions/session.action";
 import { calculatePrice, formatAMPM } from "@/lib/format";
 import { zonedTimeToUtc } from "date-fns-tz";
+import { PaymentDetailsForm } from "./PaymentDetailsForm";
+import { createPaymentIntent } from "@/lib/actions/stripe.action"; // You'll need to create this action
+
+interface Card {
+  id: string;
+  brand: string;
+  last4: string;
+  expMonth: number;
+  expYear: number;
+}
 
 interface SessionDetailsFormProps {
   session: Pick<
@@ -63,6 +81,7 @@ const FormSchema = z.object({
     message: "Outcome must be at least 60 characters.",
   }),
   acceptTerms: z.boolean().default(false).optional(),
+  paymentDetails: z.any(),
 });
 
 export function SessionDetailsForm({
@@ -71,6 +90,9 @@ export function SessionDetailsForm({
   expertise,
 }: SessionDetailsFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
   const router = useRouter();
 
   const start = new Date(session.start);
@@ -94,24 +116,109 @@ export function SessionDetailsForm({
     disable: false,
   }));
 
+  const handleCardsUpdate = useCallback((updatedCards: Card[]) => {
+    setCards(updatedCards);
+  }, []);
+
+  const handleSelectedCardChange = useCallback((card: Card | null) => {
+    setSelectedCard(card);
+  }, []);
+
+  const handleAddCard = useCallback((paymentMethod: any) => {
+    const newCard: Card = {
+      id: paymentMethod.id,
+      brand: paymentMethod.card.brand,
+      last4: paymentMethod.card.last4,
+      expMonth: paymentMethod.card.exp_month,
+      expYear: paymentMethod.card.exp_year,
+    };
+    setCards((prevCards) => [...prevCards, newCard]);
+    setSelectedCard(newCard);
+    setIsAddCardModalOpen(false);
+  }, []);
+
+  const fetchCards = useCallback(async () => {
+    try {
+      const customerCards = await getCustomerCards();
+      setCards(customerCards);
+    } catch (error) {
+      console.error("Error fetching cards:", error);
+      toast.error("Failed to fetch cards");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCards();
+  }, [fetchCards]);
+
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     setIsSubmitting(true);
     try {
       const newSession = await createSession({
         ...session,
-        ...values,
+        objective: values.objective,
+        category: values.category.map((cat) => cat.value)[0],
+        outcome: values.outcome,
         start: zonedTimeToUtc(start, timeZone),
         end: zonedTimeToUtc(end, timeZone),
-        price: calculatePrice(session.duration, session.price),
-        category: values.category.map((cat) => cat.value)[0],
+        price: calculatePrice(session.duration, session.price), // Use the price prop here
+        acceptTerms: values.acceptTerms || false,
       });
 
       if (newSession) {
-        toast.success("Session created successfully");
+        if (session.price && session.price > 0 && selectedCard) {
+          // Only process payment if there's a price and a selected card
+          const { clientSecret, paymentIntentId } = await createPaymentIntent({
+            amount: session.price * 100, // Convert to cents
+            currency: "usd",
+            paymentMethodId: selectedCard.id,
+          });
+
+          const stripe = await stripePromise;
+          if (!stripe) {
+            throw new Error("Stripe failed to initialize");
+          }
+
+          const { error, paymentIntent } = await stripe.confirmCardPayment(
+            clientSecret,
+            {
+              payment_method: selectedCard.id,
+            }
+          );
+
+          if (error) {
+            console.error("Error confirming payment:", error);
+            toast.error("Payment failed: " + error.message);
+            // You might want to delete the session here if payment fails
+            // await deleteSession(newSession.id);
+          } else if (paymentIntent.status === "requires_action") {
+            const { error: actionError, paymentIntent: finalPaymentIntent } =
+              await stripe.confirmCardPayment(clientSecret);
+            if (actionError) {
+              console.error("Error after additional action:", actionError);
+              toast.error(
+                "Payment failed after additional action: " + actionError.message
+              );
+            } else {
+              toast.success("Payment successful and session created");
+              // await updateSessionPaymentStatus(newSession.id, finalPaymentIntent.id);
+              router.push("/mentor/dashboard");
+            }
+          } else {
+            toast.success("Payment successful and session created");
+            // await updateSessionPaymentStatus(newSession.id, paymentIntent.id);
+            router.push("/mentor/dashboard");
+          }
+        } else {
+          // If no price or price is 0, just create the session without payment
+          toast.success("Session created successfully");
+          router.push("/mentor/dashboard");
+        }
+      } else {
+        toast.error("Session creation failed");
       }
-      router.push("/mentor/dashboard");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Unexpected Error...");
     } finally {
       setIsSubmitting(false);
@@ -221,16 +328,40 @@ export function SessionDetailsForm({
             )}
           />
 
-          {/* Submit button */}
-          {}
+          {session.price !== 0 && session.price !== undefined && (
+            <FormItem>
+              <FormLabel>Payment Details</FormLabel>
+              <PaymentDetailsForm
+                onCardsUpdate={handleCardsUpdate}
+                onSelectedCardChange={handleSelectedCardChange}
+                price={session.price}
+                onAddCardClick={() => setIsAddCardModalOpen(true)}
+                cards={cards}
+                selectedCard={selectedCard}
+              />
+            </FormItem>
+          )}
+
           <LoadingButton
             loading={isSubmitting}
-            disabled={!form.getValues("acceptTerms")}
+            disabled={
+              !form.getValues("acceptTerms") ||
+              (!!session.price && session.price > 0 && !selectedCard)
+            }
           >
             Submit session request
           </LoadingButton>
         </form>
       </Form>
+
+      <AddCardModal
+        isOpen={isAddCardModalOpen}
+        onClose={() => setIsAddCardModalOpen(false)}
+        onSuccess={(paymentMethod) => {
+          handleAddCard(paymentMethod);
+          fetchCards(); // Refetch cards after adding a new one
+        }}
+      />
     </div>
   );
 }

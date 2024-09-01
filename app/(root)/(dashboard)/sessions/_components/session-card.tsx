@@ -41,7 +41,7 @@ const SessionCard = ({ session }: SessionCardProps) => {
             </div>
             <div className="flex flex-col space-y-3">
               <Button asChild variant="outline">
-                <Link href={`/dashboard/sessions/${id}`}>
+                <Link href={`/sessions/${id}`}>
                   View <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>

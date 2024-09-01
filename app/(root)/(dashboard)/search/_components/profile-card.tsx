@@ -235,7 +235,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
 
         <div className="flex space-x-6 justify-center items-end">
           <Button asChild variant="outline" size="lg">
-            <Link href={`/dashboard/profile/${id}`}>View profile</Link>
+            <Link href={`/profile/${id}`}>View profile</Link>
           </Button>
           <RequestSessionButton mentorId={id} />
         </div>

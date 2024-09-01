@@ -44,7 +44,7 @@ export async function getCurrentUser({
   }
 
   if (isMentorRoute && user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/search");
   }
 
   return user;

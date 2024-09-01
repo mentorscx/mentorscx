@@ -53,7 +53,7 @@ const RequestSessionButton = (props: RequestSessionButtonProps) => {
         return;
       }
 
-      router.push(`/dashboard/calendar/${props.mentorId}`);
+      router.push(`/calendar/${props.mentorId}`);
     } catch (err) {
       console.error(err);
     }

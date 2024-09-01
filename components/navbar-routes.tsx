@@ -57,7 +57,7 @@ export const NavbarRoutes = () => {
 
       <div className="flex gap-x-3 ml-auto items-center">
         {isMentorPage ? (
-          <Link href="/dashboard/search">
+          <Link href="/search">
             <Button size="sm" variant="ghost">
               <LogInIcon className="h-4 w-4 mr-2" />
               Mentee Mode

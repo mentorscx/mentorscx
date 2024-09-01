@@ -32,7 +32,7 @@ const SubscribeProModal = ({
     if (onClose) {
       onClose();
     } else {
-      router.push("/dashboard/search");
+      router.push("/search");
     }
   };
 
@@ -62,7 +62,7 @@ const SubscribeProModal = ({
           </AlertDialogCancel>
           <AlertDialogAction
             className="w-full"
-            onClick={() => router.push("/dashboard/billing")}
+            onClick={() => router.push("/billing")}
           >
             Yes, Proceed
           </AlertDialogAction>

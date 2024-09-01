@@ -145,9 +145,7 @@ const SessionCardFooter = (props: {
 
 export const SessionCard = (props: SessionCardProps) => {
   const redirectURL =
-    props.currentView === Role.MENTOR
-      ? "/mentor/sessions"
-      : "/dashboard/sessions";
+    props.currentView === Role.MENTOR ? "/mentor/sessions" : "/sessions";
 
   return (
     <Card className="w-full">

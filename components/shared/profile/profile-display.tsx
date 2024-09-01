@@ -117,7 +117,7 @@ export const ProfileDisplayPage = async ({
                 <div>
                   {canEdit ? (
                     <ShareOwnProfile
-                      path={`dashboard/profile/${user.id}`}
+                      path={`/profile/${user.id}`}
                       title="Share your profile"
                     />
                   ) : null}

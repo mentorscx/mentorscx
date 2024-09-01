@@ -83,7 +83,7 @@ export const BookingCalendar = async ({
   const handleSelectEvent = useCallback(
     async (event: Event) => {
       const { id } = event;
-      router.push(`/dashboard/session/${id}`);
+      router.push(`/session/${id}`);
     },
     [myEvents]
   );

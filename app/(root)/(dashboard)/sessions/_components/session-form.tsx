@@ -106,7 +106,7 @@ export function SessionForm({ session, user }: SessionFormProps) {
         category: values.category.value,
       });
       setEnableEdit(false);
-      router.push("/dashboard/session");
+      router.push("/session");
       toast.success("Request submitted");
     } catch (error) {
       console.log(error);

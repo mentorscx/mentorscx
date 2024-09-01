@@ -82,7 +82,7 @@ const DashboardSessionsUpcoming = async ({
               <p className="text-muted-foreground">No upcoming sessions</p>
               {role === Role.MENTEE && (
                 <Button variant="secondary" asChild>
-                  <Link href="/dashboard/search">
+                  <Link href="/search">
                     Browse for mentors and request call
                   </Link>
                 </Button>

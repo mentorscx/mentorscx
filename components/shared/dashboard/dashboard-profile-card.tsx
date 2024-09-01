@@ -105,7 +105,7 @@ const MenteeProfileDetails = ({
         <>
           <p className="muted">0 Calls/month</p>
           <Button asChild variant="link">
-            <Link href="/dashboard/billing">Become a Pro Member</Link>
+            <Link href="/billing">Become a Pro Member</Link>
           </Button>
         </>
       )}
@@ -129,7 +129,7 @@ export const MentorDashBoardProfileCard = ({
       <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
         <ProfileLinkButton userId={userId} />
         <ShareOwnProfile
-          path={`dashboard/profile/${userId}`}
+          path={`/profile/${userId}`}
           title="Share your profile"
         />
       </div>
@@ -150,10 +150,7 @@ export const MenteeDashBoardProfileCard = ({
       <MenteeProfileDetails planName={planName} />
       <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
         <ProfileLinkButton userId={userId} />
-        <ShareOwnProfile
-          path={`dashboard/profile/${userId}`}
-          title="Invite Friends"
-        />
+        <ShareOwnProfile path={`/profile/${userId}`} title="Invite Friends" />
       </div>
     </div>
   </section>

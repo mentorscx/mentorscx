@@ -8,7 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/waitlist",
   "/support",
   "/docs/(.*)",
-  "/dashboard/profile/(.*)",
+  "/profile/(.*)",
   "/privacy",
   "/about",
   "/pricing",

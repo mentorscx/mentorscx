@@ -63,7 +63,7 @@ export default function Onboarding06({ user }: Props) {
       if (!data) {
         toast.error("Something went wrong, please try again");
       }
-      router.push("/dashboard/search");
+      router.push("/search");
       toast.success("Onboarding completed successfully");
     } catch (error) {
       console.log(error);

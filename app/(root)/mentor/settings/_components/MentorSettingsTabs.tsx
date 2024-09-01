@@ -53,7 +53,7 @@ const MentorSettingsTabs = async () => {
   }
 
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/search");
   }
 
   if (!user) {

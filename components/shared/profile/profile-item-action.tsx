@@ -125,7 +125,7 @@ interface RequestCallButtonProps {
 export function RequestCallButton({ id }: RequestCallButtonProps) {
   const router = useRouter();
   const handleClick = () => {
-    router.push(`/dashboard/schedule/${id}`);
+    router.push(`/schedule/${id}`);
   };
 
   return (
