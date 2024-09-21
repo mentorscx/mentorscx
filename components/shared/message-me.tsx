@@ -46,7 +46,7 @@ const MessageMe = (props: MessageMeProps) => {
         disabled={isDisabled}
       >
         {isLoading ? (
-          <Loader2Icon className="w-5 h-5 mr-1" />
+          <Loader2Icon className="w-5 h-5 mr-1 animate-spin" />
         ) : (
           <MessageCircleIcon className="w-5 h-5 mr-1" />
         )}

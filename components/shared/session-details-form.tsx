@@ -202,17 +202,17 @@ export function SessionDetailsForm({
             } else {
               toast.success("Payment successful and session created");
               // await updateSessionPaymentStatus(newSession.id, finalPaymentIntent.id);
-              router.push("/mentor/dashboard");
+              router.push("/dashboard");
             }
           } else {
             toast.success("Payment successful and session created");
             // await updateSessionPaymentStatus(newSession.id, paymentIntent.id);
-            router.push("/mentor/dashboard");
+            router.push("/dashboard");
           }
         } else {
           // If no price or price is 0, just create the session without payment
           toast.success("Session created successfully");
-          router.push("/mentor/dashboard");
+          router.push("/dashboard");
         }
       } else {
         toast.error("Session creation failed");

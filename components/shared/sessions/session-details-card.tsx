@@ -65,7 +65,6 @@ const SessionDetailsCard = (props: Props) => {
   );
 
   // This is for transformations
-  const profileLink = `/${profileUrl}/${otherUser.id}`;
   const priceLabel = session.price === 0 ? "Free" : `${session.price}$`;
   const priceLabelColor = session.price === 0 && "text-green-500";
   const statusLabel =
@@ -103,7 +102,9 @@ const SessionDetailsCard = (props: Props) => {
           <div className="flex flex-col items-center justify-center">
             <p className="font-semibold uppercase">{roleLabel}</p>
             <Button variant="link" size="lg" className="p-0" asChild>
-              <Link href={profileLink}>{otherUser.username}</Link>
+              <Link href={profileUrl} target="_blank">
+                {otherUser.username}
+              </Link>
             </Button>
           </div>
         </div>

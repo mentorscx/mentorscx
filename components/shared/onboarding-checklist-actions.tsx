@@ -23,31 +23,40 @@ export const OnboardingChecklistActions = ({
   const { onOpen } = useModal();
   const router = useRouter();
   const handleClick = async () => {
-    if (isChecked) return;
+    if (isChecked) {
+      return;
+    }
+
     if (route === "mentor/dashboard") {
       await router.push(`/mentor/profile`);
     } else if (route === "/dashboard") {
       await router.push(`/profile`);
     }
 
-    if (dataType === "industry") onOpen("addIndustry");
-    else if (dataType === "expertise") onOpen("addExpertise");
-    else if (dataType === "experience") onOpen("addExperience");
-    else if (dataType === "tool") onOpen("addTool");
-    else if (dataType === "bio")
+    if (dataType === "industry") {
+      onOpen("addIndustry");
+    } else if (dataType === "expertise") {
+      onOpen("addExpertise");
+    } else if (dataType === "experience") {
+      onOpen("addExperience");
+    } else if (dataType === "tool") {
+      onOpen("addTool");
+    } else if (dataType === "bio") {
       onOpen("editBio", {
         user: {
           id: profileId,
         },
       });
-    else if (dataType === "profession")
+    } else if (dataType === "profession") {
       onOpen("editProfession", {
         user: {
           id: profileId,
         },
       });
-    else if (dataType === "availability") {
-      router.push(`/mentor/schedule`);
+    } else if (dataType === "availability") {
+      await router.push(`/mentor/schedule`);
+    } else if (dataType === "meeting") {
+      await router.push(`/mentor/settings`);
     }
   };
 

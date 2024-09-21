@@ -384,3 +384,36 @@ export async function createPaymentIntent({
     throw error;
   }
 }
+
+export async function GetStripeDashboardLink(userId: string) {
+  const { userId: clerkId } = auth();
+
+  if (!clerkId || !userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const data = await db.user.findUnique({
+    where: {
+      clerkId: clerkId,
+      id: userId,
+    },
+    select: {
+      id: true,
+      stripeConnectedAccount: {
+        select: {
+          connectedAccountId: true,
+        },
+      },
+    },
+  });
+
+  if (data === null || data.id === null) {
+    throw new Error("User not found");
+  }
+
+  const loginLink = await stripe.accounts.createLoginLink(
+    data.stripeConnectedAccount?.connectedAccountId as string
+  );
+
+  return redirect(loginLink.url);
+}

@@ -12,32 +12,59 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 import { fetchStripeConnectAccount } from "@/lib/actions/helper.action";
-import { createStripeAccountLink } from "@/lib/actions/stripe.action";
+import {
+  createStripeAccountLink,
+  GetStripeDashboardLink,
+} from "@/lib/actions/stripe.action";
 
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { delay } from "@/lib/utils";
 
 const StripeConnectForm = ({ userId }: { userId: string }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isStripeConnected, setIsStripeConnected] = useState(false);
+  const [isFetchingStripeStatus, setIsFetchingStripeStatus] = useState(true);
 
   useEffect(() => {
     const checkStripeConnection = async () => {
-      const connected = await fetchStripeConnectAccount(userId);
-      setIsStripeConnected(connected);
+      try {
+        const connected = await fetchStripeConnectAccount(userId);
+        await delay(2000);
+        setIsStripeConnected(connected);
+      } catch (error) {
+        toast.error("Error fetching Stripe connection status");
+        console.error("Error fetching Stripe connection status:", error);
+      } finally {
+        setIsFetchingStripeStatus(false);
+      }
     };
 
     checkStripeConnection();
   }, [userId]);
 
-  const handleClick = async () => {
+  const handleConnectStripeAccount = async () => {
     setIsLoading(true);
 
     try {
       const stripeUrl = await createStripeAccountLink(userId);
       router.push(stripeUrl);
     } catch (error) {
+      toast.error("Error connecting Stripe account");
       console.error("Error creating Stripe account link:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleGetStripeDashboardLink = async () => {
+    setIsLoading(true);
+    try {
+      const stripeUrl = await GetStripeDashboardLink(userId);
+      router.push(stripeUrl);
+    } catch (error) {
+      toast.error("Error getting Stripe dashboard");
+      console.error("Error getting Stripe dashboard link:", error);
       setIsLoading(false);
     }
   };
@@ -49,23 +76,40 @@ const StripeConnectForm = ({ userId }: { userId: string }) => {
         <CardDescription>You can receive payments from Mentee</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center justify-between">
-        {isStripeConnected ? (
-          <Button variant="outline" disabled>
-            Stripe connected
+        {isFetchingStripeStatus ? (
+          <Button
+            className="flex items-center"
+            variant="outline"
+            disabled={true}
+          >
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Checking Stripe connection
+          </Button>
+        ) : isStripeConnected ? (
+          <Button
+            variant="outline"
+            onClick={handleGetStripeDashboardLink}
+            disabled={isLoading}
+          >
+            View stripe Dashboard
+            {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
           </Button>
         ) : (
           <Button
             variant="secondary"
-            onClick={handleClick}
+            onClick={handleConnectStripeAccount}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
-                Connect Stripe Account
+                Loading
                 <Loader2 className="ml-2 h-4 w-4 animate-spin" />
               </>
             ) : (
-              "Connect Stripe Account"
+              <>
+                Connect Stripe Account
+                {isLoading && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+              </>
             )}
           </Button>
         )}

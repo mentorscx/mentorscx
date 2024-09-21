@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
 import {
   CopyIcon,
+  Loader2Icon,
   MoreVerticalIcon,
   PencilIcon,
   PhoneIcon,
@@ -121,16 +123,34 @@ export default function ProfileItemAction({
 
 interface RequestCallButtonProps {
   id: string;
+  currentUserClerkId: string | null;
+  otherUserClerkId: string;
 }
-export function RequestCallButton({ id }: RequestCallButtonProps) {
+export function RequestCallButton({
+  id,
+  currentUserClerkId,
+  otherUserClerkId,
+}: RequestCallButtonProps) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isDisabled = currentUserClerkId === otherUserClerkId;
   const handleClick = () => {
-    router.push(`/schedule/${id}`);
+    setIsLoading(true);
+    router.push(`/calendar/${id}`);
   };
 
   return (
-    <Button className="rounded-full" onClick={handleClick} disabled={true}>
-      <VideoIcon className="w-5 h-5 mr-1" />
+    <Button
+      className="rounded-full"
+      onClick={handleClick}
+      disabled={isDisabled}
+    >
+      {isLoading ? (
+        <Loader2Icon className="w-5 h-5 mr-1 animate-spin" />
+      ) : (
+        <VideoIcon className="w-5 h-5 mr-1" />
+      )}
       Request session
     </Button>
   );

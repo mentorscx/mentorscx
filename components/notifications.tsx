@@ -65,7 +65,7 @@ function NotificationBell({ count }: { count: number }) {
     <PopoverTrigger className="relative flex h-10 w-10 items-center justify-center rounded-lg">
       <BellIcon className="h-6 w-6 text-slate-500" />
       {count > 0 && (
-        <div className="absolute right-0.5 top-0.5 z-20 w-4 h-4 rounded-full bg-green-500 text-xs text-center text-white">
+        <div className="absolute right-0.5 top-0.5 z-20 w-4 h-4 rounded-full bg-blue-500 text-xs text-center text-white">
           {count}
         </div>
       )}

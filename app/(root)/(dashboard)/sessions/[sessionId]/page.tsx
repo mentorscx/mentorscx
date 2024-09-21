@@ -64,7 +64,7 @@ const SessionPage = async ({ params }: SessionPageProps) => {
       {/* SESSION DETAILS */}
       <SessionDetailsCard
         roleLabel="Mentor"
-        profileUrl="/profile"
+        profileUrl={`/profile/${session.mentor.id}`}
         session={session}
         otherUser={session.mentor}
         currentUser={session.mentee}

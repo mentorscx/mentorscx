@@ -86,12 +86,12 @@ const mentorRoutes = [
     href: "/mentor/sessions",
     color: "text-neutral-600",
   },
-  // {
-  //   icon: MessageSquarePlusIcon,
-  //   label: "Messaging",
-  //   href: "/mentor/chats",
-  //   color: "text-neutral-600",
-  // },
+  {
+    icon: MessageSquarePlusIcon,
+    label: "Messaging",
+    href: "/mentor/chats",
+    color: "text-neutral-600",
+  },
   {
     icon: CalendarCheck,
     label: "Calendar",

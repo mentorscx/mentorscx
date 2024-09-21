@@ -195,7 +195,12 @@ export const ProfileDisplayPage = async ({
           {/* Social and Invites */}
           <div className="flex flex-col lg:flex-row items-center justify-between w-full py-4 max-w-3xl mx-auto">
             <div className="flex items-center justify-center w-full space-x-3 lg:justify-start">
-              <RequestCallButton id={user.id} />
+              <RequestCallButton
+                id={user.id}
+                currentUserClerkId={userId}
+                otherUserClerkId={user.clerkId}
+              />
+
               <MessageMe
                 currentUserClerkId={userId}
                 otherUserClerkId={user.clerkId}
