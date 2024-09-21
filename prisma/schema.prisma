@@ -220,7 +220,7 @@ model Session {
 
   review Review?
 
-  @@index([mentorId])
+  @@index([mentorId]) 
 }
 
 model Review {

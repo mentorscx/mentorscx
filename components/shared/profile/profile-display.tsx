@@ -43,6 +43,7 @@ import { redirect } from "next/navigation";
 import YouTubeVideo from "./profile-video";
 import NextAvailableSlot from "./next-available-day";
 import MessageMe from "../message-me";
+import ProfileReviews from "./profile-reviews";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -332,9 +333,8 @@ export const ProfileDisplayPage = async ({
           name="Toolkit"
         />
 
-        <div className="h-16"></div>
-        {/* <div id="reviews"></div> */}
-        {/* <ProfileTestmonialPage title="Reviews (5)" /> */}
+        <div id="reviews"></div>
+        <ProfileReviews canEdit={canEdit} id={user.id} />
       </div>
     </div>
   );

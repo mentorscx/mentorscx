@@ -10,6 +10,8 @@ import { useModal, ModalType } from "@/hooks/use-modal-store";
 
 import AddReviewModal from "@/components/modals/add-review-modal";
 import { ShareButton } from "../profile/profile-share";
+import ShareOwnProfile from "../profile/share-my-profile";
+import Link from "next/link";
 
 type Props = {
   sessionId: string;
@@ -169,9 +171,16 @@ export const SessionHeaderActions = (props: Props) => {
       )}
 
       {actionVisibility.showShareReview && (
-        <div className="border px-2 md:px-8 rounded-lg">
-          <p className="text-center pt-2 font-semibold">Share review</p>
-          <ShareButton property={{}} />
+        <div className="border p-4 md:px-8 rounded-lg border-blue-300 flex items-center gap-4">
+          <Button variant="secondary" asChild>
+            <Link href={`/reviews/${props.sessionId}`} target="_blank">
+              View review
+            </Link>
+          </Button>
+          <ShareOwnProfile
+            path={`/reviews/${props.sessionId}`}
+            title="Share review "
+          />
         </div>
       )}
 

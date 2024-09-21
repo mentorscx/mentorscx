@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { env } from "@/env";
 
 import { useModal } from "@/hooks/use-modal-store";
+import { cn } from "@/lib/utils";
 
 type ShareOwnProfileProps = {
   path: string;
-  title: string;
+  title?: string;
+  variant?: string;
 };
 
 const ShareOwnProfile = ({ path, title }: ShareOwnProfileProps) => {
@@ -27,7 +29,7 @@ const ShareOwnProfile = ({ path, title }: ShareOwnProfileProps) => {
     <div>
       <Button variant="secondary" onClick={handleClick}>
         {title}
-        <Share2Icon className="w-4 h-4 ml-2" />
+        <Share2Icon className={cn("w-4 h-4 ml-0", title && "ml-2")} />
       </Button>
     </div>
   );

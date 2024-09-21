@@ -1,5 +1,6 @@
 "use server";
 import { MentorApplication } from "@prisma/client";
+import { SessionStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
@@ -200,4 +201,50 @@ export async function isConnectedWithGoogleEvents() {
   } catch (error: any) {
     throw new Error("Failed to connect the calendar");
   }
+}
+
+interface MentorStats {
+  averageRating: number;
+  totalReviews: number;
+  totalCompletedSessions: number;
+}
+
+export async function getMentorReviewStats(
+  mentorId: string
+): Promise<MentorStats> {
+  // Get average rating and total reviews
+  const reviewStats = await db.review.aggregate({
+    _avg: {
+      rating: true,
+    },
+    _count: {
+      rating: true,
+    },
+    where: {
+      session: {
+        mentorId,
+      },
+    },
+  });
+
+  // Get total completed and reviewed sessions
+  const completedSessionsCount = await db.session.count({
+    where: {
+      mentorId,
+      status: {
+        in: [
+          SessionStatus.COMPLETED,
+          SessionStatus.REVIEWED,
+          SessionStatus.DONE,
+          SessionStatus.AWAITING_REVIEW,
+        ],
+      },
+    },
+  });
+
+  return {
+    averageRating: reviewStats._avg.rating || 0,
+    totalReviews: reviewStats._count.rating,
+    totalCompletedSessions: completedSessionsCount,
+  };
 }

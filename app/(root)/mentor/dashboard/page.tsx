@@ -91,9 +91,6 @@ const MentorDashboardPage = async () => {
               userId={id}
               userImage={imageUrl}
               userName={username}
-              rating={4.51}
-              sessions={345}
-              reviews={342}
             />
           </Suspense>
         </div>

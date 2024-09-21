@@ -10,14 +10,12 @@ import { getInitials } from "@/lib/utils";
 import { ShareButton } from "@/components/shared/profile/profile-share";
 import ShareOwnProfile from "@/components/shared/profile/share-my-profile";
 import { EclipseIcon, Eye, MoonIcon, SunIcon, User } from "lucide-react";
+import { getMentorReviewStats } from "@/lib/actions/helper.action";
 
 type MentorDashBoardProfileCardProps = {
   userId: string;
   userImage: string;
   userName: string;
-  rating: number;
-  sessions: number;
-  reviews: number;
 };
 
 type MenteeDashBoardProfileCardProps = {
@@ -114,28 +112,28 @@ const MenteeProfileDetails = ({
 };
 
 // Mentor Dashboard Profile Card
-export const MentorDashBoardProfileCard = ({
+export const MentorDashBoardProfileCard = async ({
   userId,
   userImage,
   userName,
-  rating,
-  sessions,
-  reviews,
-}: MentorDashBoardProfileCardProps) => (
-  <section className="p-6 border shadow rounded-lg bg-background md:pl-6 col-span-1 min-h-[250px] h-full">
-    <div className="flex items-center justify-center flex-col gap-1">
-      <UserProfileAvatar userImage={userImage} userName={userName} />
-      <MentorProfileDetails rating={rating} reviews={reviews} />
-      <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
-        <ProfileLinkButton userId={userId} />
-        <ShareOwnProfile
-          path={`/profile/${userId}`}
-          title="Share your profile"
-        />
+}: MentorDashBoardProfileCardProps) => {
+  const { averageRating, totalReviews } = await getMentorReviewStats(userId);
+  return (
+    <section className="p-6 border shadow rounded-lg bg-background md:pl-6 col-span-1 min-h-[250px] h-full">
+      <div className="flex items-center justify-center flex-col gap-1">
+        <UserProfileAvatar userImage={userImage} userName={userName} />
+        <MentorProfileDetails rating={averageRating} reviews={totalReviews} />
+        <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
+          <ProfileLinkButton userId={userId} />
+          <ShareOwnProfile
+            path={`/profile/${userId}`}
+            title="Share your profile"
+          />
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 // Mentee Dashboard Profile Card
 export const MenteeDashBoardProfileCard = ({
