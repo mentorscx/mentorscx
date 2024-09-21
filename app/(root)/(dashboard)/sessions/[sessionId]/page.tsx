@@ -35,6 +35,9 @@ const SessionPage = async ({ params }: SessionPageProps) => {
           imageUrl: true,
           position: true,
           organization: true,
+          meetingPreference: true,
+          zoomLink: true,
+          googleMeetLink: true,
         },
       },
       mentee: {
@@ -68,6 +71,12 @@ const SessionPage = async ({ params }: SessionPageProps) => {
         session={session}
         otherUser={session.mentor}
         currentUser={session.mentee}
+        meetingPreference={session.mentor.meetingPreference}
+        meetingUrl={
+          session.mentor.meetingPreference === "zoom"
+            ? session.mentor.zoomLink
+            : session.mentor.googleMeetLink
+        }
       />
 
       <SessionChatLayout otherUserId={session.mentor.clerkId} />

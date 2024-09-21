@@ -41,6 +41,9 @@ const SessionPage = async ({ params }: SessionPageProps) => {
         select: {
           id: true,
           timeZone: true,
+          meetingPreference: true,
+          zoomLink: true,
+          googleMeetLink: true,
         },
       },
     },
@@ -68,6 +71,12 @@ const SessionPage = async ({ params }: SessionPageProps) => {
         session={session}
         otherUser={session.mentee}
         currentUser={session.mentor}
+        meetingPreference={session.mentor.meetingPreference}
+        meetingUrl={
+          session.mentor.meetingPreference === "zoom"
+            ? session.mentor.zoomLink
+            : session.mentor.googleMeetLink
+        }
       />
 
       {/* SESSION CHAT*/}

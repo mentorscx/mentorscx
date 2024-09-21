@@ -91,6 +91,8 @@ const MentorSettingsTabs = async () => {
               meetingPreference={user.meetingPreference}
               maxSessions={user.maxSessions}
               timeZone={user.timeZone}
+              zoomLink={user.zoomLink}
+              googleMeetLink={user.googleMeetLink}
             />
           </TabsContent>
           <TabsContent key="account" value="account">

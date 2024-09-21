@@ -13,6 +13,8 @@ interface SessionTabContentProps {
   duration: number | null;
   meetingPreference: string | null;
   timeZone: string | null;
+  zoomLink: string | null;
+  googleMeetLink: string | null;
 }
 
 const SessionTabContent = ({
@@ -22,6 +24,8 @@ const SessionTabContent = ({
   duration,
   meetingPreference,
   timeZone,
+  zoomLink,
+  googleMeetLink,
 }: SessionTabContentProps) => {
   return (
     <div className="space-y-4 mt-6">
@@ -31,7 +35,12 @@ const SessionTabContent = ({
 
       <SessionDuration id={id} durationPreference={duration} />
 
-      <MeetingPreference id={id} meetingPreference={meetingPreference} />
+      <MeetingPreference
+        id={id}
+        meetingPreference={meetingPreference}
+        zoomLink={zoomLink}
+        googleMeetLink={googleMeetLink}
+      />
 
       <TimeZone id={id} timeZone={timeZone} />
     </div>

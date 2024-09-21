@@ -69,6 +69,7 @@ const SessionDuration = ({
             aria-label="Toggle underline"
             size="lg"
             className="border"
+            disabled={durationPreference === "15"}
           >
             15<span className="hidden md:block">min</span>
           </ToggleGroupItem>
@@ -77,6 +78,7 @@ const SessionDuration = ({
             aria-label="Toggle underline"
             size="lg"
             className="border"
+            disabled={durationPreference === "30"}
           >
             30<span className="hidden md:block">min</span>
           </ToggleGroupItem>
@@ -85,6 +87,7 @@ const SessionDuration = ({
             aria-label="Toggle underline"
             size="lg"
             className="border"
+            disabled={durationPreference === "45"}
           >
             45<span className="hidden md:block">min</span>
           </ToggleGroupItem>
@@ -93,6 +96,7 @@ const SessionDuration = ({
             aria-label="Toggle underline"
             size="lg"
             className="border"
+            disabled={durationPreference === "60"}
           >
             60<span className="hidden md:block">min</span>
           </ToggleGroupItem>

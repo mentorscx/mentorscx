@@ -19,7 +19,6 @@ import {
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { delay } from "@/lib/utils";
 
 const StripeConnectForm = ({ userId }: { userId: string }) => {
   const router = useRouter();
@@ -31,7 +30,6 @@ const StripeConnectForm = ({ userId }: { userId: string }) => {
     const checkStripeConnection = async () => {
       try {
         const connected = await fetchStripeConnectAccount(userId);
-        await delay(2000);
         setIsStripeConnected(connected);
       } catch (error) {
         toast.error("Error fetching Stripe connection status");
