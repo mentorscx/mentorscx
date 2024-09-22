@@ -24,8 +24,8 @@ import { addReview } from "@/lib/actions/review.action";
 import { SessionStatus } from "@prisma/client";
 
 const formSchema = z.object({
-  feedback: z.string().min(1, {
-    message: "Feedback is required.",
+  feedback: z.string().min(40, {
+    message: "Feedback is required (min 40 characters).",
   }),
   rating: z.number().min(1, {
     message: "Please select the rating.",
@@ -135,6 +135,11 @@ export const AddReviewModal = (props: AddReviewModalProps) => {
               {...register("feedback")}
               className="w-full h-32"
             />
+
+            <div className="text-sm text-left text-muted-foreground">
+              characters (40 minimum)
+            </div>
+
             {errors.feedback && (
               <div className="text-red-500 text-sm text-left">
                 {errors.feedback.message}
