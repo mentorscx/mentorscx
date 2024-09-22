@@ -44,6 +44,8 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     country,
     joinedAt,
     location,
+    averageReview,
+    totalSessions,
   } = data;
 
   if (
@@ -113,12 +115,11 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
         <div className=" w-[100px]">
           <h4 className="h4 font-semibold text-xl text-end flex items-center justify-end">
             <StarIcon className="h-4 w-4 mr-1 text-yellow-400 fill-yellow-400" />
-            4.99
+            {averageReview}
           </h4>
           <p className="text-sm text-muted-foreground text-end">
-            319 reviews /
+            {totalSessions} sessions
           </p>
-          <p className="text-sm text-muted-foreground text-end">516 sessions</p>
           <p className="flex justify-end items-center">
             <span className="text-green-600 font-semibold">
               {price === 0 ? "Free" : `$${price}`}

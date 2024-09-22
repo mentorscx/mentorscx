@@ -57,15 +57,19 @@ const ProfileLinkButton = ({ userId }: { userId: string }) => (
 const MentorProfileDetails = ({
   rating,
   reviews,
+  totalCompletedSessions,
 }: {
   rating: number;
   reviews: number;
+  totalCompletedSessions: number;
 }) => (
   <>
     <p className="large flex items-center gap-2 !text-2xl">
       <StarFilledIcon className="w-5 h-5 text-yellow-500" /> {rating ?? "NA"}
     </p>
-    <p className="muted">{reviews ?? 0} reviews</p>
+    <p className="muted !text-base">
+      {reviews ?? 0} reviews | {totalCompletedSessions} sessions
+    </p>
   </>
 );
 
@@ -117,12 +121,17 @@ export const MentorDashBoardProfileCard = async ({
   userImage,
   userName,
 }: MentorDashBoardProfileCardProps) => {
-  const { averageRating, totalReviews } = await getMentorReviewStats(userId);
+  const { averageRating, totalReviews, totalCompletedSessions } =
+    await getMentorReviewStats(userId);
   return (
     <section className="p-6 border shadow rounded-lg bg-background md:pl-6 col-span-1 min-h-[250px] h-full">
       <div className="flex items-center justify-center flex-col gap-1">
         <UserProfileAvatar userImage={userImage} userName={userName} />
-        <MentorProfileDetails rating={averageRating} reviews={totalReviews} />
+        <MentorProfileDetails
+          rating={averageRating}
+          reviews={totalReviews}
+          totalCompletedSessions={totalCompletedSessions}
+        />
         <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
           <ProfileLinkButton userId={userId} />
           <ShareOwnProfile

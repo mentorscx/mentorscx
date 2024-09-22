@@ -44,6 +44,7 @@ import YouTubeVideo from "./profile-video";
 import NextAvailableSlot from "./next-available-day";
 import MessageMe from "../message-me";
 import ProfileReviews from "./profile-reviews";
+import { getMentorReviewStats } from "@/lib/actions/helper.action";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -78,8 +79,6 @@ export const ProfileDisplayPage = async ({
     },
   });
 
-  console.log(user?.clerkId);
-
   if (!user) {
     return <div>Profile not found!</div>;
   }
@@ -91,6 +90,8 @@ export const ProfileDisplayPage = async ({
   if (isMentorRoute) {
     user.role !== Role.MENTOR && redirect("/");
   }
+
+  const { averageRating, totalReviews } = await getMentorReviewStats(user.id);
 
   // Check if the person can edit the profile
   const canEdit = isOwnProfile || userId === user.clerkId;
@@ -164,9 +165,11 @@ export const ProfileDisplayPage = async ({
                   <div className="flex flex-col items-center muted">
                     <div className="flex items-center">
                       <StarIcon className="w-4 h-4 fill-yellow-500 text-yellow-500 mr-1" />
-                      <p className="text-xl font-bold text-black">NA</p>
+                      <p className="text-xl font-bold text-black">
+                        {averageRating}
+                      </p>
                     </div>
-                    <div>0 reviews</div>
+                    <div>{totalReviews} reviews</div>
                   </div>
                   <Separator className="h-[2px] lg:hidden" />
                   <div className="flex flex-col items-center muted">
