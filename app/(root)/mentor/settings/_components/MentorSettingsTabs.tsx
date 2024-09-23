@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import LanguagesForm from "@/components/shared/settings/LanguagesForm";
 import CityForm from "@/components/shared/settings/CityForm";
 import CountryForm from "@/components/shared/settings/CountryForm";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 const tabConfig = [
   {
@@ -53,7 +54,7 @@ const MentorSettingsTabs = async () => {
   }
 
   if (user.role !== Role.MENTOR) {
-    redirect("/search");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   if (!user) {

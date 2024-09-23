@@ -77,8 +77,6 @@ const MenteeSessionsPage = async () => {
     ]),
   };
 
-  console.log(proUser);
-
   return (
     <ProAccessWrapper active={proUser}>
       <div className="mx-auto max-w-5xl pt-16">

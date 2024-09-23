@@ -79,8 +79,6 @@ const MentorApplicationPage = async ({
     return <div>Application not found</div>;
   }
 
-  console.log(application);
-
   return (
     <div className="max-w-5xl mx-auto px-3 md:px-6 ">
       {/* Application fields */}

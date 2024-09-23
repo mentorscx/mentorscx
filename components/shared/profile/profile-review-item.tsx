@@ -5,6 +5,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import { ShareIcon } from "lucide-react";
 import ShareOwnProfile from "./share-my-profile";
+import { StarRating } from "../star-rating";
 
 type ProfileSkillItemProps = {
   imageUrl: string;
@@ -38,7 +39,9 @@ const ProfileReviewItem = ({
       </div>
       <div className="flex min-h-[2rem] w-full min-w-0 flex-col items-start justify-start">
         <h4 className="large text-slate-800 ">{username} </h4>
-        <p className="w-full text-base text-slate-700 whitespace-pre-line">
+        <StarRating rating={rating} />
+
+        <p className="w-full text-base text-slate-700 whitespace-pre-line mt-2">
           {feedback}
         </p>
       </div>

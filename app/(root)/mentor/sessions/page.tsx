@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { Role, SessionStatus } from "@prisma/client";
 import SessionMain from "@/components/shared/sessions/session-main";
 import { TSession } from "@/types";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 // Page metadata
 export const metadata: Metadata = {
@@ -52,6 +53,17 @@ const MenteeSessionsPage = async () => {
 
   if (!clerkId) {
     return redirect("/sign-in");
+  }
+
+  const user = await db.user.findUnique({
+    where: { clerkId },
+    select: {
+      role: true,
+    },
+  });
+
+  if (!user || user.role !== Role.MENTOR) {
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   const sessions = await fetchSessionsData(clerkId);

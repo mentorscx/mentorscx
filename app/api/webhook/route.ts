@@ -4,6 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
+import { Role } from "@prisma/client";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -88,6 +89,7 @@ export async function POST(req: Request) {
           username: `${first_name}${last_name ? ` ${last_name}` : ""}`,
           imageUrl: image_url,
           email: email_addresses[0].email_address,
+          role: Role.MENTEE,
         },
       });
     }

@@ -45,7 +45,7 @@ import {
 import { updateUser } from "@/lib/actions/user.action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { TIMEZONES } from "@/constants/data";
 
 const FormSchema = z.object({
@@ -57,9 +57,10 @@ const FormSchema = z.object({
 interface TimeZoneProps {
   id: string;
   timeZone: string | null;
+  route: Role;
 }
 
-export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
+export default function TimeZoneForm({ id, timeZone, route }: TimeZoneProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [valueChanged, setValueChange] = useState(false);
@@ -75,22 +76,29 @@ export default function TimeZoneForm({ id, timeZone }: TimeZoneProps) {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      withReactContent(Swal)
-        .fire({
-          text: "Changing timezone will rest your weekly schedule, you need to set again.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "I understand!",
-          confirmButtonColor: "#3b82f6",
-          cancelButtonText: "cancel",
-          cancelButtonColor: "#ef4444",
-        })
-        .then(async (result) => {
-          if (result.isConfirmed) {
-            await updateUser({ ...data, id, weeklyAvailability: null });
-            toast.success("Time zone preference updated");
-          }
-        });
+      if (route === Role.MENTOR) {
+        withReactContent(Swal)
+          .fire({
+            text: "Changing timezone will rest your weekly schedule, you need to set again.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "I understand!",
+            confirmButtonColor: "#3b82f6",
+            cancelButtonText: "cancel",
+            cancelButtonColor: "#ef4444",
+          })
+          .then(async (result) => {
+            if (result.isConfirmed) {
+              await updateUser({ ...data, id, weeklyAvailability: null });
+              toast.success("Time zone preference updated");
+            }
+          });
+      }
+
+      if (route === Role.MENTEE) {
+        await updateUser({ ...data, id, weeklyAvailability: null });
+        toast.success("Time zone preference updated");
+      }
 
       router.refresh();
     } catch {

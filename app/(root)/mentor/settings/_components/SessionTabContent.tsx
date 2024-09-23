@@ -5,6 +5,7 @@ import MaxSessions from "./MaxSessionsForm";
 import SessionDuration from "./SessionDurationForm";
 import MeetingPreference from "./MeetingPreferenceForm";
 import TimeZone from "@/components/shared/settings/TimeZoneForm";
+import { Role } from "@prisma/client";
 
 interface SessionTabContentProps {
   id: string;
@@ -42,7 +43,7 @@ const SessionTabContent = ({
         googleMeetLink={googleMeetLink}
       />
 
-      <TimeZone id={id} timeZone={timeZone} />
+      <TimeZone id={id} timeZone={timeZone} route={Role.MENTOR} />
     </div>
   );
 };

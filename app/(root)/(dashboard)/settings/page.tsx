@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { SettingsIcon } from "lucide-react";
 import TimeZoneForm from "@/components/shared/settings/TimeZoneForm";
 import { MenteeSettingsSkeleton } from "@/components/shared/skeletons/SettingsSkeleton";
+import { Role } from "@prisma/client";
 
 const fetchUserSettings = async (clerkId: string) => {
   try {
@@ -40,7 +41,11 @@ const MenteeSettings = async () => {
       <CountryForm userId={user.id} country={user.country} />
       <LanguagesForm userId={user.id} languages={user.languages} />
       <div className="mt-4">
-        <TimeZoneForm id={user.id} timeZone={user.timeZone} />
+        <TimeZoneForm
+          id={user.id}
+          timeZone={user.timeZone}
+          route={Role.MENTEE}
+        />
       </div>
     </>
   );

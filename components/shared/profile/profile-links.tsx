@@ -73,7 +73,11 @@ const ProfileLinks = () => {
         </Link>
       </Button>
       <Button variant="link">
-        <Link href="#reviews" className="text-lg">
+        <Link
+          href="#reviews"
+          className="text-lg"
+          onClick={(e) => handleScroll(e, "reviews")}
+        >
           Reviews
         </Link>
       </Button>

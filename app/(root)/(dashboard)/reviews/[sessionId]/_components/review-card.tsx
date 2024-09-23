@@ -1,37 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const MAX_STARS = 5;
-
-interface StarRatingProps {
-  rating: number;
-}
-
-const StarRating = ({ rating }: StarRatingProps) => (
-  <div className="flex items-center mt-1">
-    {[...Array(MAX_STARS)].map((_, i) => (
-      <motion.div
-        key={i}
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: i * 0.1 }}
-      >
-        <Star
-          className={`h-5 w-5 ${
-            i < rating
-              ? "fill-yellow-500 text-yellow-500"
-              : "fill-gray-300 text-gray-300"
-          }`}
-        />
-      </motion.div>
-    ))}
-  </div>
-);
+import { StarRating } from "@/components/shared/star-rating";
 
 interface ExpandableTextProps {
   text: string;

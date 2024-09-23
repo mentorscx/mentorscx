@@ -45,6 +45,7 @@ import NextAvailableSlot from "./next-available-day";
 import MessageMe from "../message-me";
 import ProfileReviews from "./profile-reviews";
 import { getMentorReviewStats } from "@/lib/actions/helper.action";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -62,8 +63,6 @@ export const ProfileDisplayPage = async ({
   if (isOwnProfile && !userId) {
     redirect("/login");
   }
-
-  console.log(userId);
 
   const user = await db.user.findUnique({
     where: {
@@ -88,7 +87,9 @@ export const ProfileDisplayPage = async ({
   }
 
   if (isMentorRoute) {
-    user.role !== Role.MENTOR && redirect("/");
+    if (user.role !== Role.MENTOR) {
+      return <MentorSubscribeModal isDialogOpen={true} />;
+    }
   }
 
   const { averageRating, totalReviews } = await getMentorReviewStats(user.id);

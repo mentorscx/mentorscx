@@ -11,6 +11,7 @@ import BookingCalendarDetails from "@/components/shared/calendar/booking-calenda
 import BookingCalendarMain from "@/components/shared/calendar/booking-calendar-main";
 import { generateEventsForNextYear } from "@/lib/helpers/recurring";
 import { fetchExternalEvents } from "@/lib/actions/clerk.action";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 export const metadata: Metadata = {
   title: "Calendar | Mentors CX",
@@ -66,7 +67,7 @@ const CalendarPage = async () => {
   if (!user) return null;
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   if (!user.isOnboarded) redirect("/onboard/1");

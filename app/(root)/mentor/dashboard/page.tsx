@@ -23,6 +23,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { MentorDashBoardProfileCard } from "@/components/shared/dashboard/dashboard-profile-card";
 import { MentorLevelsCard } from "@/components/shared/dashboard/mentor-levels-card";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 export const metadata: Metadata = {
   title: "Dashboard | Mentors CX",
@@ -60,7 +61,7 @@ const MentorDashboardPage = async () => {
 
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   const { id, imageUrl, username } = user;
