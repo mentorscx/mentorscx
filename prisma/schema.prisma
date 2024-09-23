@@ -70,6 +70,8 @@ model User {
   Subscription     Subscription?
   stripeConnectedAccount StripeConnectedAccount?
 
+  featureRequests FeatureRequest[]
+
   joinedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -293,7 +295,10 @@ enum FeatureType {
 
 model FeatureRequest {
   id          Int         @id @default(autoincrement())
+
   userId      String
+  user   User   @relation(fields: [userId], references: [id])  
+
   featureType FeatureType @default(NEW_FEATURE)
   description String      @db.Text
 }
