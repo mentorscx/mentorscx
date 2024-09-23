@@ -22,6 +22,7 @@ import {
 } from "@/components/shared/dashboard/dashboard-skelton";
 import { Card } from "@/components/ui/card";
 import { MentorDashBoardProfileCard } from "@/components/shared/dashboard/dashboard-profile-card";
+import { MentorLevelsCard } from "@/components/shared/dashboard/mentor-levels-card";
 
 export const metadata: Metadata = {
   title: "Dashboard | Mentors CX",
@@ -79,7 +80,7 @@ const MentorDashboardPage = async () => {
               <DashBoardUsersBooked userId={id} />
             </Suspense>
             <Suspense fallback={<DashboardCardSkelton />}>
-              <DashBoardSessionCount userId={id} />
+              <MentorLevelsCard mentorId={id} />
             </Suspense>
           </div>
         </Card>

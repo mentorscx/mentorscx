@@ -88,7 +88,7 @@ const MenteeDashboardPage = async () => {
               <DashBoardSessionCount userId={id} />
             </Suspense>
             <Suspense fallback={<DashboardCardSkelton />}>
-              <DashboardProfileLevel />
+              <DashboardProfileLevel userId={userId} />
             </Suspense>
           </div>
         </Card>
