@@ -71,6 +71,7 @@ const createStripeSession = async ({
     },
     customer: customerId,
     mode: "subscription",
+    allow_promotion_codes: true,
     billing_address_collection: "auto",
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${domainUrl}/payment/success`,
