@@ -15,19 +15,25 @@ import { Button } from "@/components/ui/button";
 import { getCompletedSessionsCount } from "@/lib/actions/helper.action";
 import { MenteeLevelsDialog } from "@/components/modals/dashboard-levels-modal";
 
-const fetchQueuedSessions = async (userId: string) => {
-  const queuedSessions = await db.session.findMany({
+export async function fetchQueuedSessionsCount(
+  userId: string
+): Promise<number> {
+  const queuedSessions = await db.session.count({
     where: {
-      status: SessionStatus.ACCEPTED || SessionStatus.AWAITING_HOST,
-      start: {
-        gte: new Date(),
-      },
       menteeId: userId,
+      status: {
+        in: [
+          SessionStatus.ACCEPTED,
+          SessionStatus.AWAITING_HOST,
+          SessionStatus.AWAITING_REVIEW,
+          SessionStatus.DONE,
+        ],
+      },
     },
   });
 
-  return queuedSessions.length;
-};
+  return queuedSessions;
+}
 
 export const DashBoardQueueLimit = async ({
   planName,
@@ -36,9 +42,7 @@ export const DashBoardQueueLimit = async ({
   planName: string | undefined;
   userId: string;
 }) => {
-  // Determine the booking limit and icon based on the plan name
-
-  const queuedSessionsCount = await fetchQueuedSessions(userId);
+  const queuedSessionsCount = await fetchQueuedSessionsCount(userId);
   const { bookingLimit } = (() => {
     switch (planName) {
       case "Moon":

@@ -84,22 +84,23 @@ export async function getSessionsCompletedLastMonth(userId: string) {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const sessions = await db.session.findMany({
+    const completedSessionsCount = await db.session.count({
       where: {
-        mentorId: userId,
+        menteeId: userId,
         createdAt: {
           gte: thirtyDaysAgo,
         },
         status: {
-          equals: "COMPLETED",
+          in: [
+            SessionStatus.COMPLETED,
+            SessionStatus.AWAITING_REVIEW,
+            SessionStatus.REVIEWED,
+          ],
         },
-      },
-      select: {
-        id: true,
       },
     });
 
-    return sessions.length;
+    return completedSessionsCount;
   } catch (err) {
     console.log("Error in getSessionsCompletedLastMonth", err);
   }
