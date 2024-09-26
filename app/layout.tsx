@@ -4,10 +4,12 @@ import { Toaster } from "@/components/ui/sonner";
 import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 
+import { env } from "@/env";
 import { Providers } from "./providers";
 import "./globals.css";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import CrispProvider from "@/components/providers/crisp-provider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,6 +42,7 @@ export default function RootLayout({
           </Providers>
           <ModalProvider />
         </body>
+        <GoogleAnalytics gaId={env.GOOGLE_ANALYTICS_KEY} />
       </html>
     </ClerkProvider>
   );
