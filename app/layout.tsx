@@ -9,7 +9,7 @@ import { Providers } from "./providers";
 import "./globals.css";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import CrispProvider from "@/components/providers/crisp-provider";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,7 +42,7 @@ export default function RootLayout({
           </Providers>
           <ModalProvider />
         </body>
-        <GoogleAnalytics gaId={env.GOOGLE_ANALYTICS_KEY} />
+        <GoogleTagManager gaId={env.GOOGLE_ANALYTICS_KEY} />
       </html>
     </ClerkProvider>
   );
