@@ -226,6 +226,13 @@ export const ProfileDisplayPage = async ({
               </Button>
             )}
 
+            {!user.portfolioWebsite && canEdit && (
+              <Button variant="link" className="max-lg:mt-4 opacity-20">
+                <span className="text-base">Personal website</span>
+                <ExternalLink className="w-4 h-4 ml-1" />
+              </Button>
+            )}
+
             <div className="max-lg:mt-6 flex items-center justify-center">
               {user.facebookProfile && (
                 <Button variant="link" size="icon" asChild>
@@ -236,6 +243,12 @@ export const ProfileDisplayPage = async ({
                   >
                     <LucideFacebook className="w-6 h-6 hover:scale-125 transition-colors duration-700" />
                   </Link>
+                </Button>
+              )}
+
+              {!user.facebookProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <LucideFacebook className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
                 </Button>
               )}
               {user.linkedinProfile && (
@@ -249,6 +262,11 @@ export const ProfileDisplayPage = async ({
                   </Link>
                 </Button>
               )}
+              {!user.linkedinProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <LinkedInLogoIcon className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
+                </Button>
+              )}
               {user.twitterProfile && (
                 <Button variant="link" size="icon" asChild>
                   <Link
@@ -260,6 +278,12 @@ export const ProfileDisplayPage = async ({
                   </Link>
                 </Button>
               )}
+
+              {!user.twitterProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <TwitterLogoIcon className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
+                </Button>
+              )}
               {user.tiktokProfile && (
                 <Button variant="link" size="icon" asChild>
                   <Link
@@ -269,6 +293,11 @@ export const ProfileDisplayPage = async ({
                   >
                     <FaTiktok className="w-6 h-6 hover:scale-125 transition-colors duration-700" />
                   </Link>
+                </Button>
+              )}
+              {!user.tiktokProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <FaTiktok className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
                 </Button>
               )}
 
