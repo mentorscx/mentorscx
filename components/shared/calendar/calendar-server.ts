@@ -11,6 +11,7 @@ type Event = {
 export const getAvailableSlots = (params: {
   individualEvents: Event[];
   timeZone: string;
+  mentorTimeZone: string;
   weeklyEvents: Event[];
   externalEvents: Event[];
   duration: number;
@@ -68,28 +69,49 @@ export const getAvailableSlots = (params: {
   );
 
   if (params.maxSessions !== null) {
-    // Group slots by week
-    const weekMap = new Map();
+    const mentorTimezone = params.mentorTimeZone;
+    const weekMap = new Map<string, Event[]>();
+    const maxSessions = params.maxSessions;
+
+    // Helper function to get the start of the week in mentor's timezone
+    const getWeekStart = (date: Date): moment.Moment => {
+      return moment.tz(date, mentorTimezone).startOf("week");
+    };
+
+    // Helper function to get the end of the week in mentor's timezone
+    const getWeekEnd = (date: Date): moment.Moment => {
+      return moment.tz(date, mentorTimezone).endOf("week");
+    };
+
+    // Group booked slots by week in mentor's timezone
     bookedSlots.forEach((slot) => {
-      const weekStart = startOfWeek(slot.start, { weekStartsOn: 1 });
-      const weekKey = weekStart.toISOString();
+      const weekStart = getWeekStart(slot.start);
+      const weekKey = weekStart.format("YYYY-MM-DD");
+
       if (!weekMap.has(weekKey)) {
         weekMap.set(weekKey, []);
       }
-      weekMap.get(weekKey).push(slot);
+      weekMap.get(weekKey)?.push(slot);
     });
 
     // Filter out weeks with more than the max allowed sessions
-    weekMap.forEach((slots, week) => {
-      if (params.maxSessions && slots.length >= params.maxSessions) {
-        // Remove all slots in this week from `uniqueAvailableTimeSlots`
-        const startOfWeekDate = new Date(week);
-        const endOfWeekDate = endOfWeek(startOfWeekDate, { weekStartsOn: 1 });
-        uniqueAvailableTimeSlots = uniqueAvailableTimeSlots.filter((slot) => {
-          return slot.start < startOfWeekDate || slot.start > endOfWeekDate;
-        });
+    uniqueAvailableTimeSlots = uniqueAvailableTimeSlots.filter(
+      (availableSlot) => {
+        const weekStart = getWeekStart(availableSlot.start);
+        const weekEnd = getWeekEnd(availableSlot.start);
+        const weekKey = weekStart.format("YYYY-MM-DD");
+
+        const bookedSlotsInWeek = weekMap.get(weekKey) || [];
+
+        // Check if the slot is within the week and if the week hasn't reached max sessions
+        return (
+          moment
+            .tz(availableSlot.start, mentorTimezone)
+            .isBetween(weekStart, weekEnd, null, "[]") &&
+          bookedSlotsInWeek.length < maxSessions
+        );
       }
-    });
+    );
   }
 
   return uniqueAvailableTimeSlots;
