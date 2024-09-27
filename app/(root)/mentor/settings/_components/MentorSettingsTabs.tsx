@@ -30,13 +30,19 @@ const tabConfig = [
   },
 
   {
-    value: "calendar",
+    value: "integrations",
     label: "Integrations",
     Icon: CalendarIcon,
   },
 ] as const;
 
-const MentorSettingsTabs = async () => {
+type MentorSettingsTabs = "account" | "session" | "integrations";
+
+interface MentorSettingsTabsProps {
+  activeTab: MentorSettingsTabs;
+}
+
+const MentorSettingsTabs = async ({ activeTab }: MentorSettingsTabsProps) => {
   const { userId: clerkId } = auth();
   if (!clerkId) {
     redirect("/login");
@@ -70,7 +76,7 @@ const MentorSettingsTabs = async () => {
   return (
     <div className="mx-auto max-w-5xl pt-16">
       <section className="my-4 lg:my-8 p-3 border shadow rounded bg-background">
-        <Tabs defaultValue="sessions" className="p-6">
+        <Tabs defaultValue={activeTab} className="p-6">
           <TabsList>
             {tabConfig.map(({ value, label, Icon }) => (
               <TabsTrigger
@@ -104,7 +110,7 @@ const MentorSettingsTabs = async () => {
           <TabsContent key="notifications" value="notifications">
             <NotificationForm />
           </TabsContent>
-          <TabsContent key="calendar" value="calendar">
+          <TabsContent key="integrations" value="integrations">
             <CalendarTabContent
               id={user.id}
               zoomLink={user.zoomLink}
