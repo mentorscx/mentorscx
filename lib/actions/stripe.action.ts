@@ -77,9 +77,6 @@ const createStripeSession = async ({
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${domainUrl}/payment/success`,
     cancel_url: `${domainUrl}/payment/cancelled`,
-    invoice_creation: {
-      enabled: true,
-    },
   });
 };
 
