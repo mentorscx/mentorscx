@@ -11,7 +11,7 @@ import {
   TrashIcon,
   VideoIcon,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +26,9 @@ import { useModal } from "@/hooks/use-modal-store";
 import { Experience, Expertise, Tool, Industry } from "@prisma/client";
 import { useEditProfileStore } from "@/hooks/use-edit-profile-store";
 import { toast } from "sonner";
+import { getUserSubscription } from "@/lib/actions/helper.action";
+import { isProUser } from "@/lib/utils";
+import SubscribeProModal from "@/components/modals/subscribe-pro-modal";
 
 interface ProfileItemActionProps {
   data: {
@@ -133,26 +136,48 @@ export function RequestCallButton({
 }: RequestCallButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const isDisabled = currentUserClerkId === otherUserClerkId;
-  const handleClick = () => {
+
+  const handleClose = () => setIsDialogOpen(!isDialogOpen);
+
+  const handleClick = async () => {
     setIsLoading(true);
+    const user = await getUserSubscription();
+
+    if (!user) {
+      redirect("/sign-in");
+    }
+
+    const proUser = isProUser(user.Subscription);
+
+    if (!proUser) {
+      setIsDialogOpen(true);
+      setIsLoading(false);
+      return;
+    }
+
     router.push(`/calendar/${id}`);
   };
 
   return (
-    <Button
-      className="rounded-full"
-      onClick={handleClick}
-      disabled={isDisabled}
-    >
-      {isLoading ? (
-        <Loader2Icon className="w-5 h-5 mr-1 animate-spin" />
-      ) : (
-        <VideoIcon className="w-5 h-5 mr-1" />
-      )}
-      Request session
-    </Button>
+    <>
+      {" "}
+      <SubscribeProModal isDialogOpen={isDialogOpen} onClose={handleClose} />
+      <Button
+        className="rounded-full"
+        onClick={handleClick}
+        disabled={isDisabled}
+      >
+        {isLoading ? (
+          <Loader2Icon className="w-5 h-5 mr-1 animate-spin" />
+        ) : (
+          <VideoIcon className="w-5 h-5 mr-1" />
+        )}
+        Request session
+      </Button>
+    </>
   );
 }
 

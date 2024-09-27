@@ -11,6 +11,7 @@ import { ShareButton } from "@/components/shared/profile/profile-share";
 import ShareOwnProfile from "@/components/shared/profile/share-my-profile";
 import { EclipseIcon, Eye, MoonIcon, SunIcon, User } from "lucide-react";
 import { getMentorReviewStats } from "@/lib/actions/helper.action";
+import { Role } from "@prisma/client";
 
 type MentorDashBoardProfileCardProps = {
   userId: string;
@@ -40,18 +41,28 @@ const UserProfileAvatar = ({
 );
 
 // Reusable Profile Link Button
-const ProfileLinkButton = ({ userId }: { userId: string }) => (
-  <Button
-    variant="secondary"
-    asChild
-    className="min-w-[150px] md:w-fit flex items-center"
-  >
-    <Link href={`/mentor/profile/${userId}`}>
-      View your profile
-      <User className="w-5 h-5 ml-1" />
-    </Link>
-  </Button>
-);
+const ProfileLinkButton = ({
+  userId,
+  role,
+}: {
+  userId: string;
+  role: Role;
+}) => {
+  const profileUrl =
+    role === Role.MENTEE ? "/profile" : `/mentor/profile/${userId}`;
+  return (
+    <Button
+      variant="secondary"
+      asChild
+      className="min-w-[150px] md:w-fit flex items-center"
+    >
+      <Link href={profileUrl}>
+        View your profile
+        <User className="w-5 h-5 ml-1" />
+      </Link>
+    </Button>
+  );
+};
 
 // Mentor-specific details component
 const MentorProfileDetails = ({
@@ -107,7 +118,9 @@ const MenteeProfileDetails = ({
         <>
           <p className="muted">0 Calls/month</p>
           <Button asChild variant="link">
-            <Link href="/billing">Become a Pro Member</Link>
+            <Link href="/billing" target="_blank">
+              Become a Pro Member
+            </Link>
           </Button>
         </>
       )}
@@ -133,7 +146,7 @@ export const MentorDashBoardProfileCard = async ({
           totalCompletedSessions={totalCompletedSessions}
         />
         <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
-          <ProfileLinkButton userId={userId} />
+          <ProfileLinkButton userId={userId} role={Role.MENTOR} />
           <ShareOwnProfile
             path={`/profile/${userId}`}
             title="Share your profile"
@@ -156,7 +169,7 @@ export const MenteeDashBoardProfileCard = ({
       <UserProfileAvatar userImage={userImage} userName={userName} />
       <MenteeProfileDetails planName={planName} />
       <div className="w-full flex flex-col md:flex-row justify-between gap-2 items-center my-2">
-        <ProfileLinkButton userId={userId} />
+        <ProfileLinkButton userId={userId} role={Role.MENTEE} />
         <ShareOwnProfile path={`/profile/${userId}`} title="Invite Friends" />
       </div>
     </div>

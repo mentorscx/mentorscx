@@ -57,12 +57,12 @@ const MentorDashboardPage = async () => {
 
   if (!user) return null;
 
-  if (!user.isOnboarded) redirect("/onboard/1");
-
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
     return <MentorSubscribeModal isDialogOpen={true} />;
   }
+
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   const { id, imageUrl, username } = user;
 
