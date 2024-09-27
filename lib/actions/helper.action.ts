@@ -1,6 +1,7 @@
 "use server";
 import { MentorApplication } from "@prisma/client";
 import { SessionStatus } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
@@ -283,3 +284,53 @@ export const getCompletedSessionsCount = async (
     throw new Error("Failed to get completed sessions count");
   }
 };
+
+/**
+ * Generates a unique user ID by concatenating first name and last name.
+ * If both are null, returns a UUID. If one is null, uses the other.
+ * If the ID already exists, appends a number to make it unique.
+ *
+ * @param firstName - The first name of the user
+ * @param lastName - The last name of the user
+ * @returns The unique ID for the user
+ */
+export async function generateUniqueUserId(
+  firstName: string | null,
+  lastName: string | null
+): Promise<string> {
+  let baseId: string;
+
+  if (!firstName && !lastName) {
+    return uuidv4();
+  } else if (firstName && lastName) {
+    baseId = `${firstName.toLowerCase()}${lastName.toLowerCase()}`;
+  } else if (firstName) {
+    baseId = firstName.toLowerCase();
+  } else {
+    baseId = lastName!.toLowerCase();
+  }
+
+  let uniqueId = baseId;
+  let idExists = true;
+  let counter = 1;
+
+  // Check if the ID already exists in the database
+  while (idExists) {
+    const existingUser = await db.user.findUnique({
+      where: {
+        id: uniqueId,
+      },
+    });
+
+    // If no user exists with this ID, we have a unique ID
+    if (!existingUser) {
+      idExists = false;
+    } else {
+      // Otherwise, append the counter and check again
+      uniqueId = `${baseId}${counter}`;
+      counter++;
+    }
+  }
+
+  return uniqueId;
+}
