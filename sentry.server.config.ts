@@ -7,9 +7,13 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://8cfa4bff2ee46ea3c643e00d60748e9c@o4508014230568960.ingest.us.sentry.io/4508014238433280",
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  // Adjust sampling rates based on environment
+  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
 
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
+  // Only for client config (sentry.client.config.ts)
+  replaysSessionSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
+  replaysOnErrorSampleRate: process.env.NODE_ENV === "production" ? 1.0 : 1,
+
+  // Disable debug mode in production
+  debug: process.env.NODE_ENV !== "production",
 });
