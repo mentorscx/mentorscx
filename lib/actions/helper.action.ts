@@ -250,24 +250,36 @@ export async function getMentorReviewStats(
   };
 }
 
-// Function to fetch total number of completed sessions for a user (server-side)
-export const getCompletedSessionsCount = async (userId: string) => {
+export const getCompletedSessionsCount = async (
+  userId: string,
+  days?: number
+) => {
   try {
-    const completedSessionsCount = await db.session.count({
-      where: {
-        menteeId: userId,
-        status: {
-          in: [
-            SessionStatus.COMPLETED,
-            SessionStatus.REVIEWED,
-            SessionStatus.DONE,
-            SessionStatus.AWAITING_REVIEW,
-          ],
-        },
+    const whereClause: any = {
+      mentorId: userId, // Changed from menteeId to mentorId as we're checking mentor's completed sessions
+      status: {
+        in: [
+          SessionStatus.COMPLETED,
+          SessionStatus.REVIEWED,
+          SessionStatus.DONE,
+          SessionStatus.AWAITING_REVIEW,
+        ],
       },
+    };
+
+    if (days && !isNaN(days)) {
+      const dateThreshold = new Date();
+      dateThreshold.setDate(dateThreshold.getDate() - days);
+      whereClause.createdAt = { gte: dateThreshold };
+    }
+
+    const completedSessionsCount = await db.session.count({
+      where: whereClause,
     });
+
     return completedSessionsCount;
-  } catch (err: any) {
-    console.error("Error in getting GET_COMPLETED_SESSIONS", err);
+  } catch (err) {
+    console.error("Error in getCompletedSessionsCount:", err);
+    throw new Error("Failed to get completed sessions count");
   }
 };

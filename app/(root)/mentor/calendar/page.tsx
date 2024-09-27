@@ -13,6 +13,9 @@ import { generateEventsForNextYear } from "@/lib/helpers/recurring";
 import { fetchExternalEvents } from "@/lib/actions/clerk.action";
 import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Calendar | Mentors CX",
   description:
@@ -147,6 +150,7 @@ const CalendarPage = async () => {
               expertise={user.expertise}
               sessions={user.sessionsGiven}
               maxSessions={user.maxSessions}
+              mentorTimeZone={user.timeZone || "America/New_York"}
             />
           </div>
         </div>

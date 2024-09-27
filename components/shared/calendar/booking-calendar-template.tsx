@@ -63,6 +63,7 @@ const BookingCalendarTemplate = async (props: BookingCalendarTemplateProps) => {
               weeklyEvents={weeklyEvents}
               externalEvents={calendarEvents}
               timeZone={props.mentee.timeZone || "America/New_York"}
+              mentorTimeZone={props.mentor.timeZone || "America/New_York"}
               duration={props.mentor.duration}
               mentorId={props.mentor.id}
               price={props.mentor.price}

@@ -28,6 +28,7 @@ type Event = {
 type BookingCalendarMainProps = {
   individualEvents: Event[];
   timeZone: string;
+  mentorTimeZone: string;
   weeklyEvents: Event[];
   externalEvents: Event[];
   duration: number;

@@ -5,6 +5,9 @@ import React from "react";
 
 import BookingCalendarTemplate from "@/components/shared/calendar/booking-calendar-template";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const MenteeCalendarPage = async (props: {
   params: {
     profileId: string;

@@ -31,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { formatPrice } from "@/lib/format";
 import { updateUser } from "@/lib/actions/user.action";
 import { User } from "@prisma/client";
+import { getCompletedSessionsCount } from "@/lib/actions/helper.action";
 
 interface PriceFormProps {
   id: string;
@@ -55,6 +56,12 @@ const PriceForm = ({ id, price }: PriceFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const completedSessions = await getCompletedSessionsCount(id);
+
+      if (!completedSessions || completedSessions < 4) {
+        toast.warning("Please complete 4 sessions to update the price!");
+        return;
+      }
       await updateUser({ ...values, id });
       toast.success("Price updated");
       router.refresh();

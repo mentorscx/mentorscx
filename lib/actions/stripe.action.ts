@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Stripe from "stripe";
 import { db } from "@/lib/db";
 import { Card } from "@stripe/stripe-js";
+import { features } from "process";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -76,6 +77,9 @@ const createStripeSession = async ({
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${domainUrl}/payment/success`,
     cancel_url: `${domainUrl}/payment/cancelled`,
+    invoice_creation: {
+      enabled: true,
+    },
   });
 };
 
