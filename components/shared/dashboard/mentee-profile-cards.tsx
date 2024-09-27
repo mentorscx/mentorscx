@@ -42,7 +42,7 @@ export const DashBoardQueueLimit = async ({
   planName: string | undefined;
   userId: string;
 }) => {
-  const queuedSessionsCount = await fetchQueuedSessionsCount(userId);
+  const queuedSessionsCount = (await fetchQueuedSessionsCount(userId)) || 0;
   const { bookingLimit } = (() => {
     switch (planName) {
       case "Moon":
@@ -60,7 +60,7 @@ export const DashBoardQueueLimit = async ({
     <section>
       <DashboardInfoCard
         title="Available to Queue"
-        displayValue={`${queuedSessionsCount}/${bookingLimit}`}
+        displayValue={`${bookingLimit - queuedSessionsCount}/${bookingLimit}`}
         footer="calls"
       />
     </section>

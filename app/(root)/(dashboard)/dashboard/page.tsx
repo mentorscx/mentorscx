@@ -70,8 +70,6 @@ const MenteeDashboardPage = async () => {
       plan.annualPriceId === user.Subscription?.planId
   )?.name;
 
-  console.log(planName);
-
   return (
     <div className="max-w-5xl mx-auto pt-16 p-3">
       {/* PAGE TITLE */}
