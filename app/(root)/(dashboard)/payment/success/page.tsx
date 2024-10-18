@@ -25,7 +25,7 @@ export default function SuccessRoute() {
 
             <div className="mt-5 sm:mt-6 w-full">
               <Button className="w-full" asChild>
-                <Link href="/billing">Take me to Billing</Link>
+                <Link href="/billing">Take me to billing</Link>
               </Button>
             </div>
           </div>

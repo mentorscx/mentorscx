@@ -54,7 +54,7 @@ export default function Review({
               className="text-2xl sm:text-3xl
              font-bold text-blue-600"
             >
-              Customer Review
+              Mentee Review
             </CardTitle>
           )}
         </CardHeader>

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { sendEmailViaBrevoTemplate } from "@/lib/brevo";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,18 @@ export default function Home() {
     setLoading(true);
     setMessage(null);
     setError(null);
+
+    await sendEmailViaBrevoTemplate({
+      templateId: 22,
+      email: "angel@mentorscx.com",
+      name: "Angel funes",
+      params: {
+        menteename: "Bharadwaj k",
+        duration: "30",
+      },
+    });
+
+    alert("email sent to angel@mentorscx.com");
 
     try {
       const response = await fetch("/api/sessions/revalidate", {

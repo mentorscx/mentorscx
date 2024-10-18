@@ -171,7 +171,7 @@ export const SessionHeaderActions = (props: Props) => {
       )}
 
       {actionVisibility.showShareReview && (
-        <div className="border p-4 md:px-8 rounded-lg border-blue-300 flex items-center gap-4">
+        <div className="p-4 md:px-8 border-y border-blue-300/20 flex items-center gap-4">
           <Button variant="secondary" asChild>
             <Link href={`/reviews/${props.sessionId}`} target="_blank">
               View review

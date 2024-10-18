@@ -3,12 +3,22 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { env } from "@/env";
 
-export async function sendEmailViaBrevoTemplate(params: {
+type PARAMS = {
+  menteename: string;
+  duration: string;
+};
+
+export async function sendEmailViaBrevoTemplate({
+  email,
+  name,
+  templateId,
+  params,
+}: {
   templateId: number;
   email: string;
   name: string;
+  params?: PARAMS;
 }) {
-  const { email, name, templateId } = params;
   const options: AxiosRequestConfig = {
     method: "POST",
     url: "https://api.brevo.com/v3/smtp/email",
@@ -20,6 +30,7 @@ export async function sendEmailViaBrevoTemplate(params: {
     data: {
       to: [{ email, name }],
       templateId,
+      params: params,
     },
   };
 

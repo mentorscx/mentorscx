@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
   try {
     const sessions = await db.session.findMany({
       where: {
-        // end: {
-        //   lte: new Date(),
-        // },
+        end: {
+          lte: new Date(),
+        },
         status: SessionStatus.ACCEPTED,
       },
     });
