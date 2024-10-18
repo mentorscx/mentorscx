@@ -208,3 +208,17 @@ export const hasCredits = (
 
   return subscription.credits > 0;
 };
+
+/**
+ * Formats a number to one decimal place
+ * @param value The number to format
+ * @returns The formatted number as a string, or null if input is invalid
+ */
+export const formatToOneDp = (
+  value: number | null | undefined
+): string | null => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return null;
+  }
+  return (Math.round(value * 10) / 10).toFixed(1);
+};

@@ -24,6 +24,7 @@ type SessionMainProps = {
     [key in SessionTypeKey]: TSession[];
   };
   currentView: Role;
+  activeTab: string;
 };
 
 const sessionConfig: SessionTypeInfo[] = [
@@ -70,7 +71,7 @@ const sessionConfig: SessionTypeInfo[] = [
 ];
 
 const SessionMain = (props: SessionMainProps) => (
-  <Tabs defaultValue="upcoming" className="p-6">
+  <Tabs defaultValue={props.activeTab} className="p-6">
     <TabsList>
       {sessionConfig.map(({ type, icon, label }) => (
         <TabsTrigger key={type} value={type} className="flex items-center">

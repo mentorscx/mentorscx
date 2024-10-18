@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { formatMonthYear } from "@/lib/format";
 import RequestSessionButton from "@/components/shared/request-session-button";
+import { formatToOneDp } from "@/lib/utils";
 
 interface ProfileCardProps {
   user: string;
@@ -115,7 +116,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
         <div className=" w-[100px]">
           <h4 className="h4 font-semibold text-xl text-end flex items-center justify-end">
             <StarIcon className="h-4 w-4 mr-1 text-yellow-400 fill-yellow-400" />
-            {averageReview}
+            {formatToOneDp(averageReview)}
           </h4>
           <p className="text-sm text-muted-foreground text-end">
             {totalSessions} sessions

@@ -46,6 +46,7 @@ import MessageMe from "../message-me";
 import ProfileReviews from "./profile-reviews";
 import { getMentorReviewStats } from "@/lib/actions/helper.action";
 import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
+import { formatToOneDp } from "@/lib/utils";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -167,7 +168,7 @@ export const ProfileDisplayPage = async ({
                     <div className="flex items-center">
                       <StarIcon className="w-4 h-4 fill-yellow-500 text-yellow-500 mr-1" />
                       <p className="text-xl font-bold text-black">
-                        {averageRating}
+                        {formatToOneDp(averageRating)}
                       </p>
                     </div>
                     <div>{totalReviews} reviews</div>

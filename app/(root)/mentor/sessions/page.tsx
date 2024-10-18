@@ -16,6 +16,12 @@ export const metadata: Metadata = {
     "Manage your mentorship sessions. View upcoming and past sessions on Mentors CX.",
 };
 
+type TabValue = "requested" | "upcoming" | "completed" | "archived";
+
+const isValidTab = (tab: string | undefined): tab is TabValue =>
+  tab !== undefined &&
+  ["requested", "upcoming", "completed", "archived"].includes(tab);
+
 // Function to fetch session data for a given user
 const fetchSessionsData = async (clerkId: string): Promise<TSession[]> => {
   const userWithSessions = await db.user.findUnique({
@@ -48,12 +54,19 @@ const filterSessionsByStatus = (
 };
 
 // Main component for rendering the mentee sessions page
-const MenteeSessionsPage = async () => {
+const MenteeSessionsPage = async ({
+  searchParams,
+}: {
+  searchParams: { tab?: string };
+}) => {
   const { userId: clerkId } = auth();
 
   if (!clerkId) {
     return redirect("/sign-in");
   }
+
+  const tab = searchParams.tab;
+  const activeTab: TabValue = isValidTab(tab) ? tab : "upcoming";
 
   const user = await db.user.findUnique({
     where: { clerkId },
@@ -87,7 +100,11 @@ const MenteeSessionsPage = async () => {
   return (
     <div className="mx-auto max-w-5xl pt-16">
       <section>
-        <SessionMain sessions={sessionTypes} currentView={Role.MENTOR} />
+        <SessionMain
+          sessions={sessionTypes}
+          currentView={Role.MENTOR}
+          activeTab={activeTab}
+        />
       </section>
     </div>
   );

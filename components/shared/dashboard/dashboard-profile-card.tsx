@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 import { LinkedInShareButton } from "./dashboard-actions";
-import { getInitials } from "@/lib/utils";
+import { formatToOneDp, getInitials } from "@/lib/utils";
 import { ShareButton } from "@/components/shared/profile/profile-share";
 import ShareOwnProfile from "@/components/shared/profile/share-my-profile";
 import { EclipseIcon, Eye, MoonIcon, SunIcon, User } from "lucide-react";
@@ -76,7 +76,8 @@ const MentorProfileDetails = ({
 }) => (
   <>
     <p className="large flex items-center gap-2 !text-2xl">
-      <StarFilledIcon className="w-5 h-5 text-yellow-500" /> {rating ?? "NA"}
+      <StarFilledIcon className="w-5 h-5 text-yellow-500" />{" "}
+      {formatToOneDp(rating) ?? "NA"}
     </p>
     <p className="muted !text-base">
       {reviews ?? 0} reviews | {totalCompletedSessions} sessions

@@ -18,6 +18,12 @@ export const metadata: Metadata = {
     "Manage your mentorship sessions. View upcoming and past sessions on Mentors CX.",
 };
 
+type TabValue = "requested" | "upcoming" | "completed" | "archived";
+
+const isValidTab = (tab: string | undefined): tab is TabValue =>
+  tab !== undefined &&
+  ["requested", "upcoming", "completed", "archived"].includes(tab);
+
 // Function to fetch sessions based on clerk ID
 const fetchSessionsData = async (
   clerkId: string
@@ -55,11 +61,18 @@ const filterSessionsByStatus = (
 };
 
 // Main component for rendering the sessions page
-const MenteeSessionsPage = async () => {
+const MenteeSessionsPage = async ({
+  searchParams,
+}: {
+  searchParams: { tab?: string };
+}) => {
   const { userId: clerkId } = auth();
   if (!clerkId) {
     throw redirect("/sign-in");
   }
+
+  const tab = searchParams.tab;
+  const activeTab: TabValue = isValidTab(tab) ? tab : "upcoming";
 
   const { sessions, proUser } = await fetchSessionsData(clerkId);
   const sessionTypes = {
@@ -81,17 +94,25 @@ const MenteeSessionsPage = async () => {
     <ProAccessWrapper active={proUser}>
       <div className="mx-auto max-w-5xl pt-16">
         <section>
-          <SessionMain sessions={sessionTypes} currentView={Role.MENTEE} />
+          <SessionMain
+            sessions={sessionTypes}
+            currentView={Role.MENTEE}
+            activeTab={activeTab}
+          />
         </section>
       </div>
     </ProAccessWrapper>
   );
 };
 
-const MenteeSessionsPageWithSuspense = () => {
+const MenteeSessionsPageWithSuspense = ({
+  searchParams,
+}: {
+  searchParams: { tab?: string };
+}) => {
   return (
     <Suspense fallback={<SessionsLoadingSkelton />}>
-      <MenteeSessionsPage />
+      <MenteeSessionsPage searchParams={searchParams} />
     </Suspense>
   );
 };
