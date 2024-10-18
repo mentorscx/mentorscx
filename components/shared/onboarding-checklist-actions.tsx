@@ -57,6 +57,8 @@ export const OnboardingChecklistActions = ({
       await router.push(`/mentor/schedule`);
     } else if (dataType === "meeting") {
       await router.push(`/mentor/settings`);
+    } else if (dataType === "shortBio") {
+      await router.push(`/mentor/settings?tab=account`);
     }
   };
 

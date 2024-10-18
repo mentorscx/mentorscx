@@ -38,6 +38,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     organization,
     role,
     bio,
+    shortBio,
     toolkit,
     industries,
     expertise,
@@ -57,7 +58,8 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     price === null ||
     languages === null ||
     city === null ||
-    country === null
+    country === null ||
+    shortBio === null
   ) {
     return null;
   }
@@ -158,7 +160,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
 
       {/* content */}
       <div className="my-4">
-        <p className="text-md  text-gray-700 line-clamp-3">{bio}</p>
+        <p className="text-md  text-gray-700 line-clamp-3">{shortBio}</p>
       </div>
 
       {/* skills Tab */}

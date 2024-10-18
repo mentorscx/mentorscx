@@ -16,6 +16,7 @@ import LanguagesForm from "@/components/shared/settings/LanguagesForm";
 import CityForm from "@/components/shared/settings/CityForm";
 import CountryForm from "@/components/shared/settings/CountryForm";
 import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
+import ShortBioForm from "@/components/shared/settings/ShortBioForm";
 
 const tabConfig = [
   {
@@ -103,6 +104,7 @@ const MentorSettingsTabs = async ({ activeTab }: MentorSettingsTabsProps) => {
             />
           </TabsContent>
           <TabsContent key="account" value="account">
+            <ShortBioForm id={user.id} shortBio={user.shortBio} />
             <CityForm id={user.id} city={user.city} />
             <CountryForm userId={user.id} country={user.country} />
             <LanguagesForm userId={user.id} languages={user?.languages} />
