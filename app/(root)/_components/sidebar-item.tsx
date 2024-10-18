@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-
-import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 interface SidebarItemProps {
   icon: LucideIcon;
@@ -15,30 +13,23 @@ interface SidebarItemProps {
 
 export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const isActive =
     (pathname === "/" && href === "/") ||
     pathname === href ||
-    pathname?.startsWith(`${href}/`);
-
-  const onClick = () => {
-    router.push(href);
-  };
+    pathname?.endsWith(`${href}`);
 
   return (
     <Link
-      key={href}
       href={href}
-      className={cn(
-        " group flex px-3 py-3.5 w-full justify-start font-medium cursor-pointer  hover:bg-blue-100 hover:text-primary-600 rounded-lg transition",
-        isActive ? "text-primary-600 bg-blue-100" : "text-neutral-600"
-      )}
+      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+        isActive
+          ? "bg-muted text-primary"
+          : "text-muted-foreground hover:text-primary"
+      }`}
     >
-      <div className="flex items-center flex-1">
-        <Icon className={cn("h-5 w-5 mr-3")} />
-        {label}
-      </div>
+      <Icon className="h-4 w-4" />
+      {label}
     </Link>
   );
 };

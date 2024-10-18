@@ -10,6 +10,7 @@ import { MentorsCalendar } from "./mentors-calendar";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import MentorEmailsList from "./MentorEmailsList";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 const MentorScheduleMain = async () => {
   const clerkUser = await currentUser();
@@ -32,7 +33,7 @@ const MentorScheduleMain = async () => {
   }
 
   if (user.role !== Role.MENTOR) {
-    redirect("/");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   // Get all externalEmails accounts
@@ -50,7 +51,7 @@ const MentorScheduleMain = async () => {
     email.endsWith("@gmail.com")
   );
 
-  let externalEvents = await listEvents(googleConnectedEmails);
+  let externalEvents = await listEvents(googleConnectedEmails, clerkUser.id);
   const weeklyAvailability = user?.weeklyAvailability || {};
   const { schedule } = JSON.parse(JSON.stringify(weeklyAvailability)) || [];
   const events = generateEventsForNextYear(schedule);

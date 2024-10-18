@@ -43,6 +43,10 @@ import { redirect } from "next/navigation";
 import YouTubeVideo from "./profile-video";
 import NextAvailableSlot from "./next-available-day";
 import MessageMe from "../message-me";
+import ProfileReviews from "./profile-reviews";
+import { getMentorReviewStats } from "@/lib/actions/helper.action";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
+import { formatToOneDp } from "@/lib/utils";
 
 type ProfileDisplayPageProps = {
   isMentorRoute: boolean;
@@ -61,8 +65,6 @@ export const ProfileDisplayPage = async ({
     redirect("/login");
   }
 
-  console.log(userId);
-
   const user = await db.user.findUnique({
     where: {
       id: profileId,
@@ -77,8 +79,6 @@ export const ProfileDisplayPage = async ({
     },
   });
 
-  console.log(user?.clerkId);
-
   if (!user) {
     return <div>Profile not found!</div>;
   }
@@ -88,14 +88,18 @@ export const ProfileDisplayPage = async ({
   }
 
   if (isMentorRoute) {
-    user.role !== Role.MENTOR && redirect("/");
+    if (user.role !== Role.MENTOR) {
+      return <MentorSubscribeModal isDialogOpen={true} />;
+    }
   }
+
+  const { averageRating, totalReviews } = await getMentorReviewStats(user.id);
 
   // Check if the person can edit the profile
   const canEdit = isOwnProfile || userId === user.clerkId;
 
   return (
-    <div className="pt-[80px]">
+    <div className="pt-16">
       <div className="max-lg:p-3">
         <div className="relative flex flex-col items-center justify-center space-y-3 bg-background rounded border shadow p-3">
           {canEdit && (
@@ -117,7 +121,7 @@ export const ProfileDisplayPage = async ({
                 <div>
                   {canEdit ? (
                     <ShareOwnProfile
-                      path={`dashboard/profile/${user.id}`}
+                      path={`/profile/${user.id}`}
                       title="Share your profile"
                     />
                   ) : null}
@@ -163,9 +167,11 @@ export const ProfileDisplayPage = async ({
                   <div className="flex flex-col items-center muted">
                     <div className="flex items-center">
                       <StarIcon className="w-4 h-4 fill-yellow-500 text-yellow-500 mr-1" />
-                      <p className="text-xl font-bold text-black">NA</p>
+                      <p className="text-xl font-bold text-black">
+                        {formatToOneDp(averageRating)}
+                      </p>
                     </div>
-                    <div>0 reviews</div>
+                    <div>{totalReviews} reviews</div>
                   </div>
                   <Separator className="h-[2px] lg:hidden" />
                   <div className="flex flex-col items-center muted">
@@ -195,7 +201,12 @@ export const ProfileDisplayPage = async ({
           {/* Social and Invites */}
           <div className="flex flex-col lg:flex-row items-center justify-between w-full py-4 max-w-3xl mx-auto">
             <div className="flex items-center justify-center w-full space-x-3 lg:justify-start">
-              <RequestCallButton id={user.id} />
+              <RequestCallButton
+                id={user.id}
+                currentUserClerkId={userId}
+                otherUserClerkId={user.clerkId}
+              />
+
               <MessageMe
                 currentUserClerkId={userId}
                 otherUserClerkId={user.clerkId}
@@ -216,6 +227,13 @@ export const ProfileDisplayPage = async ({
               </Button>
             )}
 
+            {!user.portfolioWebsite && canEdit && (
+              <Button variant="link" className="max-lg:mt-4 opacity-20">
+                <span className="text-base">Personal website</span>
+                <ExternalLink className="w-4 h-4 ml-1" />
+              </Button>
+            )}
+
             <div className="max-lg:mt-6 flex items-center justify-center">
               {user.facebookProfile && (
                 <Button variant="link" size="icon" asChild>
@@ -226,6 +244,12 @@ export const ProfileDisplayPage = async ({
                   >
                     <LucideFacebook className="w-6 h-6 hover:scale-125 transition-colors duration-700" />
                   </Link>
+                </Button>
+              )}
+
+              {!user.facebookProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <LucideFacebook className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
                 </Button>
               )}
               {user.linkedinProfile && (
@@ -239,6 +263,11 @@ export const ProfileDisplayPage = async ({
                   </Link>
                 </Button>
               )}
+              {!user.linkedinProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <LinkedInLogoIcon className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
+                </Button>
+              )}
               {user.twitterProfile && (
                 <Button variant="link" size="icon" asChild>
                   <Link
@@ -250,6 +279,12 @@ export const ProfileDisplayPage = async ({
                   </Link>
                 </Button>
               )}
+
+              {!user.twitterProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <TwitterLogoIcon className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
+                </Button>
+              )}
               {user.tiktokProfile && (
                 <Button variant="link" size="icon" asChild>
                   <Link
@@ -259,6 +294,11 @@ export const ProfileDisplayPage = async ({
                   >
                     <FaTiktok className="w-6 h-6 hover:scale-125 transition-colors duration-700" />
                   </Link>
+                </Button>
+              )}
+              {!user.tiktokProfile && canEdit && (
+                <Button variant="link" size="icon">
+                  <FaTiktok className="w-6 h-6 hover:scale-125 transition-colors duration-700 opacity-20" />
                 </Button>
               )}
 
@@ -327,9 +367,8 @@ export const ProfileDisplayPage = async ({
           name="Toolkit"
         />
 
-        <div className="h-16"></div>
-        {/* <div id="reviews"></div> */}
-        {/* <ProfileTestmonialPage title="Reviews (5)" /> */}
+        <div id="reviews"></div>
+        <ProfileReviews canEdit={canEdit} id={user.id} />
       </div>
     </div>
   );

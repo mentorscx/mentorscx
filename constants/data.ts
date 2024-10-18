@@ -1637,3 +1637,149 @@ export const industryData = [
     filePath: "/assets/industries/utilities.svg",
   },
 ];
+
+export const plans = [
+  {
+    _id: 1,
+    name: "Eclipse",
+    icon: "/assets/icons/free-plan.svg",
+    price: 39,
+    priceId: "price_1PpAwjEE1IEtny7DcLD4yyZs",
+    description: "For those exploring the mentorship world",
+    credits: 3,
+    planEnabled: true,
+    inclusions: [
+      {
+        label: "2 calls/month",
+        isIncluded: true,
+      },
+      {
+        label: "Access to all mentors",
+        isIncluded: true,
+      },
+      {
+        label: "Chat with mentors before booking",
+        isIncluded: true,
+      },
+      {
+        label: "Dedicated support",
+        isIncluded: true,
+      },
+    ],
+  },
+  {
+    _id: 2,
+    name: "Moon",
+    icon: "/assets/icons/free-plan.svg",
+    price: 59,
+    priceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
+    description: "For those committed to a more sustainable growth",
+    credits: 10000,
+    planEnabled: true,
+    inclusions: [
+      {
+        label: "Everything in Eclipse",
+        isIncluded: true,
+      },
+      {
+        label: "Unlimited calls/month",
+        isIncluded: true,
+      },
+      {
+        label: "Personalized onboarding",
+        isIncluded: true,
+      },
+      {
+        label: "Access to deals on tools",
+        isIncluded: true,
+      },
+    ],
+  },
+  {
+    _id: 3,
+    name: "Sun",
+    icon: "/assets/icons/free-plan.svg",
+    price: 99,
+    priceId: "",
+    description: "For those committed to a more sustainable growth",
+    credits: 10000,
+    planEnabled: false,
+    inclusions: [
+      {
+        label: "Everything in Moon",
+        isIncluded: true,
+      },
+      {
+        label: "5 seats (+$39/additional user)",
+        isIncluded: true,
+      },
+      {
+        label: "Transferable seats",
+        isIncluded: true,
+      },
+      {
+        label: "",
+        isIncluded: false,
+      },
+    ],
+  },
+];
+
+export const pricingPlans = [
+  {
+    id: 1,
+    name: "Eclipse",
+    monthlyPrice: 39,
+    annualPrice: 31,
+    credits: 3,
+    monthlyPriceId: "price_1PpAwjEE1IEtny7DcLD4yyZs",
+    annualPriceId: "price_1Pqy9nEE1IEtny7D7JFpDu5c",
+    description: "For those exploring the mentorship world",
+    features: [
+      "2 calls/month",
+      "Access to all mentors",
+      "Chat with mentors before booking",
+      "Dedicated support",
+    ],
+    buttonLabel: "I'm ready 😊",
+    highlight: false,
+    comingSoon: false,
+  },
+  {
+    id: 2,
+    name: "Moon",
+    monthlyPrice: 59,
+    annualPrice: 49,
+    credits: 10001,
+    monthlyPriceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
+    annualPriceId: "price_1Pqy8zEE1IEtny7DccLkPgs3",
+    description: "For those committed to a more sustainable growth",
+    features: [
+      "Everything in Eclipse",
+      "Unlimited calls/month",
+      "Personalized onboarding",
+      "Access to deals on tools that help your CX career",
+    ],
+    buttonLabel: "I'm ready 😊",
+    highlight: true,
+    comingSoon: false,
+  },
+  {
+    id: 3,
+    name: "Sun",
+    monthlyPrice: 199,
+    annualPrice: 159,
+    credits: 10001,
+    monthlyPriceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
+    annualPriceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
+    description: "For teams that want to grow & develop together",
+    features: [
+      "Everything in Moon",
+      "5 seats (+$39/additional user)",
+      "Transferable seats",
+    ],
+    buttonLabel: "I'm ready 😊",
+    highlight: false,
+    comingSoon: true,
+  },
+];

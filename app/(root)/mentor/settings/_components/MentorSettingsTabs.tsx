@@ -12,9 +12,11 @@ import NotificationForm from "./notification-form1";
 import { db } from "@/lib/db";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
-import LanguagesForm from "./LanguagesForm";
-import CityForm from "./CityForm";
-import CountryForm from "./CountryForm";
+import LanguagesForm from "@/components/shared/settings/LanguagesForm";
+import CityForm from "@/components/shared/settings/CityForm";
+import CountryForm from "@/components/shared/settings/CountryForm";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
+import ShortBioForm from "@/components/shared/settings/ShortBioForm";
 
 const tabConfig = [
   {
@@ -29,13 +31,19 @@ const tabConfig = [
   },
 
   {
-    value: "calendar",
+    value: "integrations",
     label: "Integrations",
     Icon: CalendarIcon,
   },
 ] as const;
 
-const MentorSettingsTabs = async () => {
+type MentorSettingsTabs = "account" | "session" | "integrations";
+
+interface MentorSettingsTabsProps {
+  activeTab: MentorSettingsTabs;
+}
+
+const MentorSettingsTabs = async ({ activeTab }: MentorSettingsTabsProps) => {
   const { userId: clerkId } = auth();
   if (!clerkId) {
     redirect("/login");
@@ -53,7 +61,7 @@ const MentorSettingsTabs = async () => {
   }
 
   if (user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   if (!user) {
@@ -67,9 +75,9 @@ const MentorSettingsTabs = async () => {
   }
 
   return (
-    <div className="mx-auto max-w-5xl pt-[80px]">
+    <div className="mx-auto max-w-5xl pt-16">
       <section className="my-4 lg:my-8 p-3 border shadow rounded bg-background">
-        <Tabs defaultValue="sessions" className="p-6">
+        <Tabs defaultValue={activeTab} className="p-6">
           <TabsList>
             {tabConfig.map(({ value, label, Icon }) => (
               <TabsTrigger
@@ -91,9 +99,12 @@ const MentorSettingsTabs = async () => {
               meetingPreference={user.meetingPreference}
               maxSessions={user.maxSessions}
               timeZone={user.timeZone}
+              zoomLink={user.zoomLink}
+              googleMeetLink={user.googleMeetLink}
             />
           </TabsContent>
           <TabsContent key="account" value="account">
+            <ShortBioForm id={user.id} shortBio={user.shortBio} />
             <CityForm id={user.id} city={user.city} />
             <CountryForm userId={user.id} country={user.country} />
             <LanguagesForm userId={user.id} languages={user?.languages} />
@@ -101,7 +112,7 @@ const MentorSettingsTabs = async () => {
           <TabsContent key="notifications" value="notifications">
             <NotificationForm />
           </TabsContent>
-          <TabsContent key="calendar" value="calendar">
+          <TabsContent key="integrations" value="integrations">
             <CalendarTabContent
               id={user.id}
               zoomLink={user.zoomLink}

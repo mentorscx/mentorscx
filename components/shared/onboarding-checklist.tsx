@@ -87,14 +87,20 @@ export async function OnboardingChecklist({
 
   const hasProfession: boolean = Boolean(user.position);
   const hasOrganization: boolean = Boolean(user.organization);
+  const hasMeetingLink: boolean = Boolean(user.googleMeetLink || user.zoomLink);
+  const hasShortBio: boolean = Boolean(user.shortBio);
 
-  const profileCompletionChecks: boolean[] = [
+  let profileCompletionChecks: boolean[] = [
     hasBio,
     hasExpertise,
     hasIndustries,
     hasProfession && hasOrganization,
-    hasSessions,
   ];
+
+  // If route is mentor, add hasSessions and hasMeetingLink to the checklist
+  if (route === "/mentor/dashboard") {
+    profileCompletionChecks.push(hasSessions, hasMeetingLink, hasShortBio);
+  }
 
   const completedItemsCount: number =
     profileCompletionChecks.filter(Boolean).length;
@@ -121,12 +127,28 @@ export async function OnboardingChecklist({
       label: "Add your industry",
       dataType: "industry",
     },
-    {
-      isChecked: hasSessions,
-      label: "Add your availability",
-      dataType: "availability",
-    },
   ];
+
+  // Only add these checklist items for mentors
+  if (route === "/mentor/dashboard") {
+    checklist.push(
+      {
+        isChecked: hasSessions,
+        label: "Add your availability",
+        dataType: "availability",
+      },
+      {
+        isChecked: hasMeetingLink,
+        label: "Add your meeting link",
+        dataType: "meeting",
+      },
+      {
+        isChecked: hasShortBio,
+        label: "Add your short Bio",
+        dataType: "shortBio",
+      }
+    );
+  }
 
   if (completionPercentage === 100 && user.isActivated) return null;
   else if (completionPercentage === 100 && !user.isActivated)

@@ -10,6 +10,11 @@ import { Role } from "@prisma/client";
 import BookingCalendarDetails from "@/components/shared/calendar/booking-calendar-details";
 import BookingCalendarMain from "@/components/shared/calendar/booking-calendar-main";
 import { generateEventsForNextYear } from "@/lib/helpers/recurring";
+import { fetchExternalEvents } from "@/lib/actions/clerk.action";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Calendar | Mentors CX",
@@ -31,6 +36,7 @@ const CalendarPage = async () => {
     select: {
       id: true,
       imageUrl: true,
+      clerkId: true,
       username: true,
       timeZone: true,
       meetingPreference: true,
@@ -64,7 +70,7 @@ const CalendarPage = async () => {
   if (!user) return null;
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
   if (!user.isOnboarded) redirect("/onboard/1");
@@ -89,8 +95,10 @@ const CalendarPage = async () => {
   //TODO: SET DEFAULT TIMEZONE IN PRISMA
   const timeZone = user?.timeZone || "America/New_York";
 
+  const calendarEvents = await fetchExternalEvents(user.clerkId);
+
   return (
-    <div className="pt-[80px] min-h-screen p-3">
+    <div className="pt-16 min-h-screen p-3">
       <div className="w-full mt-4 max-w-5xl mx-auto p-3 border shadow rounded bg-background md:pl-6">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex gap-4">
@@ -133,6 +141,7 @@ const CalendarPage = async () => {
           <div className="w-full basis-3/4">
             <BookingCalendarMain
               individualEvents={individualEvents}
+              externalEvents={calendarEvents}
               weeklyEvents={weeklyEvents}
               timeZone={timeZone}
               duration={user.duration}
@@ -141,6 +150,7 @@ const CalendarPage = async () => {
               expertise={user.expertise}
               sessions={user.sessionsGiven}
               maxSessions={user.maxSessions}
+              mentorTimeZone={user.timeZone || "America/New_York"}
             />
           </div>
         </div>

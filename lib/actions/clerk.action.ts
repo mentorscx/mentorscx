@@ -1,7 +1,10 @@
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { listEvents } from "./google-calandar.action";
 
-export async function getOauthToken(): Promise<string | undefined> {
+export async function getOauthToken(
+  clerkId?: string
+): Promise<string | undefined> {
   try {
     const { userId } = auth();
 
@@ -15,7 +18,7 @@ export async function getOauthToken(): Promise<string | undefined> {
 
     // Fetch the OAuth access token for the user
     const clerkResponse = await clerkClient.users.getUserOauthAccessToken(
-      userId,
+      clerkId ?? userId,
       provider
     );
     if (!clerkResponse || clerkResponse.totalCount === 0) {
@@ -82,3 +85,41 @@ export async function isConnectedWithGoogleEvents() {
     throw new Error("Failed to connect the calendar");
   }
 }
+
+export const fetchExternalEvents = async (clerkId: string) => {
+  try {
+    const clerkUser = await clerkClient.users.getUser(clerkId);
+
+    if (!clerkUser) {
+      throw new Error("Clerk user doesn't exist in the database");
+    }
+
+    // Get all connected emails
+    const connectedEmails =
+      clerkUser.emailAddresses?.map((email) => email.emailAddress) || [];
+
+    const googleConnectedEmails = connectedEmails.filter((email) =>
+      email.endsWith("@gmail.com")
+    );
+
+    if (googleConnectedEmails.length === 0) {
+      console.log("No Google connected emails found for user:", clerkId);
+      return [];
+    }
+
+    const externalEvents = await listEvents(
+      googleConnectedEmails,
+      clerkUser.id
+    );
+
+    const calendarEvents = externalEvents.map((event: any) => ({
+      start: new Date(event.start.dateTime),
+      end: new Date(event.end.dateTime),
+    }));
+
+    return calendarEvents;
+  } catch (error) {
+    console.error("Error in FETCH_EXTERNAL_EVENTS", error);
+    return []; // Always return an array even in case of an error
+  }
+};

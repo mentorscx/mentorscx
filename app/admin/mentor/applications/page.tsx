@@ -26,6 +26,7 @@ import { db } from "@/lib/db";
 import {
   AcceptApplicationDropdownItem,
   RejectApplicationDropDownItem,
+  SkipInterviewDropDownItem,
 } from "../_components/application-actions";
 
 function getMentorApplications() {
@@ -93,6 +94,7 @@ const ApplicationTable = async () => {
                   </DropdownMenuItem>
 
                   <AcceptApplicationDropdownItem id={application.id} />
+                  <SkipInterviewDropDownItem id={application.id} />
                   <DropdownMenuSeparator />
                   <RejectApplicationDropDownItem id={application.id} />
                 </DropdownMenuContent>

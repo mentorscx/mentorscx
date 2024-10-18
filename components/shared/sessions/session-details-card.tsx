@@ -1,11 +1,17 @@
 import React from "react";
-import { CheckCircle2, Video, ArrowUpRight } from "lucide-react";
+import {
+  CheckCircle2,
+  Video,
+  ArrowUpRight,
+  MessageCircleWarningIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { utcToZonedTime } from "date-fns-tz";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { cn, getInitials } from "@/lib/utils";
 import { Session } from "@prisma/client";
@@ -17,6 +23,8 @@ type RoleType = "Mentor" | "Mentee";
 type Props = {
   roleLabel: RoleType;
   profileUrl: string;
+  meetingPreference: string | null;
+  meetingUrl: string | null;
   session: Pick<
     Session,
     | "start"
@@ -44,13 +52,23 @@ const StatusStyles: {
   AWAITING_HOST: "text-yellow-600 border-yellow-500 bg-yellow-100",
   ACCEPTED: "text-blue-600 border-blue-500 bg-blue-100",
   RESCHEDULED: "text-danger-600 border-danger-500 bg-danger-100",
-  REJECTED: "text-slate-600 border-slate-500 bg-slate-100",
+  DECLINED: "text-slate-600 border-slate-500 bg-slate-100",
   CANCELLED: "text-slate-600 border-slate-500 bg-slate-100",
   COMPLETED: "text-green-600 border-green-500 bg-green-100",
+  DONE: "text-orange-600 border-orange-500 bg-orange-100",
+  REVIEWED: "text-sky-600 border-sky-500 bg-sky-100",
 };
 
 const SessionDetailsCard = (props: Props) => {
-  const { roleLabel, profileUrl, session, currentUser, otherUser } = props;
+  const {
+    roleLabel,
+    profileUrl,
+    session,
+    currentUser,
+    otherUser,
+    meetingPreference,
+    meetingUrl,
+  } = props;
 
   // Transformations for the Timezone
   const startInTimeZone = utcToZonedTime(
@@ -63,7 +81,6 @@ const SessionDetailsCard = (props: Props) => {
   );
 
   // This is for transformations
-  const profileLink = `/${profileUrl}/${otherUser.id}`;
   const priceLabel = session.price === 0 ? "Free" : `${session.price}$`;
   const priceLabelColor = session.price === 0 && "text-green-500";
   const statusLabel =
@@ -101,7 +118,9 @@ const SessionDetailsCard = (props: Props) => {
           <div className="flex flex-col items-center justify-center">
             <p className="font-semibold uppercase">{roleLabel}</p>
             <Button variant="link" size="lg" className="p-0" asChild>
-              <Link href={profileLink}>{otherUser.username}</Link>
+              <Link href={profileUrl} target="_blank">
+                {otherUser.username}
+              </Link>
             </Button>
           </div>
         </div>
@@ -150,23 +169,36 @@ const SessionDetailsCard = (props: Props) => {
         </div>
       </div>
       <Separator className="my-4 h-[1px]" />
-      <div className="space-y-4">
-        <div className="mt-3 flex w-fit items-center gap-2 rounded-md border-1 border-blue-800 p-2">
-          <div>
-            <Video className="h-6 w-6 bg-blue-500 p-1 text-white" />
+      {!meetingPreference || !meetingUrl ? (
+        <Alert variant="destructive">
+          <MessageCircleWarningIcon className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            You mentor is missing the meeting URL. Please message the mentor.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <div className="space-y-4">
+          <div className="mt-3 flex w-fit items-center gap-2 rounded-md border-1 border-blue-800 p-2">
+            <div>
+              <Video className="h-6 w-6 bg-blue-500 p-1 text-white" />
+            </div>
+            <div className="large">
+              {meetingPreference === "zoom" ? "Zoom" : "Google Meet"}
+            </div>
+            <div>
+              <CheckCircle2 className="h-6 w-6 fill-blue-700 text-white" />
+            </div>
           </div>
-          <div className="large">Zoom</div>
-          <div>
-            <CheckCircle2 className="h-6 w-6 fill-blue-700 text-white" />
-          </div>
+
+          <Button variant="link" asChild className="px-0">
+            <Link href={meetingUrl} target="_blank">
+              Click here to join the video call{" "}
+              <ArrowUpRight className="h-5 w-5 ml-1" />
+            </Link>
+          </Button>
         </div>
-        <Button variant="link" asChild className="px-0">
-          <Link href="/">
-            Click here to join the video call{" "}
-            <ArrowUpRight className="h-5 w-5 ml-1" />
-          </Link>
-        </Button>
-      </div>
+      )}
     </div>
   );
 };

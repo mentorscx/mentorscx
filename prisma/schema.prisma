@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 
 generator client {
   provider        = "prisma-client-js"
@@ -53,7 +52,7 @@ model User {
   recommendedBy       String?
   otherRecommendation String?
   companySize         String?
-  timeZone            String?
+  timeZone            String?      @default("America/New_York")
   weeklyAvailability  Json?
 
   calendarEmails String[] // Used to sync calendars
@@ -67,12 +66,28 @@ model User {
   sessionsGiven    Session[] @relation("sessionsGiven")
   sessionsReceived Session[] @relation("sessionsReceived")
 
+ 
+  Subscription     Subscription?
+  stripeConnectedAccount StripeConnectedAccount?
+
+  featureRequests FeatureRequest[]
+
   joinedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([id])
   @@index([clerkId])
 }
+
+model StripeConnectedAccount {
+  connectedAccountId    String  @unique
+  stripeConnectedLinked Boolean @default(false)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+
 
 model Language {
   id   String @id @default(uuid())
@@ -152,13 +167,32 @@ model Event {
 }
 
 enum SessionStatus {
-  AVAILABLE     @map("AVAILABLE")
-  CANCELLED     @map("CANCELLED")
-  ACCEPTED      @map("ACCEPTED")
-  AWAITING_HOST @map("AWAITING_HOST")
-  REJECTED      @map("REJECTED")
-  COMPLETED     @map("COMPLETED")
-  RESCHEDULED   @map("RESCHEDULED")
+  AVAILABLE       @map("AVAILABLE")
+  AWAITING_HOST   @map("AWAITING_HOST")
+  CANCELLED       @map("CANCELLED")
+  ACCEPTED        @map("ACCEPTED")
+  RESCHEDULED     @map("RESCHEDULED")
+  REJECTED        @map("REJECTED")
+  DECLINED        @map("DECLINED")
+  DONE            @map("DONE")
+  COMPLETED       @map("COMPLETED")
+  AWAITING_REVIEW @map("AWAITING_REVIEW")
+  REVIEWED        @map("REVIEWED")
+}
+
+
+model Subscription {
+  stripeSubscriptionId String   @id @unique
+  interval            String
+  status               String
+  planId               String
+  currentPeriodStart   Int
+  currentPeriodEnd     Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id])
+  userId               String   @unique
+  credits Int @default(0)
 }
 
 model Session {
@@ -186,7 +220,22 @@ model Session {
   declineReason String? @db.Text
   declinedBy    Role?
 
-  @@index([mentorId])
+  review Review?
+
+  @@index([mentorId]) 
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  feedback  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessionId String  @unique
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId])
 }
 
 model Subscribe {
@@ -246,7 +295,10 @@ enum FeatureType {
 
 model FeatureRequest {
   id          Int         @id @default(autoincrement())
+
   userId      String
+  user   User   @relation(fields: [userId], references: [id])  
+
   featureType FeatureType @default(NEW_FEATURE)
   description String      @db.Text
 }
@@ -286,3 +338,6 @@ model MentorApplication {
 
   @@map("mentor_applications")
 }
+
+
+

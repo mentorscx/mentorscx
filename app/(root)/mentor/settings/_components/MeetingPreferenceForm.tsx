@@ -11,27 +11,29 @@ import {
 } from "@/components/ui/card";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Bold, Italic, Underline } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { saveMeetingPreference } from "@/lib/actions/user.action";
-import { User } from "@prisma/client";
 
 interface MentorSettingsMeetingPreferenceProps {
   id: string;
   meetingPreference: string | null;
+  zoomLink: string | null;
+  googleMeetLink: string | null;
 }
 
 const MentorSettingsMeetingPreference = ({
   id,
   meetingPreference: initialMeetingPreference,
+  zoomLink,
+  googleMeetLink,
 }: MentorSettingsMeetingPreferenceProps) => {
   const router = useRouter();
 
-  const [meetingPreference, setMeetingPreference] = useState<string | null>(
-    initialMeetingPreference
-  );
+  const [meetingPreference, setMeetingPreference] = useState<
+    string | null | undefined
+  >(initialMeetingPreference);
 
   useEffect(() => {
     setMeetingPreference(meetingPreference);
@@ -39,8 +41,17 @@ const MentorSettingsMeetingPreference = ({
 
   const handleMeetingChange = async (e: any) => {
     try {
+      if (e === "zoom" && !zoomLink) {
+        toast.error("Please add your Zoom link first");
+        setMeetingPreference(undefined);
+        return;
+      } else if (e === "google-meet" && !googleMeetLink) {
+        toast.error("Please add your Google Meet link first");
+        setMeetingPreference(undefined);
+        return;
+      }
+      // Only update meeting preference after the checks pass
       await saveMeetingPreference(e, id);
-
       setMeetingPreference(e);
       toast.success("Meeting Preference updated");
       router.refresh();
@@ -48,6 +59,7 @@ const MentorSettingsMeetingPreference = ({
       toast.error("Failed to update meeting preference");
     }
   };
+
   return (
     <Card>
       <CardHeader>
@@ -64,13 +76,14 @@ const MentorSettingsMeetingPreference = ({
           type="single"
           className="flex justify-start gap-4"
           onValueChange={handleMeetingChange}
-          defaultValue={meetingPreference || ""}
+          defaultValue={meetingPreference || undefined}
         >
           <ToggleGroupItem
             value="google-meet"
             aria-label="Toggle underline"
             className="h-10 w-40 border-1 px-3 py-1 font-semibold"
             size="lg"
+            disabled={meetingPreference === "google-meet"}
           >
             Google Meet
           </ToggleGroupItem>
@@ -79,6 +92,7 @@ const MentorSettingsMeetingPreference = ({
             aria-label="Toggle underline"
             className="h-10 w-40 px-3 py-1 bg-white border-1 font-semibold"
             size="lg"
+            disabled={meetingPreference === "zoom"}
           >
             Zoom
           </ToggleGroupItem>

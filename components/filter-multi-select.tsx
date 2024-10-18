@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import Select, { Props } from "react-select";
 
+import { useIsClient } from "usehooks-ts";
+
 interface FilterProps {
   data: any[];
   name: string;
@@ -29,6 +31,7 @@ const FilterMultiSelect: React.FC<FilterProps> = ({
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const isClient = useIsClient();
 
   const onSelect = (id: string) => {
     const data = JSON.parse(id);
@@ -68,6 +71,8 @@ const FilterMultiSelect: React.FC<FilterProps> = ({
     const defaultValues = data?.filter((item) => params?.includes(item.value));
     return defaultValues;
   };
+
+  if (!isClient) return null;
 
   return (
     <div className="mb-3 p-2">

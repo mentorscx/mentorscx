@@ -9,7 +9,8 @@ import Image from "next/image";
 import { Montserrat } from "next/font/google";
 
 import { Button } from "@/components/ui/button";
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
+import Notifications from "@/components/notifications";
 
 const poppins = Montserrat({ weight: "600", subsets: ["latin"] });
 
@@ -19,35 +20,44 @@ export const NavbarRoutes = () => {
 
   const isMentorPage = pathname?.includes("/mentor");
 
+  // TODO: Test this component, Add proper Mechanism
+  // TODO: Add the Loader to the Clerk component
   return (
     <>
-      <div className="hidden h-16 md:flex items-center">
+      <div className="hidden h-full md:flex items-center">
         <Link
           href="/"
           className="py-6 flex space-x-1 items-center justify-center"
         >
           <h1
             className={cn(
-              "text-3xl font-semibold tracking-tight",
+              "text-xl font-semibold tracking-tight",
               poppins.className
             )}
           >
             Mentors
           </h1>
-          <div className="relative h-16 w-16 ml-2">
-            <Image fill alt="Logo" src="/mentors-cx.svg" />
+          <div className="relative h-12 w-12 ml-2">
+            <Image
+              fill
+              alt="Logo"
+              src="/mentors-cx.svg"
+              quality={100}
+              priority
+              className="object-contain"
+            />
           </div>
         </Link>
       </div>
       <div className="h-16 flex items-center md:invisible">
         <Link href="/" className="flex space-x-1 items-center justify-center">
-          <span className="text-2xl">Mentors</span>
-          <Image src="/mentors-cx.svg" alt="Mentors" width={45} height={45} />
+          <Image src="/mentors-cx.svg" alt="CX" width={45} height={45} />
         </Link>
       </div>
-      <div className="flex gap-x-2 ml-auto">
+
+      <div className="flex gap-x-3 ml-auto items-center">
         {isMentorPage ? (
-          <Link href="/dashboard/search">
+          <Link href="/search">
             <Button size="sm" variant="ghost">
               <LogInIcon className="h-4 w-4 mr-2" />
               Mentee Mode
@@ -61,6 +71,8 @@ export const NavbarRoutes = () => {
             </Button>
           </Link>
         )}
+        <Notifications />
+
         <UserButton
           afterSignOutUrl="/"
           userProfileProps={{

@@ -8,7 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/waitlist",
   "/support",
   "/docs/(.*)",
-  "/dashboard/profile/(.*)",
+  "/profile/(.*)",
   "/privacy",
   "/about",
   "/pricing",
@@ -26,8 +26,12 @@ const isMentorApplicationRoute = createRouteMatcher([
 ]);
 const isAPIRoute = createRouteMatcher([
   "/api/webhook",
+  "/api/webhook/stripe",
+  "/api/webhook/stripe/connect",
   "/api/chatgpt",
   "/api/uploadthing",
+  "/api/liveblocks-auth",
+  "/api/sessions/revalidate",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

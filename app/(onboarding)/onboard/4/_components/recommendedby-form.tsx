@@ -23,7 +23,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { saveUserReferenceById } from "@/lib/actions/user.action";
-import { markOnboardingComplete } from "@/lib/actions/clerk.action";
 
 const options = [
   { value: "Google search", label: "Google search" },
@@ -83,8 +82,8 @@ export function RecommendedByForm({
         otherRecommendation:
           data.recommendedBy === "Other" ? data?.otherRecommendation || "" : "",
       });
-      router.push("/onboard/code-of-conduct");
       toast.success("Details submitted successfully.");
+      router.push("/onboard/code-of-conduct");
     } catch (err) {
       toast.error("Unexpected error, Please try again.");
     }

@@ -50,7 +50,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { saveUserChallengeById } from "@/lib/actions/user.action";
 import { Input } from "@/components/ui/input";
@@ -115,8 +114,8 @@ export function OnboardChallengeForm({
         meetingPreference: data.meetingPreference,
         meetingURL: data.meetingURL,
       });
-      router.push("/onboard/4");
       toast.success("Meeting preference saved successfully.");
+      router.push("/onboard/4");
     } catch (err) {
       console.error(err);
       toast.error("Unexpected error, Please try again.");

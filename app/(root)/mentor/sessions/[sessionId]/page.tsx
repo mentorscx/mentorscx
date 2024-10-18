@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { Role } from "@prisma/client";
 import SessionDetailsCard from "@/components/shared/sessions/session-details-card";
 import SessionHeader from "@/components/shared/sessions/session-header";
+import SessionChat from "@/components/shared/sessions/session-chat";
 
 interface SessionPageProps {
   params: {
@@ -33,12 +34,16 @@ const SessionPage = async ({ params }: SessionPageProps) => {
           imageUrl: true,
           position: true,
           organization: true,
+          clerkId: true,
         },
       },
       mentor: {
         select: {
           id: true,
           timeZone: true,
+          meetingPreference: true,
+          zoomLink: true,
+          googleMeetLink: true,
         },
       },
     },
@@ -49,23 +54,33 @@ const SessionPage = async ({ params }: SessionPageProps) => {
   }
 
   return (
-    <div className="mx-auto h-full max-w-5xl p-3 md:p-6 mt-[80px]">
+    <div className="mx-auto h-full max-w-5xl p-3 md:p-6 mt-16">
       {/* SESSION HEADER */}
       <SessionHeader
         sessionId={session.id}
         role={Role.MENTOR}
         status={session.status}
         declinedBy={session.declinedBy}
+        otherUserId={session.mentee.clerkId}
       />
 
       {/* SESSION DETAILS */}
       <SessionDetailsCard
         roleLabel="Mentee"
-        profileUrl="/dashboard/profile"
+        profileUrl={`/profile/${session.mentee.id}`}
         session={session}
         otherUser={session.mentee}
         currentUser={session.mentor}
+        meetingPreference={session.mentor.meetingPreference}
+        meetingUrl={
+          session.mentor.meetingPreference === "zoom"
+            ? session.mentor.zoomLink
+            : session.mentor.googleMeetLink
+        }
       />
+
+      {/* SESSION CHAT*/}
+      <SessionChat otherUserId={session.mentee.clerkId} />
     </div>
   );
 };

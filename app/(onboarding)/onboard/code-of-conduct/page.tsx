@@ -21,7 +21,7 @@ const Onboard5Page = () => {
 
   const handleClick = async () => {
     setIsLoading(true);
-    router.push("/dashboard/search");
+    router.push("/search");
   };
 
   return (

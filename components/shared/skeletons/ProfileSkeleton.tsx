@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 const ProfileSkeleton = () => {
   return (
-    <div className="pt-[80px]">
+    <div className="pt-16">
       <div className="max-lg:p-3">
         <div className="relative flex flex-col items-center justify-center space-y-3 bg-background rounded border shadow p-3">
           <div className="flex flex-col items-center justify-center">

@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ROLES, industryData } from "@/constants/data";
-import Select from "react-select";
 
 import { useRouter } from "next/navigation";
 import { saveUserCompanyAndRoleById } from "@/lib/actions/user.action";
@@ -85,8 +84,8 @@ export function OnboardStepTwoForm({ user }: Props) {
         linkedinProfile: data.linkedinProfile || undefined,
       });
 
-      router.push("/onboard/3");
       toast.success("Company and role details saved!");
+      router.push("/onboard/3");
     } catch (e) {
       console.log(e);
       toast.error("Unexpected error, Please try again.");

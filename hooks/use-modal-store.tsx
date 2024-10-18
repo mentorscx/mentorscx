@@ -27,7 +27,8 @@ export type ModalType =
   | "cancelSession"
   | "declineSession"
   | "rescheduleSession"
-  | "socialShare";
+  | "socialShare"
+  | "addCard";
 
 interface Industry {
   id: string;

@@ -80,8 +80,8 @@ export function OnboardStepOneForm({ user }: Props) {
         languages: data.languages,
       });
 
-      router.push("/onboard/2");
       toast.success("Basic details saved successfully.");
+      router.push("/onboard/2");
     } catch (error) {
       toast.error("Unexpected error, Please try again.");
     }

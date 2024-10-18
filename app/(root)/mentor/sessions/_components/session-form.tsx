@@ -100,7 +100,7 @@ export function SessionForm({ session, user, menteeEmail }: SessionFormProps) {
       setEnableEdit(false);
       router.refresh();
       toast.success("Declined the session ");
-      router.push("/dashboard/session");
+      router.push("/session");
     } catch (error) {
       console.log(error);
       toast("Unexpected Error...");
@@ -138,7 +138,7 @@ export function SessionForm({ session, user, menteeEmail }: SessionFormProps) {
     try {
       await updateSession({
         id: sessionId,
-        status: SessionStatus.REJECTED,
+        status: SessionStatus.DECLINED,
         mentorId: userId,
       });
       toast.success("Declined the session");

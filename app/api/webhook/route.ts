@@ -4,6 +4,8 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
+import { Role } from "@prisma/client";
+import { generateUniqueUserId } from "@/lib/actions/helper.action";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -55,6 +57,8 @@ export async function POST(req: Request) {
 
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, first_name, last_name } = evt.data;
+    const uniqueId = await generateUniqueUserId(first_name, last_name);
+
     const applicationData = await db.mentorApplication.findUnique({
       where: {
         email: email_addresses[0].email_address,
@@ -73,6 +77,7 @@ export async function POST(req: Request) {
           linkedinProfile: applicationData?.linkedinUrl,
           maxSessions: Number(applicationData?.weeklySessions) || 5,
           role: "MENTOR",
+          id: uniqueId,
         },
       });
 
@@ -88,6 +93,8 @@ export async function POST(req: Request) {
           username: `${first_name}${last_name ? ` ${last_name}` : ""}`,
           imageUrl: image_url,
           email: email_addresses[0].email_address,
+          role: Role.MENTEE,
+          id: uniqueId,
         },
       });
     }

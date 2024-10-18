@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { User, Role } from "@prisma/client";
+import { User, Role, SessionStatus } from "@prisma/client";
 
 import { db } from "../db";
 import { markOnboardingComplete } from "./clerk.action";
@@ -44,7 +44,7 @@ export async function getCurrentUser({
   }
 
   if (isMentorRoute && user.role !== Role.MENTOR) {
-    redirect("/dashboard/search");
+    redirect("/search");
   }
 
   return user;
@@ -262,10 +262,38 @@ export async function getUsersWithProfileFilters(searchParams: any) {
         languages: true,
         toolkit: true,
         expertise: true,
+        sessionsGiven: {
+          include: {
+            review: true,
+          },
+        },
       },
     });
 
-    return users;
+    // Calculate average ratings and total sessions given
+    const usersWithStats = users.map((user) => {
+      const totalSessions = user.sessionsGiven.filter(
+        (session) => session.review !== null
+      ).length;
+      const averageReview =
+        totalSessions > 0
+          ? user.sessionsGiven.reduce((acc, session) => {
+              if (session.review) {
+                return acc + session.review.rating;
+              }
+              return acc;
+            }, 0) / totalSessions || 0
+          : 0;
+
+      return {
+        ...user,
+        averageReview,
+        totalSessions,
+        sessionsGiven: undefined, // Remove sessionsGiven from the returned object
+      };
+    });
+
+    return usersWithStats;
   } catch (error) {
     console.log(error);
     throw Error("GET_PROFILES_WITH_FILTERS_ERROR, " + error);

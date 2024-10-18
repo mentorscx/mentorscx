@@ -5,13 +5,13 @@ import type { Metadata } from "next";
 
 import { db } from "@/lib/db";
 
-import { DashboardFeedbackForm } from "./_components/dashboard-feedback-form";
-import DashBoardProfileCard from "./_components/dashboard-profile-card";
-import DashBoardProfileViews from "./_components/dashboard-profile-views";
-import DashBoardSessionCount from "./_components/dashbord-session-count";
-import DashBoardUsersBooked from "./_components/dashboard-users-booked";
-import DashboardSessionsUpcoming from "./_components/dashboard-sessions-upcoming";
-import DashboardSessionsRequest from "./_components/dashboard-sessions-request";
+import { DashboardFeedbackForm } from "@/components/shared/dashboard/dashboard-feedback-form";
+
+import DashBoardProfileViews from "@/components/shared/dashboard/dashboard-profile-views";
+import DashBoardSessionCount from "@/components/shared/dashboard/dashbord-session-count";
+import DashBoardUsersBooked from "@/components/shared/dashboard/dashboard-users-booked";
+import DashboardSessionsUpcoming from "@/components/shared/dashboard/dashboard-sessions-upcoming";
+import DashboardSessionsRequest from "@/components/shared/dashboard/dashboard-sessions-request";
 import { OnboardingChecklist } from "@/components/shared/onboarding-checklist";
 import { Role } from "@prisma/client";
 
@@ -19,8 +19,11 @@ import {
   DashboardCardSkelton,
   DashboardProfileSkelton,
   DashboardSessionSkeleton,
-} from "./_components/dashboard-skelton";
+} from "@/components/shared/dashboard/dashboard-skelton";
 import { Card } from "@/components/ui/card";
+import { MentorDashBoardProfileCard } from "@/components/shared/dashboard/dashboard-profile-card";
+import { MentorLevelsCard } from "@/components/shared/dashboard/mentor-levels-card";
+import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 export const metadata: Metadata = {
   title: "Dashboard | Mentors CX",
@@ -54,17 +57,17 @@ const MentorDashboardPage = async () => {
 
   if (!user) return null;
 
-  if (!user.isOnboarded) redirect("/onboard/1");
-
   // Redirect if the user is not MENTOR
   if (user.role !== Role.MENTOR) {
-    redirect("/");
+    return <MentorSubscribeModal isDialogOpen={true} />;
   }
+
+  if (!user.isOnboarded) redirect("/onboard/1");
 
   const { id, imageUrl, username } = user;
 
   return (
-    <div className="max-w-5xl mx-auto pt-[80px] p-3">
+    <div className="max-w-5xl mx-auto pt-16 p-3">
       {/* PAGE TITLE */}
       <div className="w-full flex flex-col lg:flex-row gap-4 mt-4">
         {/* WELCOME BACK AND STATS*/}
@@ -78,7 +81,7 @@ const MentorDashboardPage = async () => {
               <DashBoardUsersBooked userId={id} />
             </Suspense>
             <Suspense fallback={<DashboardCardSkelton />}>
-              <DashBoardSessionCount userId={id} />
+              <MentorLevelsCard mentorId={id} />
             </Suspense>
           </div>
         </Card>
@@ -86,27 +89,24 @@ const MentorDashboardPage = async () => {
         {/* PROFILE AND SHARE DETAILS */}
         <div className="col-span-1">
           <Suspense fallback={<DashboardProfileSkelton />}>
-            <DashBoardProfileCard
+            <MentorDashBoardProfileCard
               userId={id}
               userImage={imageUrl}
               userName={username}
-              rating={4.51}
-              sessions={345}
-              reviews={342}
             />
           </Suspense>
         </div>
       </div>
 
       {/* ONBOARDING CHECKLIST */}
-      <OnboardingChecklist user={user} route="mentor/dashboard" />
+      <OnboardingChecklist user={user} route="/mentor/dashboard" />
 
       {/* SESSIONS REQUESTS */}
       <Suspense fallback={<DashboardSessionSkeleton />}>
-        <DashboardSessionsRequest userId={id} />
+        <DashboardSessionsRequest userId={id} role={Role.MENTOR} />
       </Suspense>
       <Suspense fallback={<DashboardSessionSkeleton />}>
-        <DashboardSessionsUpcoming userId={id} />
+        <DashboardSessionsUpcoming userId={id} role={Role.MENTOR} />
       </Suspense>
 
       {/* FEATURE REQUEST FORM */}

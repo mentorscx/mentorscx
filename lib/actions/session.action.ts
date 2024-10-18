@@ -2,6 +2,7 @@
 
 import { db } from "../db";
 import { scheduleMeeting } from "./google-calandar.action";
+import { alertNotification } from "./notification.action";
 import { getSelfId } from "./user.action";
 
 export async function getAllSessions(id: string) {
@@ -143,7 +144,20 @@ export async function createSession(session: TSession) {
         ...session,
         menteeId: user.id,
       },
+      include: {
+        mentor: true,
+        mentee: true,
+      },
     });
+
+    console.log(newSession);
+
+    // Send Notification
+    await alertNotification(newSession.mentor.clerkId, {
+      title: "New session Request",
+      message: `You have received new session request from ${newSession.mentee.username}`,
+    });
+
     return newSession;
   } catch (error) {
     throw Error("CREATE_SESSION_ERROR, " + error);

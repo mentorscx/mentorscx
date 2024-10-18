@@ -1,26 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { SidebarRoutes } from "./sidebar-routes";
-import { useState, useEffect } from "react";
-import { Sheet } from "lucide-react";
-import { SheetClose } from "@/components/ui/sheet";
+
+import { useIsClient } from "usehooks-ts";
 
 export const Sidebar = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const isClient = useIsClient();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
+  if (!isClient) return null;
 
   return (
-    <div className="space-y-4 py-4 flex flex-col h-full bg-white border-r">
-      <div className="flex flex-col w-full ">
+    <div className="space-y-4 py-4 flex flex-col h-full bg-muted border-r">
+      <div className="flex flex-col w-full justify-between h-full">
         <SidebarRoutes />
       </div>
     </div>

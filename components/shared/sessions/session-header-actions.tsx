@@ -1,135 +1,194 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 import { Role, SessionStatus } from "@prisma/client";
-import { cn } from "@/lib/utils";
 import { updateSession } from "@/lib/actions/session.action";
-import { useModal } from "@/hooks/use-modal-store";
+import { useModal, ModalType } from "@/hooks/use-modal-store";
+
+import AddReviewModal from "@/components/modals/add-review-modal";
+import { ShareButton } from "../profile/profile-share";
+import ShareOwnProfile from "../profile/share-my-profile";
+import Link from "next/link";
 
 type Props = {
   sessionId: string;
   role: Role;
   status: SessionStatus;
   buttonStyles: string;
+  otherUserId: string;
 };
 
-export const SessionHeaderActions = ({
-  sessionId,
-  role,
-  status,
-  buttonStyles,
-}: Props) => {
+// Define action handlers
+const useSessionActions = (sessionId: string, role: Role) => {
   const router = useRouter();
   const { onOpen } = useModal();
-
   const [disabled, setDisabled] = useState(false);
 
-  const showReschedule: Boolean =
-    status === SessionStatus.ACCEPTED || status === SessionStatus.AWAITING_HOST;
-  const showCancel: Boolean = status === SessionStatus.ACCEPTED;
-  const showReject: Boolean =
-    role === Role.MENTOR && status === SessionStatus.AWAITING_HOST;
-  const showAccept: Boolean =
-    role === Role.MENTOR && status === SessionStatus.AWAITING_HOST;
-
-  const handleReschedule = async () => {
-    onOpen("rescheduleSession", {
-      session: {
-        id: sessionId,
-        status: SessionStatus.RESCHEDULED,
-        declinedBy: role,
-      },
-    });
-  };
-
-  const handleAccept = async () => {
+  const handleAction = async (newStatus: SessionStatus, actionType: string) => {
     try {
       setDisabled(true);
-      toast.loading("Accepting the session");
-      await updateSession({
-        id: sessionId,
-        status: "ACCEPTED",
-      });
-      toast.success("Accepted the session");
-      setDisabled(false);
+      toast.loading(`${actionType} the session`);
+      await updateSession({ id: sessionId, status: newStatus });
+      toast.success(`${actionType} the session`);
       router.refresh();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Unexpected Error...");
+    } finally {
+      setDisabled(false);
     }
   };
 
-  const handleDecline = async () => {
+  const handleModalAction = (
+    newStatus: SessionStatus,
+    modalType: ModalType
+  ) => {
     setDisabled(true);
-    onOpen("declineSession", {
-      session: {
-        id: sessionId,
-        status: SessionStatus.REJECTED,
-        declinedBy: role,
-      },
+    onOpen(modalType, {
+      session: { id: sessionId, status: newStatus, declinedBy: role },
     });
     setDisabled(false);
   };
 
-  const handleCancel = async () => {
-    setDisabled(true);
-    onOpen("cancelSession", {
-      session: {
-        id: sessionId,
-        status: SessionStatus.CANCELLED,
-        declinedBy: role,
-      },
-    });
-    setDisabled(false);
+  return {
+    handleAccept: () => handleAction(SessionStatus.ACCEPTED, "Accepting"),
+    handleDecline: () =>
+      handleModalAction(SessionStatus.DECLINED, "declineSession"),
+    handleCancel: () =>
+      handleModalAction(SessionStatus.CANCELLED, "cancelSession"),
+    handleReschedule: () =>
+      handleModalAction(SessionStatus.RESCHEDULED, "rescheduleSession"),
+    handleCompleted: () => handleAction(SessionStatus.COMPLETED, "completed"),
+    disabled,
   };
+};
+
+// Define action visibility
+const getActionVisibility = (role: Role, status: SessionStatus) => ({
+  showReschedule:
+    status === SessionStatus.ACCEPTED || status === SessionStatus.AWAITING_HOST,
+  showCancel: status === SessionStatus.ACCEPTED,
+  showReject: role === Role.MENTOR && status === SessionStatus.AWAITING_HOST,
+  showAccept: role === Role.MENTOR && status === SessionStatus.AWAITING_HOST,
+  showCompleted: role === Role.MENTEE && status === SessionStatus.DONE,
+  showAskReview: role === Role.MENTOR && status === SessionStatus.COMPLETED,
+  showLeaveReview: role === Role.MENTEE && status === SessionStatus.COMPLETED,
+  showShareReview: status === SessionStatus.REVIEWED,
+});
+
+// SessionHeaderActions component
+export const SessionHeaderActions = (props: Props) => {
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+
+  // Submit review Actions
+  const handleLeaveReview = () => {
+    setIsReviewDialogOpen(!isReviewDialogOpen);
+  };
+
+  // Request review Actions
+  const handleRequestReview = () => {
+    alert("You asked for the review");
+  };
+
+  const sessionActions = useSessionActions(props.sessionId, props.role);
+  const actionVisibility = getActionVisibility(props.role, props.status);
 
   return (
     <div className="pt-4 flex items-center justify-center gap-4 flex-col md:flex-row">
-      {showReject && (
+      {actionVisibility.showReject && (
         <Button
-          className={buttonStyles}
+          className={props.buttonStyles}
           variant="outline"
-          onClick={handleDecline}
-          disabled={disabled}
+          onClick={sessionActions.handleDecline}
+          disabled={sessionActions.disabled}
         >
           Decline
         </Button>
       )}
-      {showCancel && (
+      {actionVisibility.showCancel && (
         <Button
-          className={buttonStyles}
+          className={props.buttonStyles}
           variant="outline"
-          onClick={handleCancel}
-          disabled={disabled}
+          onClick={sessionActions.handleCancel}
+          disabled={sessionActions.disabled}
         >
           Cancel
         </Button>
       )}
-      {showReschedule && (
+      {actionVisibility.showReschedule && (
         <Button
-          className={buttonStyles}
+          className={props.buttonStyles}
           variant="outline"
-          onClick={handleReschedule}
-          disabled={disabled}
+          onClick={sessionActions.handleReschedule}
+          disabled={sessionActions.disabled}
         >
           Reschedule
         </Button>
       )}
-
-      {showAccept && (
+      {actionVisibility.showAccept && (
         <Button
-          className={buttonStyles}
+          className={props.buttonStyles}
           variant="outline"
-          onClick={handleAccept}
-          disabled={disabled}
+          onClick={sessionActions.handleAccept}
+          disabled={sessionActions.disabled}
         >
           Accept
         </Button>
       )}
+      {actionVisibility.showCompleted && (
+        <Button
+          className={props.buttonStyles}
+          variant="outline"
+          onClick={sessionActions.handleCompleted}
+          disabled={sessionActions.disabled}
+        >
+          Complete
+        </Button>
+      )}
+      {actionVisibility.showLeaveReview && (
+        <Button
+          className={props.buttonStyles}
+          variant="outline"
+          onClick={handleLeaveReview}
+          disabled={sessionActions.disabled}
+        >
+          Leave a review
+        </Button>
+      )}
+
+      {actionVisibility.showAskReview && (
+        <Button
+          className={props.buttonStyles}
+          variant="outline"
+          onClick={handleRequestReview}
+          disabled={sessionActions.disabled}
+        >
+          Ask for review
+        </Button>
+      )}
+
+      {actionVisibility.showShareReview && (
+        <div className="p-4 md:px-8 border-y border-blue-300/20 flex items-center gap-4">
+          <Button variant="secondary" asChild>
+            <Link href={`/reviews/${props.sessionId}`} target="_blank">
+              View review
+            </Link>
+          </Button>
+          <ShareOwnProfile
+            path={`/reviews/${props.sessionId}`}
+            title="Share review "
+          />
+        </div>
+      )}
+
+      <AddReviewModal
+        isDialogOpen={isReviewDialogOpen}
+        onClose={handleLeaveReview}
+        sessionId={props.sessionId}
+      />
     </div>
   );
 };

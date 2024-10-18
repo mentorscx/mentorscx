@@ -15,6 +15,7 @@ export default function AdminLayout({
         <AdminNavLink href="/admin/mentor/applications">
           Applications
         </AdminNavLink>
+        <AdminNavLink href="/admin/feature-requests">Features</AdminNavLink>
       </AdminNav>
       <div className="container my-6">{children}</div>
     </>

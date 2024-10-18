@@ -90,7 +90,8 @@ const convertScheduleToUTC = (
   schedule: ScheduleItem[],
   timeZone: string
 ): ScheduleItem[] => {
-  return schedule.map((item) => {
+  if (!schedule) return [];
+  return schedule?.map((item) => {
     const dayDate = findNextDay(item.day);
     const localStartDatetime = new Date(
       dayDate.setHours(
@@ -129,7 +130,8 @@ const convertScheduleFromUTC = (
   schedule: ScheduleItem[],
   timeZone: string
 ): ScheduleItem[] => {
-  return schedule.map((item) => {
+  if (!schedule) return [];
+  return schedule?.map((item) => {
     const utcStartDatetime = new Date(item.startTime);
     const utcEndDatetime = new Date(item.endTime);
 
@@ -173,7 +175,8 @@ const Total = ({ control }: { control: Control<FormValues> }) => {
     const endTime = current.endTime.split(":");
     const startMinutes = parseInt(startTime[0]) * 60 + parseInt(startTime[1]);
     const endMinutes = parseInt(endTime[0]) * 60 + parseInt(endTime[1]);
-    const duration = endMinutes - startMinutes;
+    const duration =
+      endMinutes - startMinutes > 0 ? endMinutes - startMinutes : 0;
     return acc + duration;
   }, 0);
 
@@ -208,10 +211,15 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
     register,
     control,
     handleSubmit,
-    formState: { isDirty, errors },
+    formState: { isDirty, errors, isValid },
+    setError,
+    clearErrors,
+    getValues,
+    watch,
   } = useForm<FormValues>({
     defaultValues: { schedule: defaultWeeklyInTimezone },
-    mode: "onBlur",
+    mode: "onChange",
+    reValidateMode: "onBlur", // revalidates the form at onBlur
   });
   const { fields, append, remove, swap } = useFieldArray({
     name: "schedule",
@@ -233,6 +241,30 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
     } catch (error) {
       toast.error("Failed to update the weekly schedule.");
     }
+  };
+
+  const validateTimes = (startTime: string, endTime: string, index: number) => {
+    const start = new Date(`1970/01/01 ${startTime}`);
+    const end = new Date(`1970/01/01 ${endTime}`);
+
+    // Check if the end time is exactly midnight
+    if (endTime === "00:00") {
+      setError(`schedule.${index}.endTime`, {
+        type: "manual",
+        message: "End time cannot be 12:00 AM",
+      });
+      return false;
+    }
+
+    if (start >= end) {
+      setError(`schedule.${index}.endTime`, {
+        type: "manual",
+        message: "End time must be after start time",
+      });
+      return false;
+    }
+    clearErrors(`schedule.${index}.endTime`);
+    return true;
   };
 
   return (
@@ -280,6 +312,10 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
                   type="time"
                   {...register(`schedule.${index}.startTime` as const, {
                     required: "Start time is required",
+                    onChange: (e) => {
+                      const startTime = watch(`schedule.${index}.startTime`);
+                      validateTimes(e.target.value, startTime, index);
+                    },
                   })}
                   className="min-w-[125px] w-fit"
                   defaultValue={field.startTime}
@@ -287,8 +323,15 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
                 <Input
                   placeholder="End Time"
                   type="time"
-                  {...register(`schedule.${index}.endTime` as const, {
-                    required: "End time is required",
+                  {...register(`schedule.${index}.endTime`, {
+                    validate: {
+                      afterStartTime: (value) => {
+                        const startTime = getValues(
+                          `schedule.${index}.startTime`
+                        );
+                        return validateTimes(startTime, value, index);
+                      },
+                    },
                   })}
                   className="min-w-[125px] w-fit"
                   defaultValue={field.endTime}
@@ -303,6 +346,11 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
                   <TrashIcon className="w-4 h-4 text-danger" />
                 </Button>
               </div>
+              {errors.schedule && errors.schedule[index]?.endTime && (
+                <p className="text-red-500">
+                  {errors?.schedule[index]?.endTime?.message}
+                </p>
+              )}
             </section>
           </CardContent>
         ))}
@@ -322,7 +370,7 @@ const MentorScheduleRecurring = ({ user }: MentorScheduleRecurringProps) => {
             >
               ADD <PlusIcon className="w-4 h-4 ml-1" />
             </Button>
-            <Button type="submit" disabled={!isDirty}>
+            <Button type="submit" disabled={!isDirty || !isValid}>
               Save
             </Button>
           </div>

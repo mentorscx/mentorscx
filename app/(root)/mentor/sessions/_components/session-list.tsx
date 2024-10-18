@@ -9,17 +9,19 @@ type TSession = Session & {
 
 type SessionListProps = {
   sessions: TSession[];
+  currentView: Role;
 };
 
-const SessionList = ({ sessions }: SessionListProps) => {
+const SessionList = (props: SessionListProps) => {
   return (
     <div>
-      {sessions.map((session: TSession) => (
+      {props.sessions.map((session: TSession) => (
         <div key={session.id}>
           <SessionCard
             session={session}
-            currUser={session.mentor}
+            currentUser={session.mentor}
             otherUser={session.mentee}
+            currentView={props.currentView}
           />
         </div>
       ))}

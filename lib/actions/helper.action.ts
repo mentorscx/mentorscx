@@ -1,9 +1,12 @@
 "use server";
 import { MentorApplication } from "@prisma/client";
+import { SessionStatus } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
 import { sendEmailViaBrevoTemplate } from "../brevo";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 type TProfileViewCount = {
   profileId: string;
@@ -82,22 +85,23 @@ export async function getSessionsCompletedLastMonth(userId: string) {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const sessions = await db.session.findMany({
+    const completedSessionsCount = await db.session.count({
       where: {
-        mentorId: userId,
+        menteeId: userId,
         createdAt: {
           gte: thirtyDaysAgo,
         },
         status: {
-          equals: "COMPLETED",
+          in: [
+            SessionStatus.COMPLETED,
+            SessionStatus.AWAITING_REVIEW,
+            SessionStatus.REVIEWED,
+          ],
         },
-      },
-      select: {
-        id: true,
       },
     });
 
-    return sessions.length;
+    return completedSessionsCount;
   } catch (err) {
     console.log("Error in getSessionsCompletedLastMonth", err);
   }
@@ -139,4 +143,194 @@ export async function saveMentorApplication(mentorApplication: any) {
     console.error("Unexpected error in saveMentorApplication", err);
     throw err;
   }
+}
+
+export const getUserSubscription = async () => {
+  try {
+    const { userId: clerkId } = await auth();
+
+    if (!clerkId) {
+      return null;
+    }
+
+    // Add field condition of premium
+    const user = await db.user.findUnique({
+      where: {
+        clerkId,
+      },
+      include: {
+        Subscription: true,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    console.error("Unexpected error in hasPremiumAccess", err);
+  }
+};
+
+export async function fetchStripeConnectAccount(
+  userId: string
+): Promise<boolean> {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { stripeConnectedAccount: true },
+    });
+
+    return user?.stripeConnectedAccount?.stripeConnectedLinked ?? false;
+  } catch (error) {
+    console.error("Error fetching Stripe Connect account:", error);
+    return false;
+  }
+}
+
+export async function isConnectedWithGoogleEvents() {
+  try {
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) {
+      throw new Error("User not found");
+    }
+
+    const eventsScopeApproved = clerkUser?.externalAccounts?.some((e) =>
+      e.approvedScopes.includes(
+        "https://www.googleapis.com/auth/calendar.events"
+      )
+    );
+
+    return eventsScopeApproved;
+  } catch (error: any) {
+    throw new Error("Failed to connect the calendar");
+  }
+}
+
+interface MentorStats {
+  averageRating: number;
+  totalReviews: number;
+  totalCompletedSessions: number;
+}
+
+export async function getMentorReviewStats(
+  mentorId: string
+): Promise<MentorStats> {
+  // Get average rating and total reviews
+  const reviewStats = await db.review.aggregate({
+    _avg: {
+      rating: true,
+    },
+    _count: {
+      rating: true,
+    },
+    where: {
+      session: {
+        mentorId,
+      },
+    },
+  });
+
+  // Get total completed and reviewed sessions
+  const completedSessionsCount = await db.session.count({
+    where: {
+      mentorId,
+      status: {
+        in: [
+          SessionStatus.COMPLETED,
+          SessionStatus.REVIEWED,
+          SessionStatus.DONE,
+          SessionStatus.AWAITING_REVIEW,
+        ],
+      },
+    },
+  });
+
+  return {
+    averageRating: reviewStats._avg.rating || 0,
+    totalReviews: reviewStats._count.rating,
+    totalCompletedSessions: completedSessionsCount,
+  };
+}
+
+export const getCompletedSessionsCount = async (
+  userId: string,
+  days?: number
+) => {
+  try {
+    const whereClause: any = {
+      mentorId: userId, // Changed from menteeId to mentorId as we're checking mentor's completed sessions
+      status: {
+        in: [
+          SessionStatus.COMPLETED,
+          SessionStatus.REVIEWED,
+          SessionStatus.DONE,
+          SessionStatus.AWAITING_REVIEW,
+        ],
+      },
+    };
+
+    if (days && !isNaN(days)) {
+      const dateThreshold = new Date();
+      dateThreshold.setDate(dateThreshold.getDate() - days);
+      whereClause.createdAt = { gte: dateThreshold };
+    }
+
+    const completedSessionsCount = await db.session.count({
+      where: whereClause,
+    });
+
+    return completedSessionsCount;
+  } catch (err) {
+    console.error("Error in getCompletedSessionsCount:", err);
+    throw new Error("Failed to get completed sessions count");
+  }
+};
+
+/**
+ * Generates a unique user ID by concatenating first name and last name.
+ * If both are null, returns a UUID. If one is null, uses the other.
+ * If the ID already exists, appends a number to make it unique.
+ *
+ * @param firstName - The first name of the user
+ * @param lastName - The last name of the user
+ * @returns The unique ID for the user
+ */
+export async function generateUniqueUserId(
+  firstName: string | null,
+  lastName: string | null
+): Promise<string> {
+  let baseId: string;
+
+  if (!firstName && !lastName) {
+    return uuidv4();
+  } else if (firstName && lastName) {
+    baseId = `${firstName.toLowerCase()}${lastName.toLowerCase()}`;
+  } else if (firstName) {
+    baseId = firstName.toLowerCase();
+  } else {
+    baseId = lastName!.toLowerCase();
+  }
+
+  let uniqueId = baseId;
+  let idExists = true;
+  let counter = 1;
+
+  // Check if the ID already exists in the database
+  while (idExists) {
+    const existingUser = await db.user.findUnique({
+      where: {
+        id: uniqueId,
+      },
+    });
+
+    // If no user exists with this ID, we have a unique ID
+    if (!existingUser) {
+      idExists = false;
+    } else {
+      // Otherwise, append the counter and check again
+      uniqueId = `${baseId}${counter}`;
+      counter++;
+    }
+  }
+
+  return uniqueId;
 }

@@ -1,16 +1,24 @@
 "use client";
 import React from "react";
-import { utcToZonedTime } from "date-fns-tz";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+import moment from "moment-timezone";
+
 import { SessionDetailsForm } from "../session-details-form";
+
 import { formatAMPM } from "@/lib/format";
-import { getDisabledDays } from "@/lib/helpers/calendar";
+
 import { Session } from "@prisma/client";
-import { getAvailableSlots } from "./calendar-server";
+import {
+  filterTimeSlotsByDate,
+  getAvailableSlots,
+  getEnabledAndDisabledDays,
+} from "./calendar-server";
+
+import { utcToZonedTime } from "date-fns-tz";
 
 type Event = {
   start: Date;
@@ -20,7 +28,10 @@ type Event = {
 type BookingCalendarMainProps = {
   individualEvents: Event[];
   timeZone: string;
+
+  mentorTimeZone: string;
   weeklyEvents: Event[];
+  externalEvents: Event[];
   duration: number;
   price: number;
   mentorId: string;
@@ -34,43 +45,33 @@ type CalanderSidebarProps = {
   selectedDay: Date | null;
   onSlotSelect: (slot: Event) => void;
   onOpenForm: () => void;
+  timeZone: string;
 };
-
-function filterTimeSlotsByDate(
-  timeSlots: Event[],
-  selectedDate: Date | null
-): Event[] {
-  if (!selectedDate) {
-    return [];
-  }
-  return timeSlots.filter((timeSlot) => {
-    const startDate = timeSlot.start.toString().slice(0, 10);
-    const selectedDateStr = selectedDate.toString().slice(0, 10);
-    return startDate === selectedDateStr;
-  });
-}
 
 const CalanderSidebar = ({
   slots,
   selectedDay,
   onSlotSelect,
   onOpenForm,
+  timeZone,
 }: CalanderSidebarProps) => {
   const [slotSelected, setSlotSelected] = React.useState<Event | null>(null);
-  const [openForm, setOpenForm] = React.useState(false);
 
+  const handleResetSlot = () => setSlotSelected(null);
+  const handleOpenForm = () => onOpenForm();
   const handleSlotSelect = (slot: Event) => {
     onSlotSelect(slot);
     setSlotSelected(slot);
   };
-
-  const handleResetSlot = () => {
-    setSlotSelected(null);
+  const getFormattedTime = (date: Date) => {
+    const localDate = utcToZonedTime(date, timeZone);
+    return formatAMPM(localDate);
   };
 
-  const handleOpenForm = () => {
-    onOpenForm();
-  };
+  // Sort slots by start date ascending
+  const sortedSlots = slots.sort(
+    (a, b) => +new Date(a.start) - +new Date(b.start)
+  );
 
   if (selectedDay === null) {
     return (
@@ -90,12 +91,14 @@ const CalanderSidebar = ({
   return (
     <ScrollArea className="h-fit max-md:max-h-[300px] md:h-[400px] w-fit border p-3">
       <div className="flex items-center justify-center flex-col">
-        <h1 className="my-2">{selectedDay?.toDateString()}</h1>
+        <h1 className="my-2">
+          {utcToZonedTime(selectedDay, timeZone)?.toDateString()}
+        </h1>
         <ul className="flex flex-col gap-4">
           {slotSelected && (
             <div>
               <Button className="w-full " variant="outline">
-                {formatAMPM(slotSelected.start)}
+                {getFormattedTime(slotSelected.start)}
               </Button>
               <div className="flex items-center gap-4 mt-3">
                 <Button variant="secondary" onClick={handleResetSlot}>
@@ -106,20 +109,41 @@ const CalanderSidebar = ({
             </div>
           )}
           {!slotSelected &&
-            slots.map((slot, index) => (
-              <li key={index}>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-[200px]"
-                  onClick={() =>
-                    handleSlotSelect({ start: slot.start, end: slot.end })
-                  }
-                >
-                  {formatAMPM(slot.start)}
-                </Button>
-              </li>
-            ))}
+            sortedSlots.map((slot, index) => {
+              const formattedTime = getFormattedTime(slot.start);
+              return formattedTime.includes("AM") ? (
+                <li key={index}>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-[200px]"
+                    onClick={() =>
+                      handleSlotSelect({ start: slot.start, end: slot.end })
+                    }
+                  >
+                    {formattedTime}
+                  </Button>
+                </li>
+              ) : null;
+            })}
+          {!slotSelected &&
+            sortedSlots.map((slot, index) => {
+              const formattedTime = getFormattedTime(slot.start);
+              return formattedTime.includes("PM") ? (
+                <li key={index}>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-[200px]"
+                    onClick={() =>
+                      handleSlotSelect({ start: slot.start, end: slot.end })
+                    }
+                  >
+                    {formattedTime}
+                  </Button>
+                </li>
+              ) : null;
+            })}
         </ul>
       </div>
     </ScrollArea>
@@ -128,28 +152,58 @@ const CalanderSidebar = ({
 
 const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const [date, setDate] = React.useState<Date | null>(null);
+  const [localDate, setLocalDate] = React.useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = React.useState<Event | null>(null);
   const [openForm, setOpenForm] = React.useState(false);
 
-  const today = utcToZonedTime(new Date(), props.timeZone); // Getting today's date
-  const threeMonthsLater = new Date(); // Copying today's date
-  threeMonthsLater.setMonth(today.getMonth() + 3); // Setting it to three months from now
-
   const handleOpenForm = () => setOpenForm(!openForm);
-
   const handleSelectSlot = (slot: Event) => setSelectedSlot(slot);
-
-  const uniqueAvailableSlots = getAvailableSlots(props);
-
-  const eventSlots = filterTimeSlotsByDate(uniqueAvailableSlots, date);
-  const availableSlots = [...eventSlots];
-
   const handleSelectDate = (selectedDate: Date) => {
+    // Ensure the date selected is stripped of its time component, to start at midnight
+
+    const momentDate = moment(selectedDate);
+
+    // Create a moment object from the date with no time and convert it to the specified timezone
+
+    const localDate = momentDate
+      .tz(props.timeZone, true)
+      .startOf("day")
+      .toDate();
+
+    // Assuming setDate and setLocalDate are hooks to set state
     setDate(selectedDate);
+    setLocalDate(localDate);
   };
 
-  // Disabled dates for next 3months, which are not in the timeslots
-  const disabledDates = getDisabledDays(uniqueAvailableSlots);
+  // Get today's date in timezone and convert to ET 12:00AM
+  const today = moment.tz(new Date(), props.timeZone);
+  const todayDate = today.format("YYYY-MM-DD");
+  const [year, month, dayOfMonth] = todayDate.split("-").map(Number);
+  const todayDateToET = new Date(year, month - 1, dayOfMonth);
+
+  // Get today's date at 12:00 AM in the specified timezone
+  const todayAtMidnight = moment().tz(props.timeZone).startOf("day").toDate();
+  const threeMonthsLater = new Date(todayAtMidnight.getTime()); // Copying today's date
+  threeMonthsLater.setMonth(todayAtMidnight.getMonth() + 3); // Setting it to three months from now
+
+  // Get Unique available slots
+  // Filter based on the selected day
+  const uniqueAvailableSlots = getAvailableSlots(props);
+  const eventSlots = filterTimeSlotsByDate(uniqueAvailableSlots, localDate);
+  const availableSlots = [...eventSlots];
+
+  // Get disabled days and convert to ET
+  // convert disable days to ET
+  const { disabledDays } = getEnabledAndDisabledDays(
+    uniqueAvailableSlots,
+    props.timeZone
+  );
+
+  // Convert disabledDays strings to Date objects
+  const disabledDates = disabledDays.map((day) => {
+    const [year, month, dayOfMonth] = day.split("-").map(Number);
+    return new Date(year, month - 1, dayOfMonth);
+  });
 
   return (
     <div className="w-full">
@@ -159,18 +213,20 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
             mode="single"
             selected={date || undefined}
             onDayClick={handleSelectDate}
-            disabled={[{ before: today }, ...disabledDates]}
-            defaultMonth={today}
-            fromMonth={today}
+            disabled={[{ before: todayDateToET }, ...disabledDates]}
+            defaultMonth={todayDateToET}
+            fromMonth={todayDateToET}
             toMonth={threeMonthsLater}
             toDate={threeMonthsLater}
+            today={todayDateToET}
           />
           {/* Sidebar for slots */}
           <CalanderSidebar
             slots={availableSlots}
-            selectedDay={date}
+            selectedDay={localDate}
             onSlotSelect={handleSelectSlot}
             onOpenForm={handleOpenForm}
+            timeZone={props.timeZone}
           />
         </div>
       )}
@@ -189,8 +245,14 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
               outcome: "",
               menteeId: "",
               mentorId: props.mentorId,
-              start: selectedSlot?.start || new Date(),
-              end: selectedSlot?.end || new Date(),
+              start:
+                (selectedSlot?.start &&
+                  utcToZonedTime(selectedSlot?.start, props.timeZone)) ||
+                new Date(),
+              end:
+                (selectedSlot?.end &&
+                  utcToZonedTime(selectedSlot?.end, props.timeZone)) ||
+                new Date(),
               price: props.price,
               duration: props.duration,
               acceptTerms: false,
