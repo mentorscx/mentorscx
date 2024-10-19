@@ -130,7 +130,7 @@ export async function updateSession(session: any) {
       // Send Notification
       await alertNotification(updatedSession.mentee.clerkId, {
         title: "Your session Accepted",
-        message: `Your session request has been accepted by ${updatedSession.mentor.clerkId}`,
+        message: `Your session request has been accepted by ${updatedSession.mentor.username}`,
       });
 
       await sendEmailViaBrevoTemplate({
@@ -203,7 +203,7 @@ export async function updateSession(session: any) {
       // Send Notification
       await alertNotification(updatedSession.mentee.clerkId, {
         title: "Your session was rescheduled",
-        message: `Your session request was rescheduled by ${updatedSession.mentor.clerkId}`,
+        message: `Your session request was rescheduled by ${updatedSession.mentor.username}`,
       });
 
       await sendEmailViaBrevoTemplate({
@@ -240,7 +240,7 @@ export async function updateSession(session: any) {
       // Send Notification
       await alertNotification(updatedSession.mentor.clerkId, {
         title: "Your session was cancelled",
-        message: `Your session request was cancelled by ${updatedSession.mentee.clerkId}`,
+        message: `Your session request was cancelled by ${updatedSession.mentee.username}`,
       });
 
       await sendEmailViaBrevoTemplate({
@@ -277,7 +277,7 @@ export async function updateSession(session: any) {
       // Send Notification
       await alertNotification(updatedSession.mentee.clerkId, {
         title: "Your session was cancelled",
-        message: `Your session request was cancelled by ${updatedSession.mentor.clerkId}`,
+        message: `Your session request was cancelled by ${updatedSession.mentor.username}`,
       });
 
       await sendEmailViaBrevoTemplate({
