@@ -4,8 +4,17 @@ import axios, { AxiosRequestConfig } from "axios";
 import { env } from "@/env";
 
 type PARAMS = {
-  menteename: string;
-  duration: string;
+  mentee_name: string;
+  mentor_name: string;
+  session_duration: string;
+  session_price: string;
+  session_objective: string;
+  session_outcome: string;
+  session_meeting_preference: string | null;
+  session_meeting_link: string | null;
+  session_date: string;
+  session_time: string;
+  session_timezone: string | null;
 };
 
 export async function sendEmailViaBrevoTemplate({
