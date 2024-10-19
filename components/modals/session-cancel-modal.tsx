@@ -27,7 +27,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/hooks/use-modal-store";
 import { updateSession } from "@/lib/actions/session.action";
 import useChatStore from "@/hooks/use-chat-client-store";
-import { delay } from "@/lib/utils";
 
 const formSchema = z.object({
   reason: z.string().min(10, {

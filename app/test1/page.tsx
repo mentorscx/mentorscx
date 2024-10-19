@@ -17,10 +17,6 @@ export default function Home() {
       templateId: 22,
       email: "angel@mentorscx.com",
       name: "Angel funes",
-      params: {
-        menteename: "Bharadwaj k",
-        duration: "30",
-      },
     });
 
     alert("email sent to angel@mentorscx.com");

@@ -1,7 +1,8 @@
-import { Role } from "@prisma/client";
 import * as z from "zod";
 
 export const formUserSchema = z.object({
-  email: z.string().email(),
-  role: z.enum([Role.MENTEE, Role.MENTOR, Role.BOTH]),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["MENTOR", "MENTEE", "BOTH"]),
 });

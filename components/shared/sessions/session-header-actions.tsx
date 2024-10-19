@@ -62,6 +62,8 @@ const useSessionActions = (sessionId: string, role: Role) => {
     handleReschedule: () =>
       handleModalAction(SessionStatus.RESCHEDULED, "rescheduleSession"),
     handleCompleted: () => handleAction(SessionStatus.COMPLETED, "completed"),
+    handleAskReview: () =>
+      handleModalAction(SessionStatus.AWAITING_REVIEW, "askReview"),
     disabled,
   };
 };
@@ -86,11 +88,6 @@ export const SessionHeaderActions = (props: Props) => {
   // Submit review Actions
   const handleLeaveReview = () => {
     setIsReviewDialogOpen(!isReviewDialogOpen);
-  };
-
-  // Request review Actions
-  const handleRequestReview = () => {
-    alert("You asked for the review");
   };
 
   const sessionActions = useSessionActions(props.sessionId, props.role);
@@ -163,7 +160,7 @@ export const SessionHeaderActions = (props: Props) => {
         <Button
           className={props.buttonStyles}
           variant="outline"
-          onClick={handleRequestReview}
+          onClick={sessionActions.handleAskReview}
           disabled={sessionActions.disabled}
         >
           Ask for review

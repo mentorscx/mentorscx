@@ -174,7 +174,8 @@ const SessionDetailsCard = (props: Props) => {
           <MessageCircleWarningIcon className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
-            You mentor is missing the meeting URL. Please message the mentor.
+            Your mentor is missing the meeting link. You can message them to get
+            the link before the meeting starts.
           </AlertDescription>
         </Alert>
       ) : (

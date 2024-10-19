@@ -21,6 +21,7 @@ import { CancelSessionModal } from "@/components/modals/session-cancel-modal";
 import { DeclineSessionModal } from "@/components/modals/session-decline-modal";
 import { RescheduleSessionModal } from "@/components/modals/session-reschedule-modal";
 import { ShareSocialModal } from "@/components/modals/share-social-modal";
+import { SessionAskReviewModal } from "../modals/session-ask-review-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -55,6 +56,7 @@ export const ModalProvider = () => {
       <DeclineSessionModal />
       <RescheduleSessionModal />
       <ShareSocialModal />
+      <SessionAskReviewModal />
     </>
   );
 };

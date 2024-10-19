@@ -34,9 +34,12 @@ interface SubscribeFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
   // 1. Define your form.
-  const form = useForm<z.z.infer<typeof formUserSchema>>({
+
+  const form = useForm<z.infer<typeof formUserSchema>>({
     resolver: zodResolver(formUserSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       role: undefined,
     },
@@ -49,7 +52,12 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formUserSchema>) {
     try {
-      const result = await addSubscribeUser(values.email, values.role);
+      const result = await addSubscribeUser(
+        values.firstName,
+        values.lastName,
+        values.email,
+        values.role
+      );
 
       if (!result) {
         toast.error("Something went wrong. Please try again.");
@@ -74,6 +82,34 @@ export function SubscribeForm({ className, ...props }: SubscribeFormProps) {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Alex" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Gomez" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="email"

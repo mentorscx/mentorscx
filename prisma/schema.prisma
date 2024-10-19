@@ -242,6 +242,8 @@ model Subscribe {
   id        String   @id @default(uuid())
   email     String
   role      String   @default("MENTEE")
+  firstName String?
+  lastName String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -3,6 +3,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 import {
   Dialog,
@@ -17,19 +18,15 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import { useModal } from "@/hooks/use-modal-store";
-import { updateSession } from "@/lib/actions/session.action";
+
 import useChatStore from "@/hooks/use-chat-client-store";
-import { delay } from "@/lib/utils";
 
 const formSchema = z.object({
   reason: z.string().min(10, {
@@ -37,18 +34,19 @@ const formSchema = z.object({
   }),
 });
 
-export const RescheduleSessionModal = () => {
+export const SessionAskReviewModal = () => {
   const { isOpen, onClose, type, data } = useModal();
-  const activeChannel = useChatStore((state) => state.channel);
   const router = useRouter();
+  const activeChannel = useChatStore((state) => state.channel);
 
-  const isModalOpen = isOpen && type === "rescheduleSession";
+  const isModalOpen = isOpen && type === "askReview";
   const session = data?.session;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      reason: "",
+      reason:
+        "Hey! I hope you enjoy our session together. I would appreciate it if you can leave a review for me, as it helps me with my profile. Thank you so much in advance!",
     },
   });
 
@@ -57,55 +55,40 @@ export const RescheduleSessionModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const { reason } = values;
-      const sessionId = session?.id;
-      const sessionStatus = session?.status;
-      const declinedBy = session?.declinedBy;
 
       onClose();
 
       // Promise function that handles session update and message sending
       const rescheduleSessionPromise = async () => {
         try {
-          // Update session details
-          const result = await updateSession({
-            id: sessionId,
-            status: sessionStatus,
-            declineReason: reason,
-            declinedBy,
-          });
-
           // Send message if channel is active
-          if (activeChannel && activeChannel.id) {
+          if (activeChannel) {
             await activeChannel.sendMessage({
               text: reason,
             });
           }
 
           // Return result for toast promise handling
-          if (result) {
-            return true;
-          } else {
-            throw new Error("Decline failed");
-          }
+          return true;
         } catch (error) {
-          console.error("Error updating session:", error);
-          throw new Error("Failed to update session");
+          console.error("Error sending message:", error);
+          throw new Error("Failed to send the message");
         }
       };
 
       toast.promise(rescheduleSessionPromise(), {
-        loading: "Rescheduling the session...",
+        loading: "sending the message...",
         success: (data) => {
           // Reset form and refresh router on success
           form.reset();
           router.refresh();
 
-          return "Rescheduled the session";
+          return "Message sent";
         },
-        error: "Failed to reschedule the session. Try again!",
+        error: "Failed to send the message. Try again!",
       });
     } catch (error) {
-      console.error("Error in session-reschedule-modal" + error);
+      console.error("Error in ask-review-modal" + error);
     }
   };
 
@@ -118,13 +101,9 @@ export const RescheduleSessionModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] rounded-lg">
         <DialogHeader>
-          <DialogTitle>Reschedule Session</DialogTitle>
-          <DialogDescription>
-            Please provide a reason for rescheduling the session. This will be
-            sent as a message to them.
-          </DialogDescription>
+          <DialogTitle>Request review</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -134,10 +113,13 @@ export const RescheduleSessionModal = () => {
                 name="reason"
                 render={({ field }) => (
                   <FormItem>
+                    {/* <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                      Bio
+                    </FormLabel> */}
                     <FormControl>
                       <Textarea
                         disabled={isLoading}
-                        placeholder="Enter Reason"
+                        placeholder="Enter the message"
                         className="min-h-[120px]"
                         {...field}
                       />
@@ -153,7 +135,7 @@ export const RescheduleSessionModal = () => {
                 type="submit"
                 className="min-w-[200px] w-full mx-auto"
               >
-                Reschedule session
+                Ask for review
               </Button>
             </DialogFooter>
           </form>
