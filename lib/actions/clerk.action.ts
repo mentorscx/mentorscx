@@ -94,18 +94,29 @@ export const fetchExternalEvents = async (clerkId: string) => {
       throw new Error("Clerk user doesn't exist in the database");
     }
 
-    // Get all connected emails
-    const connectedEmails =
-      clerkUser.emailAddresses?.map((email) => email.emailAddress) || [];
+    // Get all external accounts
+    const externalAccounts = clerkUser.externalAccounts || [];
 
-    const googleConnectedEmails = connectedEmails.filter((email) =>
-      email.endsWith("@gmail.com")
+    // Filter for Google accounts with the required scope
+    const googleAccounts = externalAccounts.filter(
+      (account) =>
+        account.approvedScopes?.includes(
+          "https://www.googleapis.com/auth/calendar.events"
+        ) && account.emailAddress
     );
 
-    if (googleConnectedEmails.length === 0) {
-      console.log("No Google connected emails found for user:", clerkId);
+    if (googleAccounts.length === 0) {
+      console.log(
+        "No Google accounts with calendar access found for user:",
+        clerkId
+      );
       return [];
     }
+
+    // Extract email addresses from Google accounts
+    const googleConnectedEmails = googleAccounts.map(
+      (account) => account.emailAddress!
+    );
 
     const externalEvents = await listEvents(
       googleConnectedEmails,

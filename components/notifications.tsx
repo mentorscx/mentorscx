@@ -115,7 +115,7 @@ function NotificationsPopover() {
       <NotificationBell count={count} />
       <PopoverContent
         align="end"
-        className="w-[360px] border-none shadow-lg !important;"
+        className="w-[434px] border-none shadow-lg !important;"
       >
         <ScrollArea className="flex max-h-[320px] flex-col pl-0 pr-3">
           <div className="flex justify-between items-center mb-4">
