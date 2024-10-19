@@ -87,7 +87,7 @@ export async function addContactToBrevo({
   while (attempts < retryCount) {
     try {
       const response = await axios.request(options);
-      console.log("Contact added to Brevo successfully:", response.data);
+
       return response.data;
     } catch (error) {
       attempts++;
