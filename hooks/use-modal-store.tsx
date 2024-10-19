@@ -25,6 +25,7 @@ export type ModalType =
   | "editSocials"
   | "editProfession"
   | "cancelSession"
+  | "askReview"
   | "declineSession"
   | "rescheduleSession"
   | "socialShare"
