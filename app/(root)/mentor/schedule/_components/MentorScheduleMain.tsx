@@ -36,19 +36,26 @@ const MentorScheduleMain = async () => {
     return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
-  // Get all externalEmails accounts
-  const externalEmails = clerkUser.externalAccounts?.map(
-    (email) => email.emailAddress
+  console.log(clerkUser);
+
+  // Get all external accounts
+  const externalAccounts = clerkUser.externalAccounts || [];
+
+  // Filter for Google accounts with the required scope
+  const googleAccounts = externalAccounts.filter(
+    (account) =>
+      account.approvedScopes?.includes(
+        "https://www.googleapis.com/auth/calendar.events"
+      ) && account.emailAddress
   );
 
-  // Get all connected emails
-  const connectedEmails = clerkUser.emailAddresses?.map(
-    (email) => email.emailAddress
-  );
+  if (googleAccounts.length === 0) {
+    return [];
+  }
 
-  // Filter out the gmail connected emails
-  const googleConnectedEmails = connectedEmails.filter((email) =>
-    email.endsWith("@gmail.com")
+  // Extract email addresses from Google accounts
+  const googleConnectedEmails = googleAccounts.map(
+    (account) => account.emailAddress!
   );
 
   let externalEvents = await listEvents(googleConnectedEmails, clerkUser.id);
