@@ -1,19 +1,32 @@
 "use server";
 import { db } from "../db";
+import { addContactToBrevo } from "../brevo";
 
-export async function addSubscribeUser(email: string, role: string) {
-  if (!email) throw new Error("Email is required");
-  if (!role) throw new Error("Role is required");
+export async function addSubscribeUser(
+  firstName: string,
+  lastName: string,
+  email: string,
+  role: string
+) {
   try {
-    const user = await db.subscribe.create({
+    // Add user to the database
+    const newSubscriber = await db.subscribe.create({
       data: {
+        firstName,
+        lastName,
         email,
         role,
       },
     });
-    return user;
+
+    // Add user to Brevo
+    await addContactToBrevo({ email, firstName, lastName, role });
+
+    console.log(email, "Added to brevo successfully");
+
+    return { success: true, data: newSubscriber };
   } catch (error) {
-    console.log(error);
-    throw Error("ADD_SUBSCRIBE_USER_ERROR, " + error);
+    console.error("Error adding subscriber:", error);
+    return { success: false, error: "Failed to add subscriber" };
   }
 }
