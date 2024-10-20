@@ -30,7 +30,6 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 import { Session } from "@prisma/client";
 import { createSession } from "@/lib/actions/session.action";
@@ -153,7 +152,15 @@ export function SessionDetailsForm({
 
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     setIsSubmitting(true);
+
     try {
+      if (session.menteeId === session.mentorId) {
+        toast.error(
+          "You cannot book yourself! Please try booking session with others"
+        );
+        return;
+      }
+
       const newSession = await createSession({
         ...session,
         objective: values.objective,
@@ -346,7 +353,8 @@ export function SessionDetailsForm({
             loading={isSubmitting}
             disabled={
               !form.getValues("acceptTerms") ||
-              (!!session.price && session.price > 0 && !selectedCard)
+              (!!session.price && session.price > 0 && !selectedCard) ||
+              session.menteeId === session.mentorId
             }
           >
             Submit session request

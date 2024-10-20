@@ -22,8 +22,6 @@ export async function addSubscribeUser(
     // Add user to Brevo
     await addContactToBrevo({ email, firstName, lastName, role });
 
-    console.log(email, "Added to brevo successfully");
-
     return { success: true, data: newSubscriber };
   } catch (error) {
     console.error("Error adding subscriber:", error);

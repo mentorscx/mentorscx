@@ -27,7 +27,7 @@ type TMentor = Pick<
 
 type BookingCalendarTemplateProps = {
   mentor: TMentor;
-  mentee: Pick<User, "timeZone">;
+  mentee: Pick<User, "timeZone" | "id">;
   individualEvents: Pick<Event, "start" | "end">[];
 };
 
@@ -66,6 +66,7 @@ const BookingCalendarTemplate = async (props: BookingCalendarTemplateProps) => {
               mentorTimeZone={props.mentor.timeZone || "America/New_York"}
               duration={props.mentor.duration}
               mentorId={props.mentor.id}
+              menteeId={props.mentee.id}
               price={props.mentor.price}
               expertise={props.mentor.expertise}
               sessions={props.mentor.sessionsGiven}

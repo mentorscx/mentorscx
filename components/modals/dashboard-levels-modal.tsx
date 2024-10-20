@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { InfoIcon } from "lucide-react";
+import Link from "next/link";
 
 // Reusable Ranks Table Component
 function RanksTable({
@@ -81,6 +82,13 @@ function LevelsDialog({
         </DialogHeader>
         <div className="mt-4">
           <RanksTable ranks={ranks} />
+          <p className="mt-4">
+            Every level unlocks a special surprise, giving you a new reward that
+            makes your journey more exciting.
+          </p>
+          <Button variant="link" asChild size="lg" className="px-0">
+            <Link href="/">Learn more</Link>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

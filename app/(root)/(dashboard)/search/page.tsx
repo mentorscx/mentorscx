@@ -34,62 +34,40 @@ interface ProfilesPageProps {
   };
 }
 
-const getOptions = (arr: Column[][]) => {
-  const flattenedArray: Column[] = ([] as Column[]).concat(...arr);
-
-  // Step 2: Extract the 'name' properties and get unique names
-  const uniqueNamesObj: { [key: string]: boolean } = {};
-  for (const item of flattenedArray) {
-    uniqueNamesObj[item.name] = true;
-  }
-  const uniqueNames: string[] = Object.keys(uniqueNamesObj);
-
-  // Step 3: Map unique names to the desired structure
-  const options: Option[] = uniqueNames.map((name, index) => ({
-    id: (index + 1).toString(),
-    label: name,
-    value: name,
-  }));
-
-  return options;
-};
-
 const searchPage = async ({ searchParams }: ProfilesPageProps) => {
   const users = await getUsersWithProfileFilters(searchParams);
 
-  const industriesArray = users
-    .map((user) => user.industries)
-    .filter((industries) => industries.length !== 0);
+  const industriesSet = new Set<string>();
+  const expertiseSet = new Set<string>();
+  const toolkitSet = new Set<string>();
+  const languagesSet = new Set<string>();
+  const countriesSet = new Set<string>();
 
-  const expertiseArray = users
-    .map((user) => user.expertise)
-    .filter((expertise) => expertise.length !== 0);
+  users.forEach((user) => {
+    user.industries?.forEach((industry) => industriesSet.add(industry.name));
+    user.expertise?.forEach((exp) => expertiseSet.add(exp.name));
+    user.toolkit?.forEach((tool) => toolkitSet.add(tool.name));
+    user.languages?.forEach((lang) => languagesSet.add(lang.name));
+    if (user.country) countriesSet.add(user.country);
+  });
 
-  const toolkitArray = users
-    .map((user) => user.toolkit)
-    .filter((toolkit) => toolkit.length !== 0);
+  const createOptions = (set: Set<string>): Option[] =>
+    Array.from(set)
+      .sort((a, b) => a.localeCompare(b))
+      .map((value, index) => ({
+        id: (index + 1).toString(),
+        label: value,
+        value: value,
+      }));
 
-  const languagesArray = users
-    .map((user) => user.languages)
-    .filter((languages) => languages.length !== 0);
-
-  const countryFilters = users
-    .filter((user) => user.country !== null || user.country !== undefined) // Filter out users without a country
-    .map((user, index) => ({
-      id: (index + 1).toString(),
-      label: user.country,
-      value: user.country,
-    })) as Option[];
-
-  const industryFilters = getOptions(industriesArray);
-  const expertiseFilters = getOptions(expertiseArray);
-  const toolsFilters = getOptions(toolkitArray);
-  const languagesFilters = getOptions(languagesArray);
+  const industryFilters = createOptions(industriesSet);
+  const expertiseFilters = createOptions(expertiseSet);
+  const toolsFilters = createOptions(toolkitSet);
+  const languagesFilters = createOptions(languagesSet);
+  const countryFilters = createOptions(countriesSet);
 
   return (
     <div className="max-w-7xl mx-auto pt-16 px-3">
-      {/* <MentorRedirectDialog isOpen={true} /> */}
-
       <div className="flex">
         <section className="max-w-7xl mt-6 hidden lg:block">
           <ProfileFilters

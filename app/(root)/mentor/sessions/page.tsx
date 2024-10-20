@@ -28,6 +28,9 @@ const fetchSessionsData = async (clerkId: string): Promise<TSession[]> => {
     where: { clerkId },
     include: {
       sessionsGiven: {
+        orderBy: {
+          start: "desc",
+        },
         include: {
           mentor: { select: { id: true, role: true, timeZone: true } },
           mentee: { select: { username: true, imageUrl: true } },

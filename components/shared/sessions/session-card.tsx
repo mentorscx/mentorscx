@@ -69,7 +69,17 @@ const SessionCardContent = (props: {
       <div className="flex items-start justify-around gap-4">
         <div>
           <p className="medium uppercase">cost</p>
-          <p className="muted mt-2">${props.session.price}</p>
+          <p
+            className={`mt-2 ${
+              props.session.price === 0
+                ? "text-green-600 font-normal "
+                : "text-muted-foreground"
+            }`}
+          >
+            {props.session.price === 0
+              ? "FREE"
+              : `$${props.session.price.toFixed(2)}`}
+          </p>
         </div>
         <div>
           <p className="medium uppercase">Status</p>
