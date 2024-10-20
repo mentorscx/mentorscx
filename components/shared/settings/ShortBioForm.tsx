@@ -34,7 +34,7 @@ const FormSchema = z.object({
   shortBio: z
     .string()
     .min(40, "Please enter bio atleast 40 characters")
-    .max(100, "Please keep it short"),
+    .max(220, "Please keep it short"),
 });
 
 interface ShortBioFormProps {

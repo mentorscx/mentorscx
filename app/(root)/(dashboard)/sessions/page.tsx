@@ -32,6 +32,9 @@ const fetchSessionsData = async (
     where: { clerkId },
     include: {
       sessionsReceived: {
+        orderBy: {
+          start: "desc",
+        },
         include: {
           mentee: { select: { id: true, role: true, timeZone: true } },
           mentor: { select: { username: true, imageUrl: true } },

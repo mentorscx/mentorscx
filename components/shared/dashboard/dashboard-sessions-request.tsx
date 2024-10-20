@@ -88,9 +88,11 @@ const DashboardSessionsRequest = async ({
           <div key={session.id}>
             <SessionCard
               session={session}
-              currentUser={session.mentor}
-              otherUser={session.mentee}
-              currentView={Role.MENTOR}
+              currentUser={
+                role === Role.MENTOR ? session.mentor : session.mentee
+              }
+              otherUser={role === Role.MENTOR ? session.mentee : session.mentor}
+              currentView={role}
             />
           </div>
         ))}

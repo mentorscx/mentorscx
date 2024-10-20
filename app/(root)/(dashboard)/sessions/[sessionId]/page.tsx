@@ -3,6 +3,11 @@ import { Role } from "@prisma/client";
 import SessionDetailsCard from "@/components/shared/sessions/session-details-card";
 import SessionHeader from "@/components/shared/sessions/session-header";
 import SessionChatLayout from "@/components/chats/SessionChatLayout";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import EmptyDataCard from "@/components/shared/empty-data";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface SessionPageProps {
   params: {
@@ -12,9 +17,17 @@ interface SessionPageProps {
 
 const SessionPage = async ({ params }: SessionPageProps) => {
   const { sessionId } = params;
+
+  const { userId: clerkId } = auth();
+
+  if (!clerkId) return redirect("/sign-in");
+
   const session = await db.session.findUnique({
     where: {
       id: sessionId,
+      mentee: {
+        clerkId: clerkId,
+      },
     },
     select: {
       id: true,
@@ -50,7 +63,14 @@ const SessionPage = async ({ params }: SessionPageProps) => {
   });
 
   if (!session) {
-    return null;
+    return (
+      <div className="flex items-center justify-center h-screen flex-col gap-4">
+        <EmptyDataCard description="Session doesn't exist!" />
+        <Button variant="link" size="lg" asChild>
+          <Link href="/sessions">Take me to my sessions!</Link>
+        </Button>
+      </div>
+    );
   }
 
   return (

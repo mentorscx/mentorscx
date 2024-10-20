@@ -270,30 +270,41 @@ export async function getUsersWithProfileFilters(searchParams: any) {
       },
     });
 
-    // Calculate average ratings and total sessions given
-    const usersWithStats = users.map((user) => {
-      const totalSessions = user.sessionsGiven.filter(
-        (session) => session.review !== null
-      ).length;
-      const averageReview =
-        totalSessions > 0
-          ? user.sessionsGiven.reduce((acc, session) => {
-              if (session.review) {
-                return acc + session.review.rating;
-              }
-              return acc;
-            }, 0) / totalSessions || 0
-          : 0;
+    // Filter out incomplete profiles and calculate stats
+    const completeUsers = users
+      .filter(
+        (user) =>
+          user.city &&
+          user.imageUrl &&
+          user.username &&
+          user.duration &&
+          user.price !== null &&
+          user.languages.length > 0 &&
+          user.country &&
+          user.shortBio
+      )
+      .map((user) => {
+        const totalSessions = user.sessionsGiven.filter(
+          (session) => session.review !== null
+        ).length;
+        const averageReview =
+          totalSessions > 0
+            ? user.sessionsGiven.reduce(
+                (acc, session) =>
+                  session.review ? acc + session.review.rating : acc,
+                0
+              ) / totalSessions
+            : 0;
 
-      return {
-        ...user,
-        averageReview,
-        totalSessions,
-        sessionsGiven: undefined, // Remove sessionsGiven from the returned object
-      };
-    });
+        return {
+          ...user,
+          averageReview,
+          totalSessions,
+          sessionsGiven: undefined, // Remove sessionsGiven from the returned object
+        };
+      });
 
-    return usersWithStats;
+    return completeUsers;
   } catch (error) {
     console.log(error);
     throw Error("GET_PROFILES_WITH_FILTERS_ERROR, " + error);

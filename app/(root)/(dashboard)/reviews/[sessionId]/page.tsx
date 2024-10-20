@@ -1,6 +1,8 @@
 import React from "react";
 import Review from "./_components/review-card";
 import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const ReviewPage = async ({ params }: { params: { sessionId: string } }) => {
   const review = await db.review.findUnique({

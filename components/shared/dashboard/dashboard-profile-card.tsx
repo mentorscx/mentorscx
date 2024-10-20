@@ -34,9 +34,15 @@ const UserProfileAvatar = ({
   userImage: string;
   userName: string;
 }) => (
-  <Avatar className="w-20 h-20">
-    <AvatarImage src={userImage} alt={userName} />
-    <AvatarFallback>{getInitials(userName)}</AvatarFallback>
+  <Avatar className="h-20 w-20 relative overflow-hidden">
+    <AvatarImage
+      src={userImage}
+      alt={userName}
+      className="object-cover w-full h-full"
+    />
+    <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-muted text-2xl">
+      {getInitials(userName)}
+    </AvatarFallback>
   </Avatar>
 );
 

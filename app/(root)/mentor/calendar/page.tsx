@@ -145,6 +145,7 @@ const CalendarPage = async () => {
               weeklyEvents={weeklyEvents}
               timeZone={timeZone}
               duration={user.duration}
+              menteeId={user.id}
               mentorId={user.id}
               price={user.price}
               expertise={user.expertise}

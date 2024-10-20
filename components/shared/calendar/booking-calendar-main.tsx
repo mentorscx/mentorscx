@@ -35,6 +35,7 @@ type BookingCalendarMainProps = {
   duration: number;
   price: number;
   mentorId: string;
+  menteeId: string;
   expertise: { name: string }[];
   maxSessions: number | null;
   sessions: Pick<Session, "start" | "end" | "status">[];
@@ -243,7 +244,7 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
               objective: "",
               category: "",
               outcome: "",
-              menteeId: "",
+              menteeId: props.menteeId,
               mentorId: props.mentorId,
               start:
                 (selectedSlot?.start &&

@@ -36,8 +36,6 @@ const MentorScheduleMain = async () => {
     return <MentorSubscribeModal isDialogOpen={true} />;
   }
 
-  console.log(clerkUser);
-
   // Get all external accounts
   const externalAccounts = clerkUser.externalAccounts || [];
 
