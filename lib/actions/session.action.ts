@@ -158,6 +158,32 @@ export async function updateSession(session: any) {
           session_timezone: updatedSession.mentor.timeZone,
         },
       });
+
+      await sendEmailViaBrevoTemplate({
+        templateId: 35,
+        email: updatedSession.mentee.email,
+        name: updatedSession.mentee.username,
+        params: {
+          mentee_name: updatedSession.mentee.username,
+          mentor_name: updatedSession.mentor.username,
+          session_duration: String(updatedSession.duration || 30),
+          session_price:
+            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
+          session_objective: updatedSession.objective,
+          session_outcome: updatedSession.outcome,
+          session_meeting_preference:
+            updatedSession.mentor.meetingPreference === "zoom"
+              ? "Zoom"
+              : "Google Meet",
+          session_meeting_link:
+            updatedSession.mentor.meetingPreference === "zoom"
+              ? updatedSession.mentor.zoomLink
+              : updatedSession.mentor.googleMeetLink,
+          session_date: formatDateToWeekDDMonth(startInTimeZone),
+          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
+          session_timezone: updatedSession.mentor.timeZone,
+        },
+      });
     }
     if (
       updatedSession.status === SessionStatus.RESCHEDULED &&
