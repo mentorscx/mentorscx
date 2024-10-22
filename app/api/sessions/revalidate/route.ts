@@ -5,7 +5,7 @@ import pLimit from "p-limit";
 
 const CONCURRENCY_LIMIT = 10;
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const apiKey = request.headers.get("x-api-key");
 
   // Validate the API key
