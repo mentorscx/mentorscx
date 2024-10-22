@@ -1,4 +1,4 @@
-import { Options } from "react-select";
+import { env } from "@/env";
 
 export interface timeZone {
   readonly value: string;
@@ -1725,6 +1725,21 @@ export const plans = [
   },
 ];
 
+const getPriceId = (
+  planName: string,
+  interval: "monthly" | "annual"
+): string => {
+  const envKey = `NEXT_PUBLIC_STRIPE_${planName.toUpperCase()}_${interval.toUpperCase()}_PRICE_ID`;
+  const priceId = process.env[envKey];
+
+  if (!priceId) {
+    console.warn(`Missing environment variable: ${envKey}`);
+    return "";
+  }
+
+  return priceId;
+};
+
 export const pricingPlans = [
   {
     id: 1,
@@ -1732,8 +1747,8 @@ export const pricingPlans = [
     monthlyPrice: 39,
     annualPrice: 31,
     credits: 3,
-    monthlyPriceId: "price_1PpAwjEE1IEtny7DcLD4yyZs",
-    annualPriceId: "price_1Pqy9nEE1IEtny7D7JFpDu5c",
+    monthlyPriceId: env.NEXT_PUBLIC_STRIPE_ECLIPSE_MONTHLY_PRICE_ID,
+    annualPriceId: env.NEXT_PUBLIC_STRIPE_ECLIPSE_ANNUAL_PRICE_ID,
     description: "For those exploring the mentorship world",
     features: [
       "2 calls/month",
@@ -1751,8 +1766,8 @@ export const pricingPlans = [
     monthlyPrice: 59,
     annualPrice: 49,
     credits: 10001,
-    monthlyPriceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
-    annualPriceId: "price_1Pqy8zEE1IEtny7DccLkPgs3",
+    monthlyPriceId: env.NEXT_PUBLIC_STRIPE_MOON_MONTHLY_PRICE_ID,
+    annualPriceId: env.NEXT_PUBLIC_STRIPE_MOON_ANNUAL_PRICE_ID,
     description: "For those committed to a more sustainable growth",
     features: [
       "Everything in Eclipse",
@@ -1770,8 +1785,8 @@ export const pricingPlans = [
     monthlyPrice: 199,
     annualPrice: 159,
     credits: 10001,
-    monthlyPriceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
-    annualPriceId: "price_1PpAxPEE1IEtny7DThlakaLQ",
+    monthlyPriceId: env.NEXT_PUBLIC_STRIPE_SUN_MONTHLY_PRICE_ID,
+    annualPriceId: env.NEXT_PUBLIC_STRIPE_SUN_ANNUAL_PRICE_ID,
     description: "For teams that want to grow & develop together",
     features: [
       "Everything in Moon",

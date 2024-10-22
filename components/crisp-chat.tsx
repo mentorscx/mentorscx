@@ -2,6 +2,7 @@
 
 import { Crisp } from "crisp-sdk-web";
 import { useEffect } from "react";
+import { env } from "@/env";
 
 /**
  * CrispChat component for initializing Crisp customer chat functionality.
@@ -9,7 +10,7 @@ import { useEffect } from "react";
  */
 export const CrispChat = () => {
   useEffect(() => {
-    const CRISP_WEBSITE_ID = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
+    const CRISP_WEBSITE_ID = env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
 
     if (!CRISP_WEBSITE_ID) {
       console.error(
