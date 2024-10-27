@@ -102,7 +102,17 @@ const NOTIFICATION_TEMPLATES = {
   SESSION_DONE: {
     title: "Your session was done",
     getMessage: (userName: string) =>
-      `Your session request was done with ${userName}`,
+      `Your session request was done with ${userName}. Awaiting for the confirmation`,
+  },
+  SESSION_COMPLETED: {
+    title: "Your session was completed",
+    getMessage: (userName: string) =>
+      `Your session was completed with ${userName}`,
+  },
+  SESSION_INCOMPLETE: {
+    title: "Your session is incomplete",
+    getMessage: (userName: string) =>
+      `Your session request was incomplete with ${userName}`,
   },
 } as const;
 
@@ -213,7 +223,7 @@ async function handleSessionUpdate(
   emailParams: any
 ) {
   switch (statusKey) {
-    case SessionStatus.AVAILABLE: {
+    case SessionStatus.ACCEPTED: {
       await Promise.all([
         // Notify mentee
         alertNotification(session.mentee.clerkId, {
@@ -434,14 +444,88 @@ async function handleSessionUpdate(
         // Email mentor
         sendEmailViaBrevoTemplate({
           templateId: 29,
-          email: session.mentee.email,
-          name: session.mentee.username,
+          email: session.mentor.email,
+          name: session.mentor.username,
           params: emailParams,
         }),
 
         // Email mentee
         sendEmailViaBrevoTemplate({
           templateId: 40,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.COMPLETED}`: {
+      await Promise.all([
+        // Notify mentor
+        alertNotification(session.mentor.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_COMPLETED,
+          message: NOTIFICATION_TEMPLATES.SESSION_COMPLETED.getMessage(
+            session.mentee.username
+          ),
+        }),
+
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_COMPLETED,
+          message: NOTIFICATION_TEMPLATES.SESSION_COMPLETED.getMessage(
+            session.mentor.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 29,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 38,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.INCOMPLETE}`: {
+      await Promise.all([
+        // Notify mentor
+        alertNotification(session.mentor.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_INCOMPLETE,
+          message: NOTIFICATION_TEMPLATES.SESSION_INCOMPLETE.getMessage(
+            session.mentee.username
+          ),
+        }),
+
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_INCOMPLETE,
+          message: NOTIFICATION_TEMPLATES.SESSION_INCOMPLETE.getMessage(
+            session.mentor.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 33,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 45,
           email: session.mentee.email,
           name: session.mentee.username,
           params: emailParams,

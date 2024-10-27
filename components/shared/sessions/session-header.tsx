@@ -72,20 +72,6 @@ const getSessionHeaderContent = (
       Icon: AlertCircle,
       theme: "slate",
     },
-    [`${Role.MENTOR}-${SessionStatus.CANCELLED}`]: {
-      header: "You cancelled this session",
-      content:
-        "You already explained to the mentee why you decided to cancel this call. If you’d like to encourage them to book again, shoot them a message.",
-      Icon: Clock,
-      theme: "slate",
-    },
-    [`${Role.MENTOR}-${SessionStatus.RESCHEDULED}-${Role.MENTOR}`]: {
-      header: "You asked the mentee to reschedule",
-      content:
-        "The mentee will choose a new time from the availability set in your calendar. Please wait and confirm the requested time works in a timely manner.",
-      Icon: Clock,
-      theme: "danger",
-    },
     [`${Role.MENTEE}-${SessionStatus.AWAITING_HOST}`]: {
       header: "Your session request was sent successfully",
       content:
@@ -107,10 +93,31 @@ const getSessionHeaderContent = (
       Icon: Clock,
       theme: "slate",
     },
-    [`${Role.MENTEE}-${SessionStatus.CANCELLED}`]: {
+    [`${Role.MENTEE}-${SessionStatus.CANCELLED}-${Role.MENTOR}`]: {
       header: "The mentor cancelled this session",
       content:
         "The mentor explained why they decided to cancel this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTOR}-${SessionStatus.CANCELLED}-${Role.MENTOR}`]: {
+      header: "You cancelled this session",
+      content:
+        "You already explained to the mentee why you decided to cancel this call. If you’d like to encourage them to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTOR}-${SessionStatus.CANCELLED}-${Role.MENTEE}`]: {
+      header: "The mentee cancelled this session",
+      content:
+        "The mentee explained why they decided to cancel this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+      Icon: Clock,
+      theme: "slate",
+    },
+    [`${Role.MENTEE}-${SessionStatus.CANCELLED}-${Role.MENTEE}`]: {
+      header: "You cancelled this session",
+      content:
+        "You already explained to the mentee why you decided to cancel this call. If you’d like to encourage them to book again, shoot them a message.",
       Icon: Clock,
       theme: "slate",
     },
@@ -122,11 +129,25 @@ const getSessionHeaderContent = (
       theme: "slate",
     },
     [`${Role.MENTEE}-${SessionStatus.RESCHEDULED}-${Role.MENTEE}`]: {
-      header: "The mentor rescheduled this session",
+      header: "You rescheduled this session",
       content:
-        "The mentor explained why they decided to reschedule this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
+        "You explained why they decided to reschedule this call. If you’d like to ask for more details or to discuss the possibility to book again, shoot them a message.",
       Icon: Clock,
       theme: "slate",
+    },
+    [`${Role.MENTOR}-${SessionStatus.RESCHEDULED}-${Role.MENTOR}`]: {
+      header: "You asked the mentee to reschedule",
+      content:
+        "The mentee will choose a new time from the availability set in your calendar. Please wait and confirm the requested time works in a timely manner.",
+      Icon: Clock,
+      theme: "danger",
+    },
+    [`${Role.MENTOR}-${SessionStatus.RESCHEDULED}-${Role.MENTEE}`]: {
+      header: "The mentee rescheduled this session",
+      content:
+        "Your mentee will choose a new time from the availability set in your calendar. Please wait and confirm the requested time works in a timely manner.",
+      Icon: Clock,
+      theme: "danger",
     },
     [`${Role.MENTOR}-${SessionStatus.DONE}`]: {
       header: "Pending confirmation ",
