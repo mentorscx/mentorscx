@@ -300,6 +300,7 @@ export async function generateUniqueUserId(
 ): Promise<string> {
   let baseId: string;
 
+  // TODO: do the trim and add characters
   if (!firstName && !lastName) {
     return uuidv4();
   } else if (firstName && lastName) {

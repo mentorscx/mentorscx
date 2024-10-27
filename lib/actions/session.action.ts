@@ -73,17 +73,79 @@ export async function getSessionByMenteeId(menteeId: string) {
   }
 }
 
+const NOTIFICATION_TEMPLATES = {
+  SESSION_ACCEPTED: {
+    title: "Your session Accepted",
+    getMessage: (userName: string) =>
+      `Your session request has been accepted by ${userName}`,
+  },
+  SESSION_CANCELLED: {
+    title: "Your session was cancelled",
+    getMessage: (userName: string) =>
+      `Your session request was cancelled by ${userName}`,
+  },
+  SESSION_RESCHEDULED: {
+    title: "Your session was rescheduled",
+    getMessage: (userName: string) =>
+      `Your session request was rescheduled by ${userName}`,
+  },
+  SESSION_DECLINED: {
+    title: "Your session was declined",
+    getMessage: (userName: string) =>
+      `Your session request was declined by ${userName}`,
+  },
+  SESSION_REVIEWED: {
+    title: "Your session was reviewed",
+    getMessage: (userName: string) =>
+      `Your session request was reviewed by ${userName}`,
+  },
+  SESSION_DONE: {
+    title: "Your session was done",
+    getMessage: (userName: string) =>
+      `Your session request was done with ${userName}`,
+  },
+} as const;
+
+const getEmailParams = (updatedSession: any) => {
+  const startInTimeZone = utcToZonedTime(
+    new Date(updatedSession.start),
+    updatedSession.mentor.timeZone || "UTC"
+  );
+  const endInTimeZone = utcToZonedTime(
+    new Date(updatedSession.end),
+    updatedSession.mentor.timeZone || "UTC"
+  );
+
+  return {
+    mentee_name: updatedSession.mentee.username,
+    mentor_name: updatedSession.mentor.username,
+    session_duration: String(updatedSession.duration || 30),
+    session_price:
+      updatedSession.price === 0 ? "Free" : String(updatedSession.price),
+    session_objective: updatedSession.objective,
+    session_outcome: updatedSession.outcome,
+    session_meeting_preference:
+      updatedSession.mentor.meetingPreference === "zoom"
+        ? "Zoom"
+        : "Google Meet",
+    session_meeting_link:
+      updatedSession.mentor.meetingPreference === "zoom"
+        ? updatedSession.mentor.zoomLink
+        : updatedSession.mentor.googleMeetLink,
+    session_date: formatDateToWeekDDMonth(startInTimeZone),
+    session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
+    session_timezone: updatedSession.mentor.timeZone,
+  };
+};
+
 export async function updateSession(session: any) {
   try {
     const { id } = session;
     if (!id) throw new Error("Session id is required");
+
     const updatedSession = await db.session.update({
-      where: {
-        id: session.id,
-      },
-      data: {
-        ...session,
-      },
+      where: { id: session.id },
+      data: { ...session },
       select: {
         price: true,
         duration: true,
@@ -115,242 +177,278 @@ export async function updateSession(session: any) {
       },
     });
 
-    const startInTimeZone = utcToZonedTime(
-      new Date(updatedSession.start),
-      updatedSession.mentor.timeZone || "UTC"
-    );
-    const endInTimeZone = utcToZonedTime(
-      new Date(updatedSession.end),
-      updatedSession.mentor.timeZone || "UTC"
-    );
-
     if (!updatedSession) throw new Error("Session not found");
 
-    if (updatedSession.status === SessionStatus.ACCEPTED) {
-      // Send Notification
-      await alertNotification(updatedSession.mentee.clerkId, {
-        title: "Your session Accepted",
-        message: `Your session request has been accepted by ${updatedSession.mentor.username}`,
-      });
+    const emailParams = getEmailParams(updatedSession);
+    const statusKey = updatedSession.declinedBy
+      ? `${updatedSession.status}_${updatedSession.declinedBy}`
+      : updatedSession.status;
 
-      await sendEmailViaBrevoTemplate({
-        templateId: 24,
-        email: updatedSession.mentor.email,
-        name: updatedSession.mentor.username,
-        params: {
-          mentee_name: updatedSession.mentee.username,
-          mentor_name: updatedSession.mentor.username,
-          session_duration: String(updatedSession.duration || 30),
-          session_price:
-            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
-          session_objective: updatedSession.objective,
-          session_outcome: updatedSession.outcome,
-          session_meeting_preference:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? "Zoom"
-              : "Google Meet",
-          session_meeting_link:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? updatedSession.mentor.zoomLink
-              : updatedSession.mentor.googleMeetLink,
-          session_date: formatDateToWeekDDMonth(startInTimeZone),
-          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
-          session_timezone: updatedSession.mentor.timeZone,
-        },
-      });
+    // Handle notifications and emails based on status and declinedBy
+    await handleSessionUpdate(statusKey, updatedSession, emailParams);
 
-      await sendEmailViaBrevoTemplate({
-        templateId: 35,
-        email: updatedSession.mentee.email,
-        name: updatedSession.mentee.username,
-        params: {
-          mentee_name: updatedSession.mentee.username,
-          mentor_name: updatedSession.mentor.username,
-          session_duration: String(updatedSession.duration || 30),
-          session_price:
-            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
-          session_objective: updatedSession.objective,
-          session_outcome: updatedSession.outcome,
-          session_meeting_preference:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? "Zoom"
-              : "Google Meet",
-          session_meeting_link:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? updatedSession.mentor.zoomLink
-              : updatedSession.mentor.googleMeetLink,
-          session_date: formatDateToWeekDDMonth(startInTimeZone),
-          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
-          session_timezone: updatedSession.mentor.timeZone,
-        },
-      });
-    }
-    if (
-      updatedSession.status === SessionStatus.RESCHEDULED &&
-      updatedSession.declinedBy === Role.MENTEE
-    ) {
-      // Send Notification
-      await alertNotification(updatedSession.mentee.clerkId, {
-        title: "Your session was rescheduled",
-        message: `Your session request was rescheduled by ${updatedSession.mentee.username}`,
-      });
-
-      await sendEmailViaBrevoTemplate({
-        templateId: 25,
-        email: updatedSession.mentor.email,
-        name: updatedSession.mentor.username,
-        params: {
-          mentee_name: updatedSession.mentee.username,
-          mentor_name: updatedSession.mentor.username,
-          session_duration: String(updatedSession.duration || 30),
-          session_price:
-            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
-          session_objective: updatedSession.objective,
-          session_outcome: updatedSession.outcome,
-          session_meeting_preference:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? "Zoom"
-              : "Google Meet",
-          session_meeting_link:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? updatedSession.mentor.zoomLink
-              : updatedSession.mentor.googleMeetLink,
-          session_date: formatDateToWeekDDMonth(startInTimeZone),
-          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
-          session_timezone: updatedSession.mentor.timeZone,
-        },
-      });
-    }
-
-    if (
-      updatedSession.status === SessionStatus.RESCHEDULED &&
-      updatedSession.declinedBy === Role.MENTOR
-    ) {
-      // Send Notification
-      await alertNotification(updatedSession.mentee.clerkId, {
-        title: "Your session was rescheduled",
-        message: `Your session request was rescheduled by ${updatedSession.mentor.username}`,
-      });
-
-      await sendEmailViaBrevoTemplate({
-        templateId: 25,
-        email: updatedSession.mentee.email,
-        name: updatedSession.mentee.username,
-        params: {
-          mentee_name: updatedSession.mentee.username,
-          mentor_name: updatedSession.mentor.username,
-          session_duration: String(updatedSession.duration || 30),
-          session_price:
-            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
-          session_objective: updatedSession.objective,
-          session_outcome: updatedSession.outcome,
-          session_meeting_preference:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? "Zoom"
-              : "Google Meet",
-          session_meeting_link:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? updatedSession.mentor.zoomLink
-              : updatedSession.mentor.googleMeetLink,
-          session_date: formatDateToWeekDDMonth(startInTimeZone),
-          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
-          session_timezone: updatedSession.mentor.timeZone,
-        },
-      });
-    }
-
-    if (
-      updatedSession.status === SessionStatus.CANCELLED &&
-      updatedSession.declinedBy === Role.MENTEE
-    ) {
-      // Send Notification
-      await alertNotification(updatedSession.mentor.clerkId, {
-        title: "Your session was cancelled",
-        message: `Your session request was cancelled by ${updatedSession.mentee.username}`,
-      });
-
-      await sendEmailViaBrevoTemplate({
-        templateId: 31,
-        email: updatedSession.mentor.email,
-        name: updatedSession.mentor.username,
-        params: {
-          mentee_name: updatedSession.mentee.username,
-          mentor_name: updatedSession.mentor.username,
-          session_duration: String(updatedSession.duration || 30),
-          session_price:
-            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
-          session_objective: updatedSession.objective,
-          session_outcome: updatedSession.outcome,
-          session_meeting_preference:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? "Zoom"
-              : "Google Meet",
-          session_meeting_link:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? updatedSession.mentor.zoomLink
-              : updatedSession.mentor.googleMeetLink,
-          session_date: formatDateToWeekDDMonth(startInTimeZone),
-          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
-          session_timezone: updatedSession.mentor.timeZone,
-        },
-      });
-    }
-
-    if (
-      updatedSession.status === SessionStatus.CANCELLED &&
-      updatedSession.declinedBy === Role.MENTOR
-    ) {
-      // Send Notification
-      await alertNotification(updatedSession.mentee.clerkId, {
-        title: "Your session was cancelled",
-        message: `Your session request was cancelled by ${updatedSession.mentor.username}`,
-      });
-
-      await sendEmailViaBrevoTemplate({
-        templateId: 34,
-        email: updatedSession.mentee.email,
-        name: updatedSession.mentee.username,
-        params: {
-          mentee_name: updatedSession.mentee.username,
-          mentor_name: updatedSession.mentor.username,
-          session_duration: String(updatedSession.duration || 30),
-          session_price:
-            updatedSession.price === 0 ? "Free" : String(updatedSession.price),
-          session_objective: updatedSession.objective,
-          session_outcome: updatedSession.outcome,
-          session_meeting_preference:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? "Zoom"
-              : "Google Meet",
-          session_meeting_link:
-            updatedSession.mentor.meetingPreference === "zoom"
-              ? updatedSession.mentor.zoomLink
-              : updatedSession.mentor.googleMeetLink,
-          session_date: formatDateToWeekDDMonth(startInTimeZone),
-          session_time: formatDateToHHMMToHHMM(startInTimeZone, endInTimeZone),
-          session_timezone: updatedSession.mentor.timeZone,
-        },
-      });
-    }
-
-    if (updatedSession.status !== "ACCEPTED") {
-      const mentorEmail = updatedSession?.mentor?.email;
-      const menteeEmail = updatedSession?.mentee?.email;
-      if (menteeEmail === undefined) {
+    // Schedule meeting if needed
+    if (updatedSession.status !== SessionStatus.ACCEPTED) {
+      if (!updatedSession.mentee.email) {
         throw new Error("Mentee email not found");
       }
 
       await scheduleMeeting(
-        mentorEmail,
-        menteeEmail,
-        updatedSession?.start.toISOString(),
-        updatedSession?.end.toISOString()
+        updatedSession.mentor.email,
+        updatedSession.mentee.email,
+        updatedSession.start.toISOString(),
+        updatedSession.end.toISOString()
       );
     }
 
     return updatedSession;
   } catch (error) {
     throw Error("UPDATE_SESSION_ERROR, " + error);
+  }
+}
+
+async function handleSessionUpdate(
+  statusKey: string,
+  session: any,
+  emailParams: any
+) {
+  switch (statusKey) {
+    case SessionStatus.AVAILABLE: {
+      await Promise.all([
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_ACCEPTED,
+          message: NOTIFICATION_TEMPLATES.SESSION_ACCEPTED.getMessage(
+            session.mentor.username
+          ),
+        }),
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 24,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 35,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.RESCHEDULED}_${Role.MENTEE}`: {
+      await Promise.all([
+        // Notify mentor
+        alertNotification(session.mentor.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_RESCHEDULED,
+          message: NOTIFICATION_TEMPLATES.SESSION_RESCHEDULED.getMessage(
+            session.mentee.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 46,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 36,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+      ]);
+
+      break;
+    }
+
+    case `${SessionStatus.RESCHEDULED}_${Role.MENTOR}`: {
+      await Promise.all([
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_RESCHEDULED,
+          message: NOTIFICATION_TEMPLATES.SESSION_RESCHEDULED.getMessage(
+            session.mentor.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 25,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 37,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.CANCELLED}_${Role.MENTEE}`: {
+      await Promise.all([
+        // Notify mentor
+        alertNotification(session.mentor.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_CANCELLED,
+          message: NOTIFICATION_TEMPLATES.SESSION_CANCELLED.getMessage(
+            session.mentee.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 31,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 42,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.CANCELLED}_${Role.MENTOR}`: {
+      await Promise.all([
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_CANCELLED,
+          message: NOTIFICATION_TEMPLATES.SESSION_CANCELLED.getMessage(
+            session.mentor.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 34,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 43,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.DECLINED}`: {
+      await Promise.all([
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_DECLINED,
+          message: NOTIFICATION_TEMPLATES.SESSION_DECLINED.getMessage(
+            session.mentor.username
+          ),
+        }),
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 30,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 41,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.REVIEWED}`: {
+      await Promise.all([
+        // Notify mentor
+        alertNotification(session.mentor.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_REVIEWED,
+          message: NOTIFICATION_TEMPLATES.SESSION_REVIEWED.getMessage(
+            session.mentee.username
+          ),
+        }),
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 28,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 39,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
+
+    case `${SessionStatus.DONE}`: {
+      await Promise.all([
+        // Notify mentor
+        alertNotification(session.mentor.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_DONE,
+          message: NOTIFICATION_TEMPLATES.SESSION_DONE.getMessage(
+            session.mentee.username
+          ),
+        }),
+
+        // Notify mentee
+        alertNotification(session.mentee.clerkId, {
+          ...NOTIFICATION_TEMPLATES.SESSION_DONE,
+          message: NOTIFICATION_TEMPLATES.SESSION_DONE.getMessage(
+            session.mentor.username
+          ),
+        }),
+
+        // Email mentor
+        sendEmailViaBrevoTemplate({
+          templateId: 29,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+
+        // Email mentee
+        sendEmailViaBrevoTemplate({
+          templateId: 40,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+      break;
+    }
   }
 }
 
