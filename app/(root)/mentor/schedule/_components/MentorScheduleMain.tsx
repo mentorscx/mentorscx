@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
@@ -9,7 +9,7 @@ import { listEvents } from "@/lib/actions/google-calandar.action";
 import { MentorsCalendar } from "./mentors-calendar";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
-import MentorEmailsList from "./MentorEmailsList";
+
 import MentorSubscribeModal from "@/components/modals/mentor-membership-modal";
 
 const MentorScheduleMain = async () => {
@@ -19,6 +19,8 @@ const MentorScheduleMain = async () => {
     return redirect("/login");
   }
 
+  console.log(clerkUser.id);
+
   const user = await db.user.findUnique({
     where: {
       clerkId: clerkUser.id,
@@ -27,6 +29,8 @@ const MentorScheduleMain = async () => {
       events: true,
     },
   });
+
+  console.log(user);
 
   if (!user) {
     return <div>You cannot access this page!</div>;
@@ -46,10 +50,6 @@ const MentorScheduleMain = async () => {
         "https://www.googleapis.com/auth/calendar.events"
       ) && account.emailAddress
   );
-
-  if (googleAccounts.length === 0) {
-    return [];
-  }
 
   // Extract email addresses from Google accounts
   const googleConnectedEmails = googleAccounts.map(

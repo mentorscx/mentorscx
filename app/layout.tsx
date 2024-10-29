@@ -42,7 +42,7 @@ export default function RootLayout({
           </Providers>
           <ModalProvider />
         </body>
-        <GoogleTagManager gtmId={env.GOOGLE_ANALYTICS_KEY} />
+        <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM_ID} />
       </html>
     </ClerkProvider>
   );
