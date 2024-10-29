@@ -189,7 +189,7 @@ export async function updateSession(session: any) {
 
     if (!updatedSession) throw new Error("Session not found");
 
-    const emailParams = getEmailParams(updatedSession);
+    const emailParams = await getEmailParams(updatedSession);
     const statusKey = updatedSession.declinedBy
       ? `${updatedSession.status}_${updatedSession.declinedBy}`
       : updatedSession.status;
@@ -425,14 +425,6 @@ export async function handleSessionUpdate(
 
     case `${SessionStatus.DONE}`: {
       await Promise.all([
-        // Notify mentor
-        alertNotification(session.mentor.clerkId, {
-          ...NOTIFICATION_TEMPLATES.SESSION_DONE,
-          message: NOTIFICATION_TEMPLATES.SESSION_DONE.getMessage(
-            session.mentee.username
-          ),
-        }),
-
         // Notify mentee
         alertNotification(session.mentee.clerkId, {
           ...NOTIFICATION_TEMPLATES.SESSION_DONE,
@@ -441,17 +433,9 @@ export async function handleSessionUpdate(
           ),
         }),
 
-        // Email mentor
-        sendEmailViaBrevoTemplate({
-          templateId: 29,
-          email: session.mentor.email,
-          name: session.mentor.username,
-          params: emailParams,
-        }),
-
         // Email mentee
         sendEmailViaBrevoTemplate({
-          templateId: 40,
+          templateId: 38,
           email: session.mentee.email,
           name: session.mentee.username,
           params: emailParams,
