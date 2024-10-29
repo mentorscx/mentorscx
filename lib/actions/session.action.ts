@@ -116,7 +116,7 @@ const NOTIFICATION_TEMPLATES = {
   },
 } as const;
 
-const getEmailParams = (updatedSession: any) => {
+export const getEmailParams = (updatedSession: any) => {
   const startInTimeZone = utcToZonedTime(
     new Date(updatedSession.start),
     updatedSession.mentor.timeZone || "UTC"
@@ -217,7 +217,7 @@ export async function updateSession(session: any) {
   }
 }
 
-async function handleSessionUpdate(
+export async function handleSessionUpdate(
   statusKey: string,
   session: any,
   emailParams: any
@@ -488,7 +488,7 @@ async function handleSessionUpdate(
 
         // Email mentee
         sendEmailViaBrevoTemplate({
-          templateId: 38,
+          templateId: 40,
           email: session.mentee.email,
           name: session.mentee.username,
           params: emailParams,

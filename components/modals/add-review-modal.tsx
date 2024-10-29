@@ -64,12 +64,12 @@ export const AddReviewModal = (props: AddReviewModalProps) => {
   const onSubmit = async (values: FormValues) => {
     setLoading(true);
     try {
-      const { review, updatedSession } = await addReview({
+      const { review } = await addReview({
         ...values,
         sessionId: props.sessionId,
       });
 
-      if (updatedSession.status === SessionStatus.REVIEWED && review) {
+      if (review) {
         toast.success("Review added successfully!");
         router.refresh();
       } else {
