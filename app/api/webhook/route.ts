@@ -109,7 +109,6 @@ export async function POST(req: Request) {
       data: {
         username: `${first_name}${last_name ? ` ${last_name}` : ""}`,
         imageUrl: image_url,
-        email: email_addresses[0].email_address,
       },
     });
   }

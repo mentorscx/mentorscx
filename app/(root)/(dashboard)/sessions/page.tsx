@@ -90,6 +90,7 @@ const MenteeSessionsPage = async ({
       SessionStatus.DECLINED,
       SessionStatus.CANCELLED,
       SessionStatus.RESCHEDULED,
+      SessionStatus.INCOMPLETE,
     ]),
   };
 

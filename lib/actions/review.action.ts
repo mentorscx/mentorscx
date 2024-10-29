@@ -1,69 +1,193 @@
 "use server";
+
 import { Review, SessionStatus } from "@prisma/client";
 import { db } from "../db";
 import { auth } from "@clerk/nextjs/server";
+import { getEmailParams } from "./session.action";
+import { alertNotification } from "./notification.action";
+import { sendEmailViaBrevoTemplate } from "../brevo";
 
-export async function addReview(
-  params: Pick<Review, "rating" | "feedback" | "sessionId">
-) {
-  // Check the Clerk Auth
-  const user = auth();
-  const { userId: clerkId } = user;
-  if (!clerkId) throw new Error("User not logged in");
+type ReviewInput = Pick<Review, "rating" | "feedback" | "sessionId">;
 
-  // Validate the data
-  if (!params.rating || params.rating < 1 || params.rating > 5) {
-    throw new Error("Rating must be between 1 and 5");
+/**
+ * Adds a review for a session with proper validation and notifications
+ * @param params Review parameters including rating, feedback, and sessionId
+ * @throws Error if validation fails or operations cannot be completed
+ * @returns The created review and updated session
+ */
+export async function addReview(params: ReviewInput) {
+  // Authentication check with proper error message
+  const { userId: clerkId } = auth();
+  if (!clerkId) {
+    console.error("Authentication failed: No user ID found in session");
+    throw new Error("You must be logged in to submit a review");
   }
 
-  if (!params.sessionId) {
-    throw new Error("Session ID is required");
-  }
-
-  // Check if the session exists and if the user is authorized
-  const session = await db.session.findUnique({
-    where: {
-      id: params.sessionId,
-    },
-    include: {
-      mentee: true,
-      review: true,
-    },
-  });
-
-  if (!session) {
-    throw new Error(`Session with ID ${params.sessionId} not found`);
-  }
-
-  if (session.mentee.clerkId !== clerkId) {
-    throw new Error("User is not authorized to review this session");
-  }
-
-  if (session.review?.id) {
-    throw new Error("Looks like review exists!");
-  }
-
-  // Use a transaction to ensure data consistency
   try {
-    const [review, updatedSession] = await db.$transaction([
-      db.review.create({
-        data: {
-          ...params,
-        },
-      }),
-      db.session.update({
-        where: {
-          id: params.sessionId,
-        },
-        data: {
-          status: SessionStatus.REVIEWED,
-        },
-      }),
-    ]);
+    // Input validation with specific error messages
+    if (!params.sessionId?.trim()) {
+      throw new Error("Session ID is required");
+    }
 
-    return { review, updatedSession };
+    if (
+      !params.rating ||
+      typeof params.rating !== "number" ||
+      params.rating < 1 ||
+      params.rating > 5
+    ) {
+      throw new Error("Rating must be a number between 1 and 5");
+    }
+
+    if (!params.feedback?.trim()) {
+      throw new Error("Feedback is required");
+    }
+
+    // Use a transaction for all database operations to ensure data consistency
+    const { review, updatedSession, session } = await db.$transaction(
+      async (tx) => {
+        // Get session with necessary data
+        const session = await tx.session.findUnique({
+          where: { id: params.sessionId },
+          include: {
+            mentee: {
+              select: {
+                clerkId: true,
+                email: true,
+                username: true,
+                timeZone: true,
+              },
+            },
+            mentor: {
+              select: {
+                clerkId: true,
+                email: true,
+                username: true,
+                meetingPreference: true,
+                zoomLink: true,
+                timeZone: true,
+                googleMeetLink: true,
+              },
+            },
+            review: true,
+          },
+        });
+
+        // Comprehensive session validation
+        if (!session) {
+          throw new Error(`Session not found: ${params.sessionId}`);
+        }
+
+        if (session.mentee.clerkId !== clerkId) {
+          console.warn(
+            `Unauthorized review attempt for session ${params.sessionId} by user ${clerkId}`
+          );
+          throw new Error("You are not authorized to review this session");
+        }
+
+        if (session.review?.id) {
+          throw new Error("This session has already been reviewed");
+        }
+
+        // Create review within transaction
+        const review = await tx.review.create({
+          data: {
+            rating: params.rating,
+            feedback: params.feedback.trim(),
+            sessionId: params.sessionId,
+          },
+        });
+
+        // Update session status within same transaction
+        const updatedSession = await tx.session.update({
+          where: { id: session.id },
+          data: { status: SessionStatus.REVIEWED },
+          select: {
+            price: true,
+            duration: true,
+            objective: true,
+            outcome: true,
+            start: true,
+            status: true,
+            end: true,
+            declinedBy: true,
+            mentor: {
+              select: {
+                clerkId: true,
+                email: true,
+                username: true,
+                meetingPreference: true,
+                zoomLink: true,
+                timeZone: true,
+                googleMeetLink: true,
+              },
+            },
+            mentee: {
+              select: {
+                clerkId: true,
+                email: true,
+                username: true,
+                timeZone: true,
+              },
+            },
+          },
+        });
+
+        return { review, updatedSession, session };
+      }
+    );
+
+    // Prepare email parameters
+    const emailParams = await getEmailParams(updatedSession);
+
+    console.log(emailParams);
+
+    // Handle notifications and emails outside transaction but ensure they complete
+    try {
+      await Promise.all([
+        // Send notification to mentor
+        alertNotification(session.mentor.clerkId, {
+          title: "Your session was reviewed",
+          message: `Your session was reviewed by ${session.mentee.username}`,
+        }),
+
+        // Send confirmation emails
+        // Mentor email
+        sendEmailViaBrevoTemplate({
+          templateId: 28,
+          email: session.mentor.email,
+          name: session.mentor.username,
+          params: emailParams,
+        }),
+
+        // Mentee email
+        sendEmailViaBrevoTemplate({
+          templateId: 39,
+          email: session.mentee.email,
+          name: session.mentee.username,
+          params: emailParams,
+        }),
+      ]);
+    } catch (notificationError) {
+      // Log notification errors but don't fail the review submission
+      console.error("Error sending notifications:", notificationError);
+      // Consider implementing a retry mechanism or queueing system for failed notifications
+    }
+
+    // Return the review data
+    return {
+      review,
+      session: updatedSession,
+    };
   } catch (error) {
-    console.error("Error adding review:", error);
-    throw new Error(`Failed to add review for session ${params.sessionId}`);
+    // Log the full error for debugging but send a sanitized message to the client
+    console.error("Review submission error:", error);
+
+    // Handle specific known errors
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    // Generic error for unknown cases
+    throw new Error("Failed to submit review. Please try again later.");
   }
 }

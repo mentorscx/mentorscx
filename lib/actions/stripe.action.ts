@@ -3,8 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Stripe from "stripe";
 import { db } from "@/lib/db";
-import { Card } from "@stripe/stripe-js";
-import { features } from "process";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",

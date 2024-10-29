@@ -47,6 +47,9 @@ const fetchSessions = async (userId: string, role: Role) => {
       mentee: userSelection,
       mentor: userSelection,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 

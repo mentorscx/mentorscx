@@ -12,6 +12,7 @@ import AddReviewModal from "@/components/modals/add-review-modal";
 import { ShareButton } from "../profile/profile-share";
 import ShareOwnProfile from "../profile/share-my-profile";
 import Link from "next/link";
+import { CheckIcon, TimerOffIcon } from "lucide-react";
 
 type Props = {
   sessionId: string;
@@ -27,12 +28,12 @@ const useSessionActions = (sessionId: string, role: Role) => {
   const { onOpen } = useModal();
   const [disabled, setDisabled] = useState(false);
 
-  const handleAction = async (newStatus: SessionStatus, actionType: string) => {
+  const handleAction = async (newStatus: SessionStatus, message: string) => {
     try {
       setDisabled(true);
-      toast.loading(`${actionType} the session`);
+      toast.loading("loading...");
       await updateSession({ id: sessionId, status: newStatus });
-      toast.success(`${actionType} the session`);
+      toast.success(message);
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -54,14 +55,21 @@ const useSessionActions = (sessionId: string, role: Role) => {
   };
 
   return {
-    handleAccept: () => handleAction(SessionStatus.ACCEPTED, "Accepting"),
+    handleAccept: () =>
+      handleAction(SessionStatus.ACCEPTED, "Accepted the session"),
     handleDecline: () =>
       handleModalAction(SessionStatus.DECLINED, "declineSession"),
     handleCancel: () =>
       handleModalAction(SessionStatus.CANCELLED, "cancelSession"),
     handleReschedule: () =>
       handleModalAction(SessionStatus.RESCHEDULED, "rescheduleSession"),
-    handleCompleted: () => handleAction(SessionStatus.COMPLETED, "completed"),
+    handleCompleted: () =>
+      handleAction(SessionStatus.COMPLETED, "completed the session"),
+    handleIncomplete: () =>
+      handleAction(
+        SessionStatus.INCOMPLETE,
+        "Marked the session as incomplete"
+      ),
     handleAskReview: () =>
       handleModalAction(SessionStatus.AWAITING_REVIEW, "askReview"),
     disabled,
@@ -76,6 +84,7 @@ const getActionVisibility = (role: Role, status: SessionStatus) => ({
   showReject: role === Role.MENTOR && status === SessionStatus.AWAITING_HOST,
   showAccept: role === Role.MENTOR && status === SessionStatus.AWAITING_HOST,
   showCompleted: role === Role.MENTEE && status === SessionStatus.DONE,
+  showIncomplete: role === Role.MENTEE && status === SessionStatus.DONE,
   showAskReview: role === Role.MENTOR && status === SessionStatus.COMPLETED,
   showLeaveReview: role === Role.MENTEE && status === SessionStatus.COMPLETED,
   showShareReview: status === SessionStatus.REVIEWED,
@@ -142,7 +151,17 @@ export const SessionHeaderActions = (props: Props) => {
           onClick={sessionActions.handleCompleted}
           disabled={sessionActions.disabled}
         >
-          Complete
+          <CheckIcon className="w-4 h-4 mr-1" /> Complete
+        </Button>
+      )}
+      {actionVisibility.showIncomplete && (
+        <Button
+          className={props.buttonStyles}
+          variant="outline"
+          onClick={sessionActions.handleIncomplete}
+          disabled={sessionActions.disabled}
+        >
+          <TimerOffIcon className="w-4 h-4 mr-1" /> Skipped
         </Button>
       )}
       {actionVisibility.showLeaveReview && (

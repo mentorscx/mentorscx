@@ -177,6 +177,7 @@ enum SessionStatus {
   DONE            @map("DONE")
   COMPLETED       @map("COMPLETED")
   AWAITING_REVIEW @map("AWAITING_REVIEW")
+  INCOMPLETE @map("INCOMPLETE")
   REVIEWED        @map("REVIEWED")
 }
 

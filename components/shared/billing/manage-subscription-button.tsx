@@ -1,5 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { Loader2Icon } from "lucide-react";
+
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
@@ -12,8 +14,12 @@ const ManageSubscriptionButton = ({
   email: string;
   userId: string;
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleManageSubscription = async () => {
     try {
+      setIsLoading(true);
+
       const manageSubscriptionUrl = await createCustomerPortal(email, userId);
       redirect(manageSubscriptionUrl);
     } catch (error) {
@@ -27,8 +33,10 @@ const ManageSubscriptionButton = ({
       role="link"
       onClick={handleManageSubscription}
       className="min-w-[250px] mt-4"
+      disabled={isLoading}
     >
       Manage my subscription
+      {isLoading && <Loader2Icon className="w-4 h-4 ml-2 animate-spin" />}
     </Button>
   );
 };
