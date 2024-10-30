@@ -10,7 +10,14 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
-import { Experience, Expertise, Industry, Tool, User } from "@prisma/client";
+import {
+  Experience,
+  Expertise,
+  Industry,
+  Role,
+  Tool,
+  User,
+} from "@prisma/client";
 import { OnboardingChecklistActions } from "@/components/shared/onboarding-checklist-actions";
 import { db } from "@/lib/db";
 
@@ -164,7 +171,11 @@ export async function OnboardingChecklist({
                 Hurray! You have competed the profile, Click below to activate
                 your profile
               </p>
-              <OnboardingCompleteButton userId={user.id} />
+              <OnboardingCompleteButton
+                userId={user.id}
+                isActivated={user.isActivated}
+                role={user.role ?? Role.MENTEE}
+              />
             </div>
           </CardHeader>
         </Card>
