@@ -48,6 +48,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     location,
     averageReview,
     totalSessions,
+    isActivated,
   } = data;
 
   if (
@@ -59,7 +60,8 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     languages === null ||
     city === null ||
     country === null ||
-    shortBio === null
+    shortBio === null ||
+    !isActivated
   ) {
     return null;
   }

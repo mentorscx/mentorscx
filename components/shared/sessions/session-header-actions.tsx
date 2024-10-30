@@ -88,6 +88,7 @@ const getActionVisibility = (role: Role, status: SessionStatus) => ({
   showAskReview: role === Role.MENTOR && status === SessionStatus.COMPLETED,
   showLeaveReview: role === Role.MENTEE && status === SessionStatus.COMPLETED,
   showShareReview: status === SessionStatus.REVIEWED,
+  showMessageMe: status === SessionStatus.INCOMPLETE,
 });
 
 // SessionHeaderActions component
@@ -97,6 +98,14 @@ export const SessionHeaderActions = (props: Props) => {
   // Submit review Actions
   const handleLeaveReview = () => {
     setIsReviewDialogOpen(!isReviewDialogOpen);
+  };
+
+  const handleMessageClick = () => {
+    // Smooth scroll to bottom
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
   };
 
   const sessionActions = useSessionActions(props.sessionId, props.role);
@@ -172,6 +181,17 @@ export const SessionHeaderActions = (props: Props) => {
           disabled={sessionActions.disabled}
         >
           Leave a review
+        </Button>
+      )}
+
+      {actionVisibility.showMessageMe && (
+        <Button
+          className={props.buttonStyles}
+          variant="outline"
+          onClick={handleMessageClick}
+          disabled={sessionActions.disabled}
+        >
+          Message
         </Button>
       )}
 

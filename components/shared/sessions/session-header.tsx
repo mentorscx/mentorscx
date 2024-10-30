@@ -6,6 +6,7 @@ import {
   AlertCircle,
   CheckCircleIcon,
   PartyPopperIcon,
+  TriangleAlertIcon,
 } from "lucide-react";
 import { Role, SessionStatus } from "@prisma/client";
 import { SessionHeaderActions } from "./session-header-actions";
@@ -175,6 +176,19 @@ const getSessionHeaderContent = (
         "Amazing. You completed the call. To encourage the mentor. Please leave a rating",
       Icon: CheckCircleIcon,
       theme: "green",
+    },
+    [`${Role.MENTOR}-${SessionStatus.INCOMPLETE}`]: {
+      header: "Session marked as incomplete by mentee",
+      content: "The mentee indicated that the call never happened.",
+      Icon: TriangleAlertIcon,
+      theme: "slate",
+    },
+    [`${Role.MENTEE}-${SessionStatus.INCOMPLETE}`]: {
+      header: "You marked the session as incomplete",
+      content:
+        "You indicated that the call never happened. If you’d like to try again, we encourage you to shoot them a message before sending a request.",
+      Icon: TriangleAlertIcon,
+      theme: "slate",
     },
     [`${Role.MENTOR}-${SessionStatus.REVIEWED}`]: {
       header: "The mentee left a review for you",

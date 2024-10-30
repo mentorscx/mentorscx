@@ -281,7 +281,8 @@ export async function getUsersWithProfileFilters(searchParams: any) {
           user.price !== null &&
           user.languages.length > 0 &&
           user.country &&
-          user.shortBio
+          user.shortBio &&
+          user.isActivated
       )
       .map((user) => {
         const totalSessions = user.sessionsGiven.filter(

@@ -7,11 +7,13 @@ import ShinyButton from "./shiny-button";
 type ConfettiSideCannonsProps = {
   name: string;
   onhandleClick: () => void;
+  isVisible: boolean;
 };
 
 export function ConfettiSideCannons({
   name,
   onhandleClick,
+  isVisible,
 }: ConfettiSideCannonsProps) {
   const handleClick = () => {
     const end = Date.now() + 3 * 1000; // 3 seconds
@@ -43,6 +45,8 @@ export function ConfettiSideCannons({
     frame();
     onhandleClick();
   };
+
+  if (!isVisible) return null;
 
   return (
     <div className="relative">
