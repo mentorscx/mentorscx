@@ -106,8 +106,6 @@ export const SessionHeaderActions = (props: Props) => {
       top: document.documentElement.scrollHeight,
       behavior: "smooth",
     });
-
-    // You can add any additional message-related logic here
   };
 
   const sessionActions = useSessionActions(props.sessionId, props.role);

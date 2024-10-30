@@ -195,7 +195,7 @@ const getSessionHeaderContent = (
       content:
         "Looks like you completed the call and the mentee took the time to leave a review for you. Please share with others.",
       Icon: PartyPopperIcon,
-      theme: "slate",
+      theme: "sky",
     },
     [`${Role.MENTEE}-${SessionStatus.REVIEWED}`]: {
       header: "You left a review",
