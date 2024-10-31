@@ -304,7 +304,7 @@ export async function generateUniqueUserId(
   if (!firstName && !lastName) {
     return uuidv4();
   } else if (firstName && lastName) {
-    baseId = `${firstName.toLowerCase()}${lastName.toLowerCase()}`;
+    baseId = `${firstName.toLowerCase()}-${lastName.toLowerCase()}`;
   } else if (firstName) {
     baseId = firstName.toLowerCase();
   } else {
@@ -313,7 +313,7 @@ export async function generateUniqueUserId(
 
   let uniqueId = baseId;
   let idExists = true;
-  let counter = 1;
+  let counter = 2;
 
   // Check if the ID already exists in the database
   while (idExists) {
@@ -328,7 +328,7 @@ export async function generateUniqueUserId(
       idExists = false;
     } else {
       // Otherwise, append the counter and check again
-      uniqueId = `${baseId}${counter}`;
+      uniqueId = `${baseId}-${counter}`;
       counter++;
     }
   }
