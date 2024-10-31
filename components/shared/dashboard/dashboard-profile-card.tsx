@@ -102,13 +102,13 @@ const MenteeProfileDetails = ({
   const { icon: PlanIcon, bookingLimit } = (() => {
     switch (planName) {
       case "Moon":
-        return { icon: MoonIcon, bookingLimit: 2 };
+        return { icon: MoonIcon, bookingLimit: "unlimited" };
       case "Eclipse":
-        return { icon: EclipseIcon, bookingLimit: 4 };
+        return { icon: EclipseIcon, bookingLimit: "2" };
       case "Sun":
-        return { icon: SunIcon, bookingLimit: 4 };
+        return { icon: SunIcon, bookingLimit: "4" };
       default:
-        return { icon: null, bookingLimit: 0 };
+        return { icon: null, bookingLimit: "0" };
     }
   })();
 

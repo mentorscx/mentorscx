@@ -22,10 +22,17 @@ const BookingCalendarDetails = ({
 }: BookingCalendarDetailsProps) => {
   return (
     <section className="flex flex-col gap-2">
-      <Avatar>
-        <AvatarImage src={imageUrl} alt={username} />
-        <AvatarFallback>{getInitials(username)}</AvatarFallback>
+      <Avatar className="h-12 w-12 relative overflow-hidden">
+        <AvatarImage
+          src={imageUrl}
+          alt={username}
+          className="object-cover w-full h-full"
+        />
+        <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-muted text-2xl">
+          {getInitials(username)}
+        </AvatarFallback>
       </Avatar>
+
       <p className="text-sm font-semibold">{username}</p>
       <p className="text-xl font-semibold my-2">{duration} Min Meeting</p>
       <p className="flex items-center text-neutral-600">
@@ -39,7 +46,7 @@ const BookingCalendarDetails = ({
       <p className="flex items-center text-neutral-600">
         <Globe className="w-5 h-5 mr-1" /> {timeZone}
       </p>
-      <p className="muted">*sessions must be booked 48hrs in advance.</p>
+      <p className="muted">*sessions must be booked 24hrs in advance.</p>
     </section>
   );
 };

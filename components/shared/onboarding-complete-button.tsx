@@ -36,10 +36,13 @@ const OnboardingCompleteButton = ({
         return;
       }
 
-      await updateUser({
-        id: userId,
-        isActivated: true,
-      });
+      if (role === Role.MENTOR) {
+        await updateUser({
+          id: userId,
+          isActivated: true,
+        });
+      }
+
       toast.success(
         role === Role.MENTOR
           ? "Mentor profile activated successfully!"
@@ -53,7 +56,7 @@ const OnboardingCompleteButton = ({
     }
   };
 
-  if (isActivated) return null;
+  if (isActivated || role === Role.MENTEE) return null;
 
   return (
     <>
