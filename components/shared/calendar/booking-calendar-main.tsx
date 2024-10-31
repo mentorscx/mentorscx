@@ -182,6 +182,10 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const [year, month, dayOfMonth] = todayDate.split("-").map(Number);
   const todayDateToET = new Date(year, month - 1, dayOfMonth);
 
+  // Get tomorrow's date by adding 1 day
+  const tomorrowDateToET = new Date(todayDateToET);
+  tomorrowDateToET.setDate(todayDateToET.getDate() + 1);
+
   // Get today's date at 12:00 AM in the specified timezone
   const todayAtMidnight = moment().tz(props.timeZone).startOf("day").toDate();
   const threeMonthsLater = new Date(todayAtMidnight.getTime()); // Copying today's date
@@ -214,7 +218,7 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
             mode="single"
             selected={date || undefined}
             onDayClick={handleSelectDate}
-            disabled={[{ before: todayDateToET }, ...disabledDates]}
+            disabled={[{ before: tomorrowDateToET }, ...disabledDates]}
             defaultMonth={todayDateToET}
             fromMonth={todayDateToET}
             toMonth={threeMonthsLater}

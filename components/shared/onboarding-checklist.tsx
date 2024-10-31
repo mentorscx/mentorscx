@@ -158,7 +158,11 @@ export async function OnboardingChecklist({
   }
 
   if (completionPercentage === 100 && user.isActivated) return null;
-  else if (completionPercentage === 100 && !user.isActivated)
+  else if (
+    completionPercentage === 100 &&
+    !user.isActivated &&
+    user.role === Role.MENTOR
+  )
     return (
       <section>
         <Card className="mt-4">
