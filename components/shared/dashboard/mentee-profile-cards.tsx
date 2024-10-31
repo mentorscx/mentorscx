@@ -46,9 +46,9 @@ export const DashBoardQueueLimit = async ({
   const { bookingLimit } = (() => {
     switch (planName) {
       case "Moon":
-        return { bookingLimit: 2 };
-      case "Eclipse":
         return { bookingLimit: 4 };
+      case "Eclipse":
+        return { bookingLimit: 2 };
       case "Sun":
         return { bookingLimit: 4 };
       default:
