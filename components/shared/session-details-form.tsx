@@ -181,17 +181,17 @@ export function SessionDetailsForm({
       const creditLimit = getCreditLimit(subscription?.planName);
       const availableCredits = subscription?.credits ?? 0;
 
-      if (queuedSessionsCount >= bookingLimit || availableCredits <= 0) {
-        toast.error("You have reached your current booking limit");
-        setIsCreditsDialogOpen(true);
-        setCreditsInfo({
-          currentBookings: queuedSessionsCount ?? 0,
-          bookingsLimit: bookingLimit,
-          currentSessions: creditLimit - availableCredits,
-          sessionLimit: creditLimit,
-        });
-        return;
-      }
+      // if (queuedSessionsCount >= bookingLimit || availableCredits <= 0) {
+      //   toast.error("You have reached your current booking limit");
+      //   setIsCreditsDialogOpen(true);
+      //   setCreditsInfo({
+      //     currentBookings: queuedSessionsCount ?? 0,
+      //     bookingsLimit: bookingLimit,
+      //     currentSessions: creditLimit - availableCredits,
+      //     sessionLimit: creditLimit,
+      //   });
+      //   return;
+      // }
 
       const newSession = await createSession({
         ...session,
