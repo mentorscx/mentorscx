@@ -41,11 +41,6 @@ export default function CreditsDialog({
   const isControlled = controlledIsOpen !== undefined;
   const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
 
-  currentSessions = 3;
-  sessionLimit = 10002;
-  currentBookings = 4;
-  bookingsLimit = 4;
-
   useEffect(() => {
     if (isControlled) {
       setInternalIsOpen(controlledIsOpen);
