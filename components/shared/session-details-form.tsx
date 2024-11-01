@@ -179,14 +179,15 @@ export function SessionDetailsForm({
       const subscription = await getSubscriptionDetails(session.menteeId);
       const bookingLimit = getBookingLimit(subscription?.planName);
       const creditLimit = getCreditLimit(subscription?.planName);
+      const availableCredits = subscription?.credits ?? 0;
 
-      if (queuedSessionsCount >= bookingLimit) {
+      if (queuedSessionsCount >= bookingLimit || availableCredits <= 0) {
         toast.error("You have reached your current booking limit");
         setIsCreditsDialogOpen(true);
         setCreditsInfo({
           currentBookings: queuedSessionsCount ?? 0,
           bookingsLimit: bookingLimit,
-          currentSessions: creditLimit - (subscription?.credits ?? 0),
+          currentSessions: creditLimit - availableCredits,
           sessionLimit: creditLimit,
         });
         return;
