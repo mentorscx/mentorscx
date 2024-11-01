@@ -31,12 +31,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 import { Badge } from "@/components/ui/badge";
 
-import { Session } from "@prisma/client";
-import { createSession } from "@/lib/actions/session.action";
+import { Session, SessionStatus } from "@prisma/client";
+import { createSession, fetchSessionCount } from "@/lib/actions/session.action";
 import { calculatePrice, formatAMPM } from "@/lib/format";
 import { zonedTimeToUtc } from "date-fns-tz";
 import { PaymentDetailsForm } from "./PaymentDetailsForm";
 import { createPaymentIntent } from "@/lib/actions/stripe.action"; // You'll need to create this action
+import { delay, getBookingLimit, getCreditLimit } from "@/lib/utils";
+import { getSubscriptionDetails } from "@/lib/actions/subscription.action";
+import { tree } from "next/dist/build/templates/app-page";
+import CreditsDialog from "../modals/credits-dialog";
 
 interface Card {
   id: string;
@@ -93,6 +97,14 @@ export function SessionDetailsForm({
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
   const router = useRouter();
+
+  const [isCreditsDialogOpen, setIsCreditsDialogOpen] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState({
+    currentBookings: 0,
+    bookingsLimit: 0,
+    currentSessions: 0,
+    sessionLimit: 0,
+  });
 
   const start = new Date(session.start);
   const end = new Date(session.end);
@@ -158,6 +170,25 @@ export function SessionDetailsForm({
         toast.error(
           "You cannot book yourself! Please try booking session with others"
         );
+        return;
+      }
+      const queuedSessionsCount = await fetchSessionCount(session.menteeId, [
+        SessionStatus.ACCEPTED,
+        SessionStatus.AWAITING_HOST,
+      ]);
+      const subscription = await getSubscriptionDetails(session.menteeId);
+      const bookingLimit = getBookingLimit(subscription?.planName);
+      const creditLimit = getCreditLimit(subscription?.planName);
+
+      if (queuedSessionsCount >= bookingLimit) {
+        toast.error("You have reached your current booking limit");
+        setIsCreditsDialogOpen(true);
+        setCreditsInfo({
+          currentBookings: queuedSessionsCount ?? 0,
+          bookingsLimit: bookingLimit,
+          currentSessions: creditLimit - (subscription?.credits ?? 0),
+          sessionLimit: creditLimit,
+        });
         return;
       }
 
@@ -230,6 +261,19 @@ export function SessionDetailsForm({
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isCreditsDialogOpen) {
+    return (
+      <CreditsDialog
+        currentBookings={creditsInfo.currentBookings}
+        bookingsLimit={creditsInfo.bookingsLimit}
+        currentSessions={creditsInfo.currentSessions}
+        sessionLimit={creditsInfo.sessionLimit}
+        isOpen={isCreditsDialogOpen}
+        onOpenChange={setIsCreditsDialogOpen}
+      />
+    );
   }
 
   return (
@@ -352,6 +396,7 @@ export function SessionDetailsForm({
           <LoadingButton
             loading={isSubmitting}
             disabled={
+              isSubmitting ||
               !form.getValues("acceptTerms") ||
               (!!session.price && session.price > 0 && !selectedCard) ||
               session.menteeId === session.mentorId

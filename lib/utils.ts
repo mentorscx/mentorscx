@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Subscription } from "@prisma/client";
+import { PLAN_BOOKING_LIMITS, PLAN_CREDIT_LIMITS } from "@/constants/data";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -221,4 +222,30 @@ export const formatToOneDp = (
     return null;
   }
   return (Math.round(value * 10) / 10).toFixed(1);
+};
+
+export const getBookingLimit = (planName: string | undefined): number => {
+  switch (planName) {
+    case "Moon":
+      return PLAN_BOOKING_LIMITS.Moon;
+    case "Eclipse":
+      return PLAN_BOOKING_LIMITS.Eclipse;
+    case "Sun":
+      return PLAN_BOOKING_LIMITS.Sun;
+    default:
+      return PLAN_BOOKING_LIMITS.Default;
+  }
+};
+
+export const getCreditLimit = (planName: string | undefined): number => {
+  switch (planName) {
+    case "Moon":
+      return PLAN_CREDIT_LIMITS.Moon;
+    case "Eclipse":
+      return PLAN_CREDIT_LIMITS.Eclipse;
+    case "Sun":
+      return PLAN_CREDIT_LIMITS.Sun;
+    default:
+      return PLAN_CREDIT_LIMITS.Default;
+  }
 };

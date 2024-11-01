@@ -617,3 +617,27 @@ export async function createSession(session: TSession) {
     throw Error("CREATE_SESSION_ERROR, " + error);
   }
 }
+
+export async function fetchSessionCount(
+  menteeId: string,
+  statusArr?: SessionStatus[]
+) {
+  try {
+    const where = {
+      menteeId,
+      ...(statusArr &&
+        statusArr.length > 0 && {
+          status: {
+            in: statusArr,
+          },
+        }),
+    };
+
+    const count = await db.session.count({
+      where,
+    });
+    return count;
+  } catch (error) {
+    throw Error("FETCH_SESSION_COUNT_ERROR, " + error);
+  }
+}

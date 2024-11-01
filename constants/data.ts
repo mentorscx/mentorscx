@@ -1798,3 +1798,19 @@ export const pricingPlans = [
     comingSoon: true,
   },
 ];
+
+// First, define constants for plan types and their limits
+export const PLAN_BOOKING_LIMITS = {
+  Moon: 4,
+  Eclipse: 2,
+  Sun: 4,
+  Default: 0,
+} as const;
+
+// First, define constants for plan types and their limits
+export const PLAN_CREDIT_LIMITS = {
+  Moon: 10001,
+  Eclipse: 2,
+  Sun: 10001,
+  Default: 0,
+} as const;
