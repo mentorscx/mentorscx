@@ -178,6 +178,7 @@ export async function updateSession(session: any) {
         },
         mentee: {
           select: {
+            id: true,
             clerkId: true,
             email: true,
             username: true,
@@ -187,7 +188,32 @@ export async function updateSession(session: any) {
       },
     });
 
-    if (!updatedSession) throw new Error("Session not found");
+    if (
+      updatedSession.status === SessionStatus.RESCHEDULED ||
+      updatedSession.status === SessionStatus.CANCELLED ||
+      updatedSession.status === SessionStatus.INCOMPLETE ||
+      updatedSession.status === SessionStatus.DECLINED
+    ) {
+      const credits = await db.subscription.update({
+        where: { userId: updatedSession.mentee.id },
+        data: {
+          credits: {
+            increment: 1,
+          },
+        },
+        select: { credits: true },
+      });
+
+      if (!credits) {
+        console.error("UPDATE_SESSION_ERROR: credits not updated");
+        throw new Error("credits not updated ");
+      }
+    }
+
+    if (!updatedSession) {
+      console.error("UPDATE_SESSION_ERROR: session not found");
+      throw new Error("Session not updated ");
+    }
 
     const emailParams = await getEmailParams(updatedSession);
     const statusKey = updatedSession.declinedBy
@@ -198,7 +224,7 @@ export async function updateSession(session: any) {
     await handleSessionUpdate(statusKey, updatedSession, emailParams);
 
     // Schedule meeting if needed
-    if (updatedSession.status !== SessionStatus.ACCEPTED) {
+    if (updatedSession.status === SessionStatus.ACCEPTED) {
       if (!updatedSession.mentee.email) {
         throw new Error("Mentee email not found");
       }
@@ -538,37 +564,55 @@ export async function createSession(session: TSession) {
   if (!user) throw new Error("User not found");
 
   try {
-    const newSession = await db.session.create({
-      data: {
-        ...session,
-        menteeId: user.id,
-      },
-      select: {
-        price: true,
-        duration: true,
-        objective: true,
-        outcome: true,
-        start: true,
-        end: true,
-        mentor: {
-          select: {
-            clerkId: true,
-            email: true,
-            username: true,
-            meetingPreference: true,
-            zoomLink: true,
-            timeZone: true,
-            googleMeetLink: true,
+    const newSession = await db.$transaction(async (tx) => {
+      // 1. Create the session
+      const sessionUpdate = await tx.session.create({
+        data: {
+          ...session,
+          menteeId: user.id,
+        },
+        select: {
+          price: true,
+          duration: true,
+          objective: true,
+          outcome: true,
+          start: true,
+          end: true,
+          mentor: {
+            select: {
+              clerkId: true,
+              email: true,
+              username: true,
+              meetingPreference: true,
+              zoomLink: true,
+              timeZone: true,
+              googleMeetLink: true,
+            },
+          },
+          mentee: {
+            select: {
+              id: true,
+              email: true,
+              username: true,
+              timeZone: true,
+            },
           },
         },
-        mentee: {
-          select: {
-            email: true,
-            username: true,
-            timeZone: true,
+      });
+
+      // 2. Update credits
+      await tx.subscription.update({
+        where: {
+          userId: session.menteeId,
+        },
+        data: {
+          credits: {
+            decrement: 1,
           },
         },
-      },
+      });
+
+      return sessionUpdate;
     });
 
     const startInTimeZone = utcToZonedTime(

@@ -75,6 +75,13 @@ const createStripeSession = async ({
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${domainUrl}/payment/success`,
     cancel_url: `${domainUrl}/payment/cancelled`,
+    subscription_data: {
+      metadata: {
+        buyerId: userId,
+        credits: credits.toString(),
+        email: email,
+      },
+    },
   });
 };
 
