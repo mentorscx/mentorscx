@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { Partner } from "@/lib/actions/shared.types";
 
 export interface timeZone {
   readonly value: string;
@@ -1814,3 +1815,78 @@ export const PLAN_CREDIT_LIMITS = {
   Sun: 10001,
   Default: 0,
 } as const;
+
+export const partners: Partner[] = [
+  {
+    logo: "/assets/toolkit/intercom.png",
+    name: "Cento",
+    category: "Payroll",
+    offer: "25% off your first year",
+    description:
+      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
+    ctaText: "Claim discount",
+    ctaLink: "#",
+    value: "$500",
+    summary:
+      "Pento offers automated payroll solutions to streamline your HR processes.",
+    redemptionUrl: "https://pento.com/redeem",
+    details: "Get 25% off your first year of Pento's premium payroll service.",
+    terms: "Valid for new customers only. Must have at least 10 employees.",
+    howToClaim:
+      "Click the claim button and follow the instructions to set up your account.",
+  },
+  {
+    logo: "/assets/toolkit/intercom.png",
+    name: "Dento",
+    category: "Payroll",
+    offer: "25% off your first year",
+    description:
+      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
+    ctaText: "Claim discount",
+    ctaLink: "#",
+    value: "$500",
+    summary:
+      "Pento offers automated payroll solutions to streamline your HR processes.",
+    redemptionUrl: "https://pento.com/redeem",
+    details: "Get 25% off your first year of Pento's premium payroll service.",
+    terms: "Valid for new customers only. Must have at least 10 employees.",
+    howToClaim:
+      "Click the claim button and follow the instructions to set up your account.",
+  },
+  {
+    logo: "/assets/toolkit/intercom.png",
+    name: "Mento",
+    category: "Payroll",
+    offer: "25% off your first year",
+    description:
+      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
+    ctaText: "Claim discount",
+    ctaLink: "#",
+    value: "$500",
+    summary:
+      "Pento offers automated payroll solutions to streamline your HR processes.",
+    redemptionUrl: "https://pento.com/redeem",
+    details: "Get 25% off your first year of Pento's premium payroll service.",
+    terms: "Valid for new customers only. Must have at least 10 employees.",
+    howToClaim:
+      "Click the claim button and follow the instructions to set up your account.",
+  },
+  {
+    logo: "/assets/toolkit/intercom.png",
+    name: "Intercom",
+    category: "Customer support",
+    offer: "25% off your first year",
+    description:
+      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
+    ctaText: "Claim discount",
+    ctaLink: "#",
+    value: "$500",
+    summary:
+      "Pento offers automated payroll solutions to streamline your HR processes.",
+    redemptionUrl: "https://pento.com/redeem",
+    details: "Get 25% off your first year of Pento's premium payroll service.",
+    terms: "Valid for new customers only. Must have at least 10 employees.",
+    howToClaim:
+      "Click the claim button and follow the instructions to set up your account.",
+  },
+];
