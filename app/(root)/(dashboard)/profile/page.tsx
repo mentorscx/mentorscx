@@ -1,9 +1,9 @@
 import { ProfileDisplayPage } from "@/components/shared/profile/profile-display";
 import ProfileSkeleton from "@/components/shared/skeletons/ProfileSkeleton";
-import MentorRedirectDialog from "@/components/modals/redirect-mentors-modal";
 
 import type { Metadata } from "next";
 import { Suspense } from "react";
+
 export const metadata: Metadata = {
   title: "Profile | Mentors CX",
   description:
