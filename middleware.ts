@@ -14,6 +14,7 @@ const isPublicRoute = createRouteMatcher([
   "/pricing",
   "/application/mentor",
   "/application/mentor/(.*)",
+  "/search",
 ]);
 
 const isWaitlistRoute = createRouteMatcher(["/waitlist"]);

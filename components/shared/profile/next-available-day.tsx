@@ -18,18 +18,26 @@ const NextAvailableDay = async (props: NextAvailableDayProps) => {
 
   const { userId: currentUserId } = auth();
 
-  if (!currentUserId) redirect("/sign-in");
+  if (!currentUserId) {
+    return null;
+  }
 
-  const currentUser = await db.user.findUnique({
-    where: {
-      clerkId: currentUserId,
-    },
-    select: {
-      timeZone: true,
-    },
-  });
+  let timezone = "America/New_York";
 
-  if (!currentUser) redirect("/sign-in");
+  if (currentUserId) {
+    const currentUser = await db.user.findUnique({
+      where: {
+        clerkId: currentUserId,
+      },
+      select: {
+        timeZone: true,
+      },
+    });
+
+    if (currentUser && currentUser.timeZone) {
+      timezone = currentUser.timeZone;
+    }
+  }
 
   const user = await db.user.findUnique({
     where: {
@@ -82,8 +90,7 @@ const NextAvailableDay = async (props: NextAvailableDayProps) => {
   });
 
   const earliestDate =
-    findEarliestDate(uniqueAvailableTimeSlots, currentUser.timeZone) ??
-    "No slots";
+    findEarliestDate(uniqueAvailableTimeSlots, timezone) ?? "No slots";
 
   return (
     <div className="flex flex-col items-center muted">

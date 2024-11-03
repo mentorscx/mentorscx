@@ -27,33 +27,39 @@ const MessageMe = (props: MessageMeProps) => {
 
   const setActiveUsers = useConversationStore((state) => state.activeUsers);
 
-  if (!props.currentUserClerkId) {
-    redirect("/sign-in");
-  }
-
   const handleClose = () => setIsDialogOpen(!isDialogOpen);
 
   const handleClick = async () => {
     setIsLoading(true);
 
-    const user = await getUserSubscription();
+    try {
+      if (!props.currentUserClerkId) {
+        router.push("/sign-in");
+        return;
+      }
 
-    if (!user) {
-      redirect("/sign-in");
-    }
+      const user = await getUserSubscription();
 
-    const proUser = isProUser(user.Subscription);
+      if (!user) {
+        router.push("/sign-in");
+        return;
+      }
 
-    if (!proUser) {
-      setIsDialogOpen(true);
+      const proUser = isProUser(user.Subscription);
+
+      if (!proUser) {
+        setIsDialogOpen(true);
+        setIsLoading(false);
+        return;
+      }
+
+      if (props.currentUserClerkId !== null) {
+        setActiveUsers([props.currentUserClerkId, props.otherUserClerkId]);
+      }
+      router.push(props.redirectUrl);
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    if (props.currentUserClerkId !== null) {
-      setActiveUsers([props.currentUserClerkId, props.otherUserClerkId]);
-    }
-    router.push(props.redirectUrl);
   };
 
   if (!isClient) return null;
