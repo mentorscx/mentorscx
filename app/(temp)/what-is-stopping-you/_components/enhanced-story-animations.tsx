@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useState } from "react";
 
@@ -93,6 +93,12 @@ export default function Component() {
     offset: ["start end", "end start"],
   });
 
+  const ref = useRef(null);
+  const isInView = useInView(ref, {
+    margin: "-100px",
+    once: false,
+  });
+
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
   const scale = useTransform(scrollYProgress, [0, 0.3], [0.8, 1]);
   const y = useTransform(scrollYProgress, [0, 0.3], [50, 0]);
@@ -121,10 +127,16 @@ export default function Component() {
 
         {/* Video Section */}
         <motion.div
+          ref={ref}
           className="relative w-full aspect-video rounded-lg overflow-hidden shadow-2xl"
-          initial={{ opacity: 0, scale: 0.6 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.4 }}
+          animate={{
+            opacity: isInView ? 1 : 0,
+            scale: isInView ? 1 : 0.6,
+          }}
+          transition={{
+            duration: 1,
+            ease: "easeOut",
+          }}
           whileHover={{ scale: 1.05 }}
         >
           <iframe
@@ -138,7 +150,17 @@ export default function Component() {
 
         {/* Content Section */}
         <div className="grid md:grid-cols-2 gap-8 pt-16 max-w-5xl mx-auto">
-          <div className="flex flex-col justify-center space-y-4 p-4">
+          <motion.div
+            className="flex flex-col justify-center space-y-4 p-4"
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              type: "spring",
+              bounce: 0.2,
+            }}
+          >
             <h3 className="text-2xl font-bold text-blue-950">
               Behind "Truffle Pig"
             </h3>
@@ -149,7 +171,7 @@ export default function Component() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
                 <a
-                  href="#" // Replace with actual download link
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
@@ -158,43 +180,69 @@ export default function Component() {
                 </a>
               </Button>
             </motion.div>
-          </div>
+          </motion.div>
 
           <motion.div
             className="max-md:mt-4 relative aspect-[4/3] rounded-lg overflow-hidden shadow-lg"
-            style={{
-              y: useTransform(scrollYProgress, [0, 1], [0, -20]),
+            initial={{ opacity: 0, x: 100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              type: "spring",
+              bounce: 0.2,
+              delay: 0.1,
             }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
           >
-            <Image
-              src="/hero.png"
-              alt="Truffle Pig product"
-              fill
-              className="object-cover"
-              priority
-            />
+            <motion.div
+              className="w-full h-full"
+              style={{
+                y: useTransform(scrollYProgress, [0, 1], [0, -20]),
+              }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img
+                src="/hero.png"
+                alt="Truffle Pig product"
+                className="object-cover w-full h-full"
+              />
+            </motion.div>
           </motion.div>
         </div>
-
         {/* Presentation Download Section */}
-        <motion.div
-          className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="bg-[#E85D3D] rounded-lg overflow-hidden shadow-lg aspect-[4/3] flex items-center">
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 1.8,
+              type: "spring",
+              bounce: 0.2,
+            }}
+            className="bg-[#E85D3D] rounded-lg overflow-hidden shadow-lg aspect-[4/3] flex items-center"
+          >
             <div className="p-8 space-y-4 text-white">
               <h2 className="text-3xl font-bold">
                 Making Presentations That Stick
               </h2>
               <p className="text-lg">A guide by CX</p>
             </div>
-          </div>
-          <div className="flex flex-col justify-center space-y-4 p-4">
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              type: "spring",
+              bounce: 0.2,
+              delay: 0.5, // Slight delay for second element
+            }}
+            className="flex flex-col justify-center space-y-4 p-4"
+          >
             <h3 className="text-2xl font-bold">
               Get the slides to my presentation
             </h3>
@@ -204,7 +252,7 @@ export default function Component() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
                 <a
-                  href="#" // Replace with actual download link
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
@@ -213,8 +261,8 @@ export default function Component() {
                 </a>
               </Button>
             </motion.div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
       <MeteorsCTA />
