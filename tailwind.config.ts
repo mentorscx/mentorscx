@@ -105,6 +105,14 @@ const config: Config = withUt({
             transform: "translate(calc(100cqw - 100%), 0)",
           },
         },
+        meteor: {
+          "0%": { transform: "rotate(215deg) translateX(0)", opacity: "1" },
+          "70%": { opacity: "1" },
+          "100%": {
+            transform: "rotate(215deg) translateX(-500px)",
+            opacity: "0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -112,6 +120,7 @@ const config: Config = withUt({
         buttonheartbeat: "buttonheartbeat 2s infinite ease-in-out",
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
         slide: "slide var(--speed) ease-in-out infinite alternate",
+        "meteor-effect": "meteor 5s linear infinite",
       },
     },
   },

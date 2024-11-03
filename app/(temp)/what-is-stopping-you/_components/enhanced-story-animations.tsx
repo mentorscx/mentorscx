@@ -9,8 +9,9 @@ import { useState } from "react";
 
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { Meteors } from "@/components/ui/meteors";
 
-function CTAComponent() {
+export function MeteorsCTA() {
   const [isCopied, setIsCopied] = useState(false);
   const promoCode = "HORATIOXELEVATE100";
 
@@ -28,35 +29,60 @@ function CTAComponent() {
   };
 
   return (
-    <section className="w-full bg-gradient-to-br from-blue-600 to-blue-700 py-16 text-white mt-16">
-      <div className="container flex flex-col items-center justify-center space-y-6 px-4 text-center">
-        <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Sponsored by Horatio
-        </h2>
+    <div className="p-4">
+      <div className=" w-full relative max-w-7xl mx-auto my-16">
+        <div className="max-w-7xl mx-auto relative shadow-xl rounded bg-gray-900 border border-gray-800  px-4 py-8 h-full overflow-hidden flex flex-col justify-end items-start">
+          <div className="h-5 w-5 rounded-full border flex items-center justify-center mb-4 border-gray-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-2 w-2 text-gray-300"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 4.5l15 15m0 0V8.25m0 11.25H8.25"
+              />
+            </svg>
+          </div>
 
-        <h3 className="text-3xl font-semibold">
-          {" "}
-          Claim your code now for two free months of access to Mentors CX!
-        </h3>
+          <div className="w-full mx-auto flex items-center justify-center flex-col gap-4">
+            <h1 className="font-bold text-5xl text-white mb-4 relative z-50 text-center w-full">
+              Sponsored by Horatio
+            </h1>
 
-        <div className="flex items-center space-x-2 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-          <code className="font-mono text-lg text-blue-50">{promoCode}</code>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-blue-50 hover:text-white hover:bg-white/20"
-            onClick={handleCopy}
-          >
-            {isCopied ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
-            <span className="sr-only">Copy code</span>
-          </Button>
+            <p className="font-normal  text-3xl text-slate-400 mb-4 relative z-50 w-full text-center">
+              Claim your code now for two free months of access to Mentors CX!
+            </p>
+
+            <div className="flex items-center space-x-2 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+              <code className="font-mono text-lg text-blue-50">
+                {promoCode}
+              </code>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-blue-50 hover:text-white hover:bg-white/20"
+                onClick={handleCopy}
+              >
+                {isCopied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+                <span className="sr-only">Copy code</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Meaty part - Meteor effect */}
+          <Meteors number={25} />
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -112,7 +138,7 @@ export default function Component() {
 
         {/* Content Section */}
         <div className="grid md:grid-cols-2 gap-8 pt-16 max-w-5xl mx-auto">
-          <div className="flex flex-col justify-center space-y-4">
+          <div className="flex flex-col justify-center space-y-4 p-4">
             <h3 className="text-2xl font-bold text-blue-950">
               Behind "Truffle Pig"
             </h3>
@@ -135,7 +161,7 @@ export default function Component() {
           </div>
 
           <motion.div
-            className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-lg"
+            className="max-md:mt-4 relative aspect-[4/3] rounded-lg overflow-hidden shadow-lg"
             style={{
               y: useTransform(scrollYProgress, [0, 1], [0, -20]),
             }}
@@ -168,7 +194,7 @@ export default function Component() {
               <p className="text-lg">A guide by CX</p>
             </div>
           </div>
-          <div className="flex flex-col justify-center space-y-4">
+          <div className="flex flex-col justify-center space-y-4 p-4">
             <h3 className="text-2xl font-bold">
               Get the slides to my presentation
             </h3>
@@ -191,10 +217,7 @@ export default function Component() {
         </motion.div>
       </div>
 
-      {/* Sponsorship Section */}
-      <div className="max-w-7xl p-6 mx-auto mb-24">
-        <CTAComponent />
-      </div>
+      <MeteorsCTA />
     </div>
   );
 }
