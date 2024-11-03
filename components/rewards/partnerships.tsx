@@ -87,7 +87,13 @@ const PerkDialog = ({ isOpen, onClose, partner }: PerkDialogProps) => {
             {/* Details Section */}
             <section className="space-y-2">
               <h3 className="text-lg md:text-xl font-semibold">Details</h3>
-              <p className="text-base md:text-lg">{partner.details}</p>
+              <ul className="list-disc pl-5 space-y-2">
+                {partner.details.map((detail, index) => (
+                  <li key={index} className="text-base md:text-lg">
+                    {detail}
+                  </li>
+                ))}
+              </ul>
             </section>
 
             {/* Redemption URL Section */}
@@ -108,13 +114,13 @@ const PerkDialog = ({ isOpen, onClose, partner }: PerkDialogProps) => {
             {/* Terms Section */}
             <section className="space-y-2">
               <h3 className="text-lg md:text-xl font-semibold">Terms</h3>
-              <p className="text-base md:text-lg">{partner.terms}</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                View our full{" "}
-                <a href="#" className="text-primary hover:underline">
-                  Terms & Conditions
-                </a>
-              </p>
+              <ul className="list-disc pl-5 space-y-2">
+                {partner.terms.map((term, index) => (
+                  <li key={index} className="text-base md:text-lg">
+                    {term}
+                  </li>
+                ))}
+              </ul>
             </section>
 
             {/* How to Claim Section */}

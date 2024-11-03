@@ -42,67 +42,34 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { useRouter } from "next/navigation";
 import { saveUserChallengeById } from "@/lib/actions/user.action";
-import { Input } from "@/components/ui/input";
+
 import { TIMEZONES } from "@/constants/data";
 
 const FormSchema = z.object({
   timeZone: z.string({
     required_error: "Please select a timeZone.",
   }),
-  meetingPreference: z.string({
-    required_error: "Please select a meeting preference.",
-  }),
-  meetingURL: z
-    .string()
-    .optional()
-    .refine(
-      (data) => {
-        // Validate as URL only if the field is not empty
-        return data === "" || z.string().url().safeParse(data).success;
-      },
-      {
-        message: "Please enter a valid URL.",
-      }
-    ),
 });
 
 interface RecommendedByFormProps {
   userId: string;
   timeZone: string | null;
-  meetingPreference: string | null;
-  googleMeetLink: string | null;
-  zoomLink: string | null;
 }
 
 export function OnboardChallengeForm({
   userId,
   timeZone,
-  meetingPreference,
-  googleMeetLink,
-  zoomLink,
 }: RecommendedByFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const defaultMeetingURL =
-    meetingPreference === "zoom" ? zoomLink : googleMeetLink;
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       timeZone: timeZone || undefined,
-      meetingPreference: meetingPreference || undefined,
-      meetingURL: defaultMeetingURL || undefined,
     },
   });
 
@@ -111,8 +78,6 @@ export function OnboardChallengeForm({
       await saveUserChallengeById({
         userId,
         timeZone: data.timeZone,
-        meetingPreference: data.meetingPreference,
-        meetingURL: data.meetingURL,
       });
       toast.success("Meeting preference saved successfully.");
       router.push("/onboard/4");
@@ -123,10 +88,6 @@ export function OnboardChallengeForm({
 
     router.refresh();
   }
-
-  const meetingPref = form.watch("meetingPreference");
-  const isMeetingOnline =
-    meetingPref === "zoom" || meetingPref === "google-meet";
 
   return (
     <Form {...form}>
@@ -190,54 +151,6 @@ export function OnboardChallengeForm({
             </FormItem>
           )}
         />
-
-        <div className="w-[400px]">
-          <FormField
-            control={form.control}
-            name="meetingPreference"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Meeting preference</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="text-muted-foreground">
-                      <SelectValue placeholder="Select a verified email to display" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="zoom">Zoom</SelectItem>
-                    <SelectItem value="google-meet">Google Meet</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        {isMeetingOnline && (
-          <FormField
-            name="meetingURL"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>
-                  {meetingPref === "zoom" ? "Zoom" : "Google Meet"} URL
-                </FormLabel>
-                <Input
-                  {...field}
-                  placeholder={`Enter ${
-                    meetingPref === "zoom" ? "Zoom" : "Google Meet"
-                  } url here`}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
 
         <div className="flex items-start justify-between pt-4">
           <Button

@@ -1816,77 +1816,69 @@ export const PLAN_CREDIT_LIMITS = {
   Default: 0,
 } as const;
 
+// data.ts
 export const partners: Partner[] = [
   {
-    logo: "/assets/toolkit/intercom.png",
-    name: "Cento",
-    category: "Payroll",
-    offer: "25% off your first year",
+    logo: "/assets/toolkit/keak.png",
+    name: "Keak",
+    category: "AI Optimization",
+    offer: "Enterprise Plan Access",
     description:
-      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
-    ctaText: "Claim discount",
-    ctaLink: "#",
-    value: "$500",
+      "AI-powered A/B testing and conversion rate optimization platform",
+    ctaText: "Claim Enterprise Access",
+    value: "$69 monthly",
     summary:
-      "Pento offers automated payroll solutions to streamline your HR processes.",
-    redemptionUrl: "https://pento.com/redeem",
-    details: "Get 25% off your first year of Pento's premium payroll service.",
-    terms: "Valid for new customers only. Must have at least 10 employees.",
+      "Keak specializes in automated A/B testing and conversion rate optimization (CRO) using AI to boost engagement and conversions by testing site elements like text and layouts, refining based on user data.",
+    redemptionUrl:
+      "https://keak.com/mentorscx?utm_source=mentorscx&utm_medium=perks&utm_campaign=enterprise",
+    details: [
+      "You will be able to use the Enterprise Plan",
+      "Find out more about keak interactive Ai Optimization at learn.keak.com/documentation#how-it-works",
+    ],
+    terms: [
+      "Valid for Mentors only!",
+      "The $21 credit only applies for a two month subscription on the enterprise Plan",
+      "You can see our full Terms & Conditions at keak.com/terms",
+    ],
     howToClaim:
-      "Click the claim button and follow the instructions to set up your account.",
+      "Follow the link to contact us, fill out the form, and just let us know if you are interested and how we can help you!",
   },
   {
-    logo: "/assets/toolkit/intercom.png",
-    name: "Dento",
-    category: "Payroll",
-    offer: "25% off your first year",
-    description:
-      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
-    ctaText: "Claim discount",
-    ctaLink: "#",
-    value: "$500",
-    summary:
-      "Pento offers automated payroll solutions to streamline your HR processes.",
-    redemptionUrl: "https://pento.com/redeem",
-    details: "Get 25% off your first year of Pento's premium payroll service.",
-    terms: "Valid for new customers only. Must have at least 10 employees.",
-    howToClaim:
-      "Click the claim button and follow the instructions to set up your account.",
+    logo: "/assets/toolkit/soon.png",
+    name: "Soon",
+    category: "Coming Soon",
+    offer: "Coming Soon",
+    description: "Details will be announced shortly",
+    ctaText: "Stay Tuned",
+    value: "TBA",
+    summary: "More details about Soon's offering will be available shortly.",
+    redemptionUrl: "#",
+    details: ["Details will be announced soon"],
+    terms: ["Terms will be announced shortly"],
+    howToClaim: "Coming soon",
   },
   {
-    logo: "/assets/toolkit/intercom.png",
-    name: "Mento",
-    category: "Payroll",
-    offer: "25% off your first year",
-    description:
-      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
-    ctaText: "Claim discount",
-    ctaLink: "#",
-    value: "$500",
+    logo: "/clients/hire-horatio.jpeg",
+    name: "Hire Horatio",
+    category: "CX Outsourcing",
+    offer: "$2,000 Launch Credit",
+    description: "24/7 multilingual customer support outsourcing solutions",
+    ctaText: "Claim Launch Credit",
+    value: "$2,000",
     summary:
-      "Pento offers automated payroll solutions to streamline your HR processes.",
-    redemptionUrl: "https://pento.com/redeem",
-    details: "Get 25% off your first year of Pento's premium payroll service.",
-    terms: "Valid for new customers only. Must have at least 10 employees.",
+      "Hire Horatio is your trusted outsourcing partner, providing 24/7 multilingual support and seamless, on-brand service across all channels. Our expert teams don't just extend your team—we enhance it.",
+    redemptionUrl:
+      "https://hirehoratio.com/mentorscx?utm_source=mentorscx&utm_medium=perks&utm_campaign=launch",
+    details: [
+      "You will be able to use your $2,000 credit for the setup fee of any of Hire Horatio's services, except consulting",
+      "Find out more about our customer experience outsourcing services on our website",
+    ],
+    terms: [
+      "Valid for new clients only",
+      "The $2,000 credit only applies to the setup fee and not to any other payment, including the monthly service fee",
+      "See our full Terms & Conditions on our website",
+    ],
     howToClaim:
-      "Click the claim button and follow the instructions to set up your account.",
-  },
-  {
-    logo: "/assets/toolkit/intercom.png",
-    name: "Intercom",
-    category: "Customer support",
-    offer: "25% off your first year",
-    description:
-      "Leading payroll solutions loved by HR teams. Integrating directly with Humaans, you can run payroll with a few clicks.",
-    ctaText: "Claim discount",
-    ctaLink: "#",
-    value: "$500",
-    summary:
-      "Pento offers automated payroll solutions to streamline your HR processes.",
-    redemptionUrl: "https://pento.com/redeem",
-    details: "Get 25% off your first year of Pento's premium payroll service.",
-    terms: "Valid for new customers only. Must have at least 10 employees.",
-    howToClaim:
-      "Click the claim button and follow the instructions to set up your account.",
+      "Follow the link to contact us, fill out the form, and just let us know which service you are interested in and how we can help you!",
   },
 ];

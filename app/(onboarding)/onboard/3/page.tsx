@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { OnboardChallengeForm } from "./_components/onboard-challenge-form";
 import OnboardHeading from "../_components/onboard-heading";
-import AlertComponent from "@/components/shared/AlertComponent";
 
 const OnboardChallengePage = async () => {
   const { userId } = auth();
@@ -40,13 +39,7 @@ const OnboardChallengePage = async () => {
             imageUrl="/assets/undraw_programming.svg"
           />
 
-          <OnboardChallengeForm
-            userId={user.id}
-            timeZone={user?.timeZone}
-            meetingPreference={user?.meetingPreference}
-            zoomLink={user.zoomLink}
-            googleMeetLink={user.googleMeetLink}
-          />
+          <OnboardChallengeForm userId={user.id} timeZone={user?.timeZone} />
         </div>
       </div>
     </div>

@@ -43,11 +43,10 @@ export type Partner = {
   offer: string;
   description: string;
   ctaText: string;
-  ctaLink: string;
   value: string;
   summary: string;
   redemptionUrl: string;
-  details: string;
-  terms: string;
+  details: string[];
+  terms: string[];
   howToClaim: string;
 };

@@ -68,8 +68,8 @@ const guestRoutes = [
   },
   {
     icon: GiftIcon,
-    label: "Rewards",
-    href: "/rewards",
+    label: "Perks hub",
+    href: "/perks-hub",
     color: "text-blue-600",
   },
 ];
