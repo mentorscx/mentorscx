@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/application/mentor",
   "/application/mentor/(.*)",
   "/search",
+  "/what-is-stopping-you",
 ]);
 
 const isWaitlistRoute = createRouteMatcher(["/waitlist"]);

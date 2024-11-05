@@ -5,11 +5,13 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "What is stopping you? | London 2024 | Elevate CX",
-  description: "a",
+  description:
+    "Join Angel Funes at Elevate CX London 2024 to discover what's holding you back and how to overcome it.",
   robots: "noindex",
   openGraph: {
     title: "What is stopping you? | London 2024 | Elevate CX",
-    description: "a",
+    description:
+      "Join Angel Funes at Elevate CX London 2024 to discover what's holding you back and how to overcome it.",
     images: [
       {
         url: "/images/what-is-stopping-you-cover.jpg",
@@ -23,7 +25,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "What is stopping you? | London 2024 | Elevate CX",
-    description: "a",
+    description:
+      "Join Angel Funes at Elevate CX London 2024 to discover what's holding you back and how to overcome it.",
     images: ["/images/what-is-stopping-you-cover.jpg"],
   },
 };

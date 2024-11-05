@@ -12,6 +12,10 @@ export async function getSubscriptionDetails(
   menteeId: string
 ): Promise<SubscriptionDetails | undefined> {
   try {
+    if (!menteeId?.trim()) {
+      console.error("ERROR_GET_SUBSCRIPTION_DETAILS: Invalid menteeId");
+      return undefined;
+    }
     const subscription = await db.subscription.findUnique({
       where: {
         userId: menteeId,

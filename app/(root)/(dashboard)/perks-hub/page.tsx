@@ -14,16 +14,16 @@ const getCurrentUser = async () => {
 
   if (!clerkId) redirect("/sign-in");
 
-  const dbUser = await db.user.findUnique({
-    where: {
-      clerkId,
-    },
-    include: {
-      Subscription: true,
-    },
-  });
-
-  return dbUser;
+  try {
+    const dbUser = await db.user.findUnique({
+      where: { clerkId },
+      include: { Subscription: true },
+    });
+    return dbUser;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user data");
+  }
 };
 
 const RewardsPage = async () => {
