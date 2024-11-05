@@ -1,6 +1,6 @@
-import { Schema } from 'mongoose';
+import { Schema } from "mongoose";
 
-import { IUser } from '@/mongodb';
+import { IUser } from "@/mongodb";
 
 export interface CreateUserParams {
   clerkId: string;
@@ -35,3 +35,18 @@ export interface GetUserStatsParams {
 export interface DeleteUserParams {
   clerkId: string;
 }
+
+export type Partner = {
+  logo: string;
+  name: string;
+  category: string;
+  offer: string;
+  description: string;
+  ctaText: string;
+  value: string;
+  summary: string;
+  redemptionUrl: string;
+  details: string[];
+  terms: string[];
+  howToClaim: string;
+};

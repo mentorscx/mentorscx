@@ -29,7 +29,8 @@ const RequestSessionButton = (props: RequestSessionButtonProps) => {
       const user = await getUserSubscription();
 
       if (!user) {
-        redirect("/sign-in");
+        router.push("/sign-in");
+        return;
       }
 
       const proUser = isProUser(user.Subscription);
@@ -56,6 +57,7 @@ const RequestSessionButton = (props: RequestSessionButtonProps) => {
       router.push(`/calendar/${props.mentorId}`);
     } catch (err) {
       console.error(err);
+      setIsLoading(false);
     }
   };
 

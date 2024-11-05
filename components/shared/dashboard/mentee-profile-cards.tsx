@@ -14,26 +14,10 @@ import { InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCompletedSessionsCount } from "@/lib/actions/helper.action";
 import { MenteeLevelsDialog } from "@/components/modals/dashboard-levels-modal";
-
-export async function fetchQueuedSessionsCount(
-  userId: string
-): Promise<number> {
-  const queuedSessions = await db.session.count({
-    where: {
-      menteeId: userId,
-      status: {
-        in: [
-          SessionStatus.ACCEPTED,
-          SessionStatus.AWAITING_HOST,
-          SessionStatus.AWAITING_REVIEW,
-          SessionStatus.DONE,
-        ],
-      },
-    },
-  });
-
-  return queuedSessions;
-}
+import { getBookingLimit, getCreditLimit } from "@/lib/utils";
+import CreditsDialog from "@/components/modals/credits-dialog";
+import { fetchSessionCount } from "@/lib/actions/session.action";
+import { getSubscriptionDetails } from "@/lib/actions/subscription.action";
 
 export const DashBoardQueueLimit = async ({
   planName,
@@ -42,19 +26,13 @@ export const DashBoardQueueLimit = async ({
   planName: string | undefined;
   userId: string;
 }) => {
-  const queuedSessionsCount = (await fetchQueuedSessionsCount(userId)) || 0;
-  const { bookingLimit } = (() => {
-    switch (planName) {
-      case "Moon":
-        return { bookingLimit: 2 };
-      case "Eclipse":
-        return { bookingLimit: 4 };
-      case "Sun":
-        return { bookingLimit: 4 };
-      default:
-        return { bookingLimit: 0 };
-    }
-  })();
+  const queuedSessionsCount = await fetchSessionCount(userId, [
+    SessionStatus.ACCEPTED,
+    SessionStatus.AWAITING_HOST,
+  ]);
+  const bookingLimit = getBookingLimit(planName);
+  const creditLimit = getCreditLimit(planName);
+  const subscription = await getSubscriptionDetails(userId);
 
   return (
     <section>
@@ -62,7 +40,14 @@ export const DashBoardQueueLimit = async ({
         title="Available to Queue"
         displayValue={`${queuedSessionsCount}/${bookingLimit}`}
         footer="calls"
-      />
+      >
+        <CreditsDialog
+          currentBookings={queuedSessionsCount}
+          bookingsLimit={bookingLimit}
+          currentSessions={creditLimit - (subscription?.credits ?? 0)}
+          sessionLimit={creditLimit}
+        />
+      </DashboardInfoCard>
     </section>
   );
 };

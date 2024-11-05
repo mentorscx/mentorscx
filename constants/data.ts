@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { Partner } from "@/lib/actions/shared.types";
 
 export interface timeZone {
   readonly value: string;
@@ -1796,5 +1797,88 @@ export const pricingPlans = [
     buttonLabel: "I'm ready 😊",
     highlight: false,
     comingSoon: true,
+  },
+];
+
+// First, define constants for plan types and their limits
+export const PLAN_BOOKING_LIMITS = {
+  Moon: 4,
+  Eclipse: 2,
+  Sun: 4,
+  Default: 0,
+} as const;
+
+// First, define constants for plan types and their limits
+export const PLAN_CREDIT_LIMITS = {
+  Moon: 10001,
+  Eclipse: 2,
+  Sun: 10001,
+  Default: 0,
+} as const;
+
+// data.ts
+export const partners: Partner[] = [
+  {
+    logo: "/assets/toolkit/keak.png",
+    name: "Keak",
+    category: "AI Optimization",
+    offer: "Enterprise Plan Access",
+    description:
+      "AI-powered A/B testing and conversion rate optimization platform",
+    ctaText: "Claim Enterprise Access",
+    value: "$69 monthly",
+    summary:
+      "Keak specializes in automated A/B testing and conversion rate optimization (CRO) using AI to boost engagement and conversions by testing site elements like text and layouts, refining based on user data.",
+    redemptionUrl:
+      "https://keak.com/mentorscx?utm_source=mentorscx&utm_medium=perks&utm_campaign=enterprise",
+    details: [
+      "You will be able to use the Enterprise Plan",
+      "Find out more about keak interactive Ai Optimization at learn.keak.com/documentation#how-it-works",
+    ],
+    terms: [
+      "Valid for Mentors only!",
+      "The $21 credit only applies for a two month subscription on the enterprise Plan",
+      "You can see our full Terms & Conditions at keak.com/terms",
+    ],
+    howToClaim:
+      "Follow the link to contact us, fill out the form, and just let us know if you are interested and how we can help you!",
+  },
+  {
+    logo: "/assets/toolkit/soon.png",
+    name: "Soon",
+    category: "Coming Soon",
+    offer: "Coming Soon",
+    description: "Details will be announced shortly",
+    ctaText: "Stay Tuned",
+    value: "TBA",
+    summary: "More details about Soon's offering will be available shortly.",
+    redemptionUrl: "#",
+    details: ["Details will be announced soon"],
+    terms: ["Terms will be announced shortly"],
+    howToClaim: "Coming soon",
+  },
+  {
+    logo: "/clients/hire-horatio.jpeg",
+    name: "Hire Horatio",
+    category: "CX Outsourcing",
+    offer: "$2,000 Launch Credit",
+    description: "24/7 multilingual customer support outsourcing solutions",
+    ctaText: "Claim Launch Credit",
+    value: "$2,000",
+    summary:
+      "Hire Horatio is your trusted outsourcing partner, providing 24/7 multilingual support and seamless, on-brand service across all channels. Our expert teams don't just extend your team—we enhance it.",
+    redemptionUrl:
+      "https://hirehoratio.com/mentorscx?utm_source=mentorscx&utm_medium=perks&utm_campaign=launch",
+    details: [
+      "You will be able to use your $2,000 credit for the setup fee of any of Hire Horatio's services, except consulting",
+      "Find out more about our customer experience outsourcing services on our website",
+    ],
+    terms: [
+      "Valid for new clients only",
+      "The $2,000 credit only applies to the setup fee and not to any other payment, including the monthly service fee",
+      "See our full Terms & Conditions on our website",
+    ],
+    howToClaim:
+      "Follow the link to contact us, fill out the form, and just let us know which service you are interested in and how we can help you!",
   },
 ];

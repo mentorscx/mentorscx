@@ -12,6 +12,7 @@ import {
   User2,
   Search,
   CreditCardIcon,
+  GiftIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -63,6 +64,12 @@ const guestRoutes = [
     icon: CreditCardIcon,
     label: "Billing",
     href: "/billing",
+    color: "text-blue-600",
+  },
+  {
+    icon: GiftIcon,
+    label: "Perks hub",
+    href: "/perks-hub",
     color: "text-blue-600",
   },
 ];

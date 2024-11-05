@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { getSelfId } from "@/lib/actions/user.action";
 import { sendEmailViaBrevoTemplate } from "../brevo";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { error } from "console";
 
 type TProfileViewCount = {
   profileId: string;
@@ -14,13 +15,29 @@ type TProfileViewCount = {
 
 export async function addProfileViewCount({ profileId }: TProfileViewCount) {
   try {
-    const user = await getSelfId();
-    if (!user) return;
+    const { userId } = auth();
+
+    if (!userId) return;
+
+    const currentUser = await db.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+      select: {
+        id: true,
+        clerkId: true,
+      },
+    });
+
+    if (!currentUser) {
+      console.error("ADD_PROFILE_VIEW_COUNT: Unable to find the user", error);
+      throw Error("ADD_PROFILE_VIEW_COUNT: Unable to find the user");
+    }
 
     const profileView = await db.profileView.create({
       data: {
         profileId,
-        viewerId: user?.id,
+        viewerId: currentUser?.id,
       },
     });
 

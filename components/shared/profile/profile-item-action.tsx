@@ -147,7 +147,8 @@ export function RequestCallButton({
     const user = await getUserSubscription();
 
     if (!user) {
-      redirect("/sign-in");
+      router.push("/sign-in");
+      return;
     }
 
     const proUser = isProUser(user.Subscription);

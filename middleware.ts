@@ -14,6 +14,8 @@ const isPublicRoute = createRouteMatcher([
   "/pricing",
   "/application/mentor",
   "/application/mentor/(.*)",
+  "/search",
+  "/what-is-stopping-you",
 ]);
 
 const isWaitlistRoute = createRouteMatcher(["/waitlist"]);
@@ -52,13 +54,6 @@ export default clerkMiddleware(async (auth, req) => {
 
   // Apply additional protection based on routes
   if (!isPublicRoute(req)) auth().protect();
-
-  // Catch users who do not have `hasAccess: true` in their publicMetadata
-  const claims = sessionClaims as any;
-  if (!userId || !claims?.metadata?.hasAccess) {
-    const waitlistUrl = new URL("/waitlist", req.url);
-    return NextResponse.redirect(waitlistUrl);
-  }
 });
 
 export const config = {

@@ -71,7 +71,7 @@ export const NavbarRoutes = () => {
             </Button>
           </Link>
         )}
-        <Notifications />
+        {userId && <Notifications />}
 
         <UserButton
           afterSignOutUrl="/"

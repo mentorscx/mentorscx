@@ -54,7 +54,7 @@ export async function getSelfId() {
   try {
     const { userId } = auth();
     if (!userId) {
-      throw new Error("User not logged in");
+      throw new Error("GET_SELF_WITH_ID: User not logged in");
     }
     const user = await db.user.findUnique({
       where: {
@@ -76,7 +76,7 @@ export async function getSelf() {
   try {
     const { userId } = auth();
     if (!userId) {
-      throw new Error("User not logged in");
+      throw new Error("GET_SELF: User not logged in");
     }
     const user = await db.user.findUnique({
       where: {
@@ -316,7 +316,7 @@ export async function getSelfWithEvents() {
   try {
     const { userId } = auth();
     if (!userId) {
-      throw new Error("User not logged in");
+      throw new Error("GET_SELF_WITH_EVENTS: User not logged in");
     }
     const user = await db.user.findUnique({
       where: {

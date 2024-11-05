@@ -4,6 +4,8 @@ import { useState, useRef, Fragment } from "react";
 import type { StaticImageData } from "next/image";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
 interface ModalVideoProps {
   thumb: StaticImageData;
@@ -113,7 +115,12 @@ export default function ModalVideo({
           <button
             className="absolute top-full flex items-center -translate-y-1/2 bg-white rounded-full font-medium group p-4 shadow-lg"
             onClick={() => {
-              setModalOpen(true);
+              withReactContent(Swal).fire({
+                text: "Video coming soon. We're a small team, sorry!",
+                icon: "info",
+                confirmButtonText: "Cool!",
+                confirmButtonColor: "#3b82f6",
+              });
             }}
           >
             <svg

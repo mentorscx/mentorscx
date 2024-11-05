@@ -80,12 +80,6 @@ export async function POST(req: Request) {
           id: uniqueId,
         },
       });
-
-      await clerkClient.users.updateUserMetadata(id, {
-        publicMetadata: {
-          hasAccess: true,
-        },
-      });
     } else {
       await db.user.create({
         data: {
