@@ -83,19 +83,15 @@ export async function POST(req: Request) {
       },
     });
   } else if (event.type === "invoice.payment_succeeded") {
-    // We need to get subscription ID from the invoice object
+    // Get invoice and subscription data (no change)
     const invoice = event.data.object as Stripe.Invoice;
     const subscriptionId = invoice.subscription as string;
-
-    // 2. Retrieve subscription with expanded price data
     const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ["items.data.price"],
     });
 
-    // 3. Get the current price ID from subscription
+    // Get the price and plan (no change)
     const currentPriceId = subscription.items.data[0].price.id;
-
-    // 4. Find the matching plan based on price ID
     const plan = pricingPlans.find(
       (p) =>
         p.monthlyPriceId === currentPriceId ||
@@ -107,14 +103,19 @@ export async function POST(req: Request) {
       throw new Error(`No plan found for price: ${currentPriceId}`);
     }
 
+    // 3. Calculate correct period
+    const period = getSubscriptionPeriod(
+      subscription.items.data[0].plan.interval as "month" | "year"
+    );
+
     await db.subscription.update({
       where: {
         stripeSubscriptionId: subscription.id,
       },
       data: {
         planId: currentPriceId,
-        currentPeriodStart: Number(subscription.current_period_start),
-        currentPeriodEnd: Number(subscription.current_period_end),
+        currentPeriodStart: period.start,
+        currentPeriodEnd: period.end,
         status: subscription.status,
         credits: plan.credits || 0,
       },
