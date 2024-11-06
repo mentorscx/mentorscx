@@ -7,6 +7,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   typescript: true,
 });
 
+function getSubscriptionPeriod(interval: "month" | "year" = "month") {
+  const now = new Date();
+  const start = Math.floor(now.getTime() / 1000);
+
+  const end = new Date(now);
+  interval === "month"
+    ? end.setMonth(end.getMonth() + 1)
+    : end.setFullYear(end.getFullYear() + 1);
+
+  return {
+    start,
+    end: Math.floor(end.getTime() / 1000),
+  };
+}
+
 export async function POST(req: Request) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature") as string;
@@ -24,10 +39,6 @@ export async function POST(req: Request) {
   const session = event.data.object as Stripe.Checkout.Session;
 
   if (event.type === "checkout.session.completed") {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
-
     if (!session.metadata?.buyerId) {
       console.error("Missing buyerId in session metadata:", {
         sessionId: session.id,
@@ -38,14 +49,23 @@ export async function POST(req: Request) {
       );
     }
 
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    );
+
+    // Get correct period using current time
+    const period = getSubscriptionPeriod(
+      subscription.items.data[0].plan.interval as "month" | "year"
+    );
+
     await db.subscription.upsert({
       where: {
         userId: session.metadata?.buyerId || "",
       },
       update: {
         stripeSubscriptionId: subscription.id,
-        currentPeriodStart: subscription.current_period_start,
-        currentPeriodEnd: subscription.current_period_end,
+        currentPeriodStart: period.start,
+        currentPeriodEnd: period.end,
         status: subscription.status,
         planId: subscription.items.data[0].plan.id,
         interval: String(subscription.items.data[0].plan.interval),
@@ -54,17 +74,15 @@ export async function POST(req: Request) {
       create: {
         stripeSubscriptionId: subscription.id,
         userId: session.metadata?.buyerId || "",
-        currentPeriodStart: subscription.current_period_start,
-        currentPeriodEnd: subscription.current_period_end,
+        currentPeriodStart: period.start,
+        currentPeriodEnd: period.end,
         status: subscription.status,
         planId: subscription.items.data[0].plan.id,
         interval: String(subscription.items.data[0].plan.interval),
         credits: Number(session.metadata?.credits) || 0,
       },
     });
-  }
-
-  if (event.type === "invoice.payment_succeeded") {
+  } else if (event.type === "invoice.payment_succeeded") {
     // We need to get subscription ID from the invoice object
     const invoice = event.data.object as Stripe.Invoice;
     const subscriptionId = invoice.subscription as string;
@@ -95,8 +113,8 @@ export async function POST(req: Request) {
       },
       data: {
         planId: currentPriceId,
-        currentPeriodStart: subscription.current_period_start,
-        currentPeriodEnd: subscription.current_period_end,
+        currentPeriodStart: Number(subscription.current_period_start),
+        currentPeriodEnd: Number(subscription.current_period_end),
         status: subscription.status,
         credits: plan.credits || 0,
       },

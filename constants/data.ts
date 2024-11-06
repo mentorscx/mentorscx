@@ -1747,7 +1747,7 @@ export const pricingPlans = [
     name: "Eclipse",
     monthlyPrice: 39,
     annualPrice: 31,
-    credits: 3,
+    credits: 2,
     monthlyPriceId: env.NEXT_PUBLIC_STRIPE_ECLIPSE_MONTHLY_PRICE_ID,
     annualPriceId: env.NEXT_PUBLIC_STRIPE_ECLIPSE_ANNUAL_PRICE_ID,
     description: "For those exploring the mentorship world",
