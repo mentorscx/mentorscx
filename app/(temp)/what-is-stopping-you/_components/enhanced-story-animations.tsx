@@ -1,8 +1,7 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useState } from "react";
@@ -11,9 +10,31 @@ import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Meteors } from "@/components/ui/meteors";
 
+import { useSearchParams } from "next/navigation";
+
 export function MeteorsCTA() {
   const [isCopied, setIsCopied] = useState(false);
-  const promoCode = "HORATIOXELEVATE100";
+
+  const searchParams = useSearchParams();
+  let nameOfCoupon = searchParams.get("name")?.toUpperCase() ?? "ELEVATE";
+
+  const validCoupons = [
+    "ERISA",
+    "HANNAH",
+    "KARL",
+    "KEIRAN",
+    "KEVIN",
+    "LARISSA",
+    "CHRIS",
+    "DARREN",
+    "JOHN",
+  ];
+
+  let couponName = validCoupons.includes(nameOfCoupon)
+    ? nameOfCoupon
+    : "ELEVATE";
+
+  const promoCode = `HORATIOX${couponName}100`;
 
   const handleCopy = async () => {
     try {
