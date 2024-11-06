@@ -126,8 +126,7 @@ export const getStripeSession = async ({
     const { userId: clerkId } = await auth();
 
     if (!clerkId) {
-      redirect("/sign-in");
-      return ""; // Safeguard for redirect, although it won't execute further
+      return "/sign-in"; // Safeguard for redirect, although it won't execute further
     }
 
     // If the email or customerId is not provided, we need to get it from the database
