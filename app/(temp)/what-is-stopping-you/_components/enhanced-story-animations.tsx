@@ -6,11 +6,12 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useState } from "react";
 
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ArrowUpRight } from "lucide-react";
 import { toast } from "sonner";
 import { Meteors } from "@/components/ui/meteors";
 
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export function MeteorsCTA() {
   const [isCopied, setIsCopied] = useState(false);
@@ -76,7 +77,8 @@ export function MeteorsCTA() {
             </h1>
 
             <p className="font-normal  text-3xl text-slate-400 mb-4 relative z-50 w-full text-center">
-              Claim your code now for two free months of access to Mentors CX!
+              Claim your code now for two free months of access to the Mentors
+              CX "Eclipse Plan"!
             </p>
 
             <div className="flex items-center space-x-2 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
@@ -97,6 +99,21 @@ export function MeteorsCTA() {
                 <span className="sr-only">Copy code</span>
               </Button>
             </div>
+            <Button
+              variant="ghost"
+              className="text-slate-300"
+              size="lg"
+              asChild
+            >
+              <Link
+                href="/pricing?annual=false"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium"
+              >
+                Redeem Now <ArrowUpRight className="w-4 h-4 ml-1" />
+              </Link>
+            </Button>
           </div>
 
           {/* Meaty part - Meteor effect */}
@@ -191,14 +208,14 @@ export default function Component() {
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
-                <a
-                  href="#"
+                <Link
+                  href="https://medium.com/@angelfunes/behind-truffle-pig-ad4e65fa8683"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
                 >
                   Read more
-                </a>
+                </Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -272,14 +289,14 @@ export default function Component() {
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
-                <a
-                  href="#"
+                <Link
+                  href="https://docs.google.com/presentation/d/1DJIoTlPVhxSnaJzmmNFM5P2Eh5JXJum9rQtoTMQWLiM/edit#slide=id.g2202cb2f5dc_0_1471"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
                 >
                   Download now
-                </a>
+                </Link>
               </Button>
             </motion.div>
           </motion.div>

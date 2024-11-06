@@ -7,12 +7,16 @@ import PricingToggle from "@/components/shared/pricing/pricing-toggle";
 import { cn } from "@/lib/utils";
 import { pricingPlans } from "@/constants/data";
 
+import { useSearchParams } from "next/navigation";
+
 export default function PricingTables({
   showHeader = true,
 }: {
   showHeader?: boolean;
 }) {
-  const [annual, setAnnual] = useState<boolean>(true);
+  const searchParams = useSearchParams();
+  const initialAnnual = searchParams.get("annual") === "true" ?? false;
+  const [annual, setAnnual] = useState<boolean>(initialAnnual && true);
 
   return (
     <section className="bg-gradient-to-b from-white to-gray-100">
