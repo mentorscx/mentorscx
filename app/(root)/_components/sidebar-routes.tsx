@@ -66,12 +66,6 @@ const guestRoutes = [
     href: "/billing",
     color: "text-blue-600",
   },
-  {
-    icon: GiftIcon,
-    label: "Perks hub",
-    href: "/perks-hub",
-    color: "text-blue-600",
-  },
 ];
 
 const mentorRoutes = [
