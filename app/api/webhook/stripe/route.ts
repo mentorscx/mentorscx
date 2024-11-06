@@ -28,8 +28,30 @@ export async function POST(req: Request) {
       session.subscription as string
     );
 
-    await db.subscription.create({
-      data: {
+    if (!session.metadata?.buyerId) {
+      console.error("Missing buyerId in session metadata:", {
+        sessionId: session.id,
+        metadata: session.metadata,
+      });
+      throw new Error(
+        "Failed to process subscription: Missing buyer information"
+      );
+    }
+
+    await db.subscription.upsert({
+      where: {
+        userId: session.metadata?.buyerId || "",
+      },
+      update: {
+        stripeSubscriptionId: subscription.id,
+        currentPeriodStart: subscription.current_period_start,
+        currentPeriodEnd: subscription.current_period_end,
+        status: subscription.status,
+        planId: subscription.items.data[0].plan.id,
+        interval: String(subscription.items.data[0].plan.interval),
+        credits: Number(session.metadata?.credits) || 0,
+      },
+      create: {
         stripeSubscriptionId: subscription.id,
         userId: session.metadata?.buyerId || "",
         currentPeriodStart: subscription.current_period_start,
