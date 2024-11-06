@@ -64,8 +64,8 @@ export async function POST(req: Request) {
       },
       update: {
         stripeSubscriptionId: subscription.id,
-        currentPeriodStart: period.start,
-        currentPeriodEnd: period.end,
+        currentPeriodStart: subscription.current_period_start,
+        currentPeriodEnd: subscription.current_period_end,
         status: subscription.status,
         planId: subscription.items.data[0].plan.id,
         interval: String(subscription.items.data[0].plan.interval),
@@ -74,8 +74,8 @@ export async function POST(req: Request) {
       create: {
         stripeSubscriptionId: subscription.id,
         userId: session.metadata?.buyerId || "",
-        currentPeriodStart: period.start,
-        currentPeriodEnd: period.end,
+        currentPeriodStart: subscription.current_period_start,
+        currentPeriodEnd: subscription.current_period_end,
         status: subscription.status,
         planId: subscription.items.data[0].plan.id,
         interval: String(subscription.items.data[0].plan.interval),
@@ -114,8 +114,8 @@ export async function POST(req: Request) {
       },
       data: {
         planId: currentPriceId,
-        currentPeriodStart: period.start,
-        currentPeriodEnd: period.end,
+        currentPeriodStart: subscription.current_period_start,
+        currentPeriodEnd: subscription.current_period_end,
         status: subscription.status,
         credits: plan.credits || 0,
       },
