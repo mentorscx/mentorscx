@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { db } from "@/lib/db";
+import { pricingPlans } from "@/constants/data";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -42,20 +43,40 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "invoice.payment_succeeded") {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
+    // We need to get subscription ID from the invoice object
+    const invoice = event.data.object as Stripe.Invoice;
+    const subscriptionId = invoice.subscription as string;
+
+    // 2. Retrieve subscription with expanded price data
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ["items.data.price"],
+    });
+
+    // 3. Get the current price ID from subscription
+    const currentPriceId = subscription.items.data[0].price.id;
+
+    // 4. Find the matching plan based on price ID
+    const plan = pricingPlans.find(
+      (p) =>
+        p.monthlyPriceId === currentPriceId ||
+        p.annualPriceId === currentPriceId
     );
+
+    if (!plan) {
+      console.error("Price ID not found in plans:", currentPriceId);
+      throw new Error(`No plan found for price: ${currentPriceId}`);
+    }
 
     await db.subscription.update({
       where: {
         stripeSubscriptionId: subscription.id,
       },
       data: {
-        planId: subscription.items.data[0].price.id,
+        planId: currentPriceId,
         currentPeriodStart: subscription.current_period_start,
         currentPeriodEnd: subscription.current_period_end,
         status: subscription.status,
-        credits: Number(session.metadata?.credits) || 0,
+        credits: plan.credits || 0,
       },
     });
   }

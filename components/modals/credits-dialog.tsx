@@ -82,9 +82,7 @@ export default function CreditsDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-blue-600">
-            Credit Store
-          </DialogTitle>
+          <DialogTitle className="text-2xl font-bold">Credit Store</DialogTitle>
           <DialogDescription>
             Your current available to queue and available sessions.
           </DialogDescription>
@@ -93,12 +91,10 @@ export default function CreditsDialog({
           <CardContent className="pt-4 space-y-6">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xl font-bold text-blue-600">
-                  Available to Queue
-                </span>
+                <span className="text-xl font-bold ">Available to Queue</span>
                 <span className=" text-lg font-semibold flex items-center justify-between gap-2">
                   {bookingsLimit === 0 ? (
-                    <Battery className="h-6 w-6 text-blue-600" />
+                    <Battery className="h-6 w-6 " />
                   ) : (
                     `Limit: ${bookingsLimit}`
                   )}
@@ -155,7 +151,7 @@ export default function CreditsDialog({
                 <p
                   className={cn(
                     "mt-2 text-sm text-gray-600",
-                    creditPercentage === 100 && "!text-red-600"
+                    !isUnlimited && creditPercentage === 100 && "!text-red-600"
                   )}
                 >
                   {isUnlimited

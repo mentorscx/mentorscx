@@ -1647,7 +1647,7 @@ export const plans = [
     price: 39,
     priceId: "price_1PpAwjEE1IEtny7DcLD4yyZs",
     description: "For those exploring the mentorship world",
-    credits: 3,
+    credits: 2,
     planEnabled: true,
     inclusions: [
       {
@@ -1785,7 +1785,7 @@ export const pricingPlans = [
     name: "Sun",
     monthlyPrice: 199,
     annualPrice: 159,
-    credits: 10001,
+    credits: 20001,
     monthlyPriceId: env.NEXT_PUBLIC_STRIPE_SUN_MONTHLY_PRICE_ID,
     annualPriceId: env.NEXT_PUBLIC_STRIPE_SUN_ANNUAL_PRICE_ID,
     description: "For teams that want to grow & develop together",
