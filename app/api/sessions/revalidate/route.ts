@@ -23,9 +23,8 @@ export async function GET(request: NextRequest) {
         },
         status: SessionStatus.ACCEPTED,
       },
-      include: {
-        mentee: true,
-        mentor: true,
+      select: {
+        id: true,
       },
       take: BATCH_LIMIT,
     });

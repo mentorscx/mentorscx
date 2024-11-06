@@ -13,17 +13,9 @@ export default function Home() {
     setMessage(null);
     setError(null);
 
-    await sendEmailViaBrevoTemplate({
-      templateId: 22,
-      email: "angel@mentorscx.com",
-      name: "Angel funes",
-    });
-
-    alert("email sent to angel@mentorscx.com");
-
     try {
       const response = await fetch("/api/sessions/revalidate", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "", // Secure your API key
@@ -32,7 +24,7 @@ export default function Home() {
 
       const result = await response.json();
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error(result.error || "Something went wrong");
       }
 
