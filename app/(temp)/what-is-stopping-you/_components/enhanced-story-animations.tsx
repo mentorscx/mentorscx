@@ -78,7 +78,8 @@ export function MeteorsCTA() {
 
             <p className="font-normal  text-3xl text-slate-400 mb-4 relative z-50 w-full text-center">
               Claim your code now for two free months of access to the Mentors
-              CX "Eclipse Plan"!
+              CX <span className="font-semibold italic">"Eclipse Plan"</span>{" "}
+              {""}!
             </p>
 
             <div className="flex items-center space-x-2 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
@@ -205,8 +206,11 @@ export default function Component() {
             <p className="text-muted-foreground">
               Learn how a $50 budget and an iPhone turned an idea into a full
               project in just one week. Explore the journey behind "Truffle Pig"
-              and see how the "what’s stopping you? Go for it." mindset brought
-              this vision to life.
+              and see how the{" "}
+              <span className="font-semibold italic">
+                "What’s stopping you? Go for it."{" "}
+              </span>
+              mindset brought this vision to life.
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
@@ -292,7 +296,7 @@ export default function Component() {
             className="flex flex-col justify-center space-y-4 p-4"
           >
             <h3 className="text-2xl font-bold">
-              Get the slides to my presentation
+              Get the slides from my presentation
             </h3>
             <p className="text-muted-foreground">
               Interested in practical advice on focus, productivity, and
