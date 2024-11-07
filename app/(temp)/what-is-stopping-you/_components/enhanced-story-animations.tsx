@@ -28,7 +28,7 @@ export function MeteorsCTA() {
     "LARISSA",
     "CHRIS",
     "DARREN",
-    "JOHN",
+    "JOHNO",
   ];
 
   let couponName = validCoupons.includes(nameOfCoupon)
@@ -78,7 +78,8 @@ export function MeteorsCTA() {
 
             <p className="font-normal  text-3xl text-slate-400 mb-4 relative z-50 w-full text-center">
               Claim your code now for two free months of access to the Mentors
-              CX "Eclipse Plan"!
+              CX <span className="font-semibold italic">"Eclipse Plan"</span>{" "}
+              {""}!
             </p>
 
             <div className="flex items-center space-x-2 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
@@ -203,8 +204,13 @@ export default function Component() {
               Behind "Truffle Pig"
             </h3>
             <p className="text-muted-foreground">
-              Read the story behind Truffle Pig, and how a $50 budget + iPhone
-              made it possible to produce from idea to distribution in ~1 week.
+              Learn how a $50 budget and an iPhone turned an idea into a full
+              project in just one week. Explore the journey behind "Truffle Pig"
+              and see how the{" "}
+              <span className="font-semibold italic">
+                "What’s stopping you? Go for it."{" "}
+              </span>
+              mindset brought this vision to life.
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
@@ -214,7 +220,7 @@ export default function Component() {
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
                 >
-                  Read more
+                  Read the full story
                 </Link>
               </Button>
             </motion.div>
@@ -241,7 +247,7 @@ export default function Component() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <img
-                src="/hero.png"
+                src="/HK.png"
                 alt="Truffle Pig product"
                 className="object-cover w-full h-full"
               />
@@ -261,12 +267,20 @@ export default function Component() {
             }}
             className="bg-[#E85D3D] rounded-lg overflow-hidden shadow-lg aspect-[4/3] flex items-center"
           >
-            <div className="p-8 space-y-4 text-white">
-              <h2 className="text-3xl font-bold">
-                Making Presentations That Stick
-              </h2>
-              <p className="text-lg">A guide by CX</p>
-            </div>
+            <motion.div
+              className="w-full h-full"
+              style={{
+                y: useTransform(scrollYProgress, [0, 1], [0, -20]),
+              }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img
+                src="/what_is_stopping_you.jpg"
+                alt="What is stopping you"
+                className="object-fit w-full h-full"
+              />
+            </motion.div>
           </motion.div>
 
           <motion.div
@@ -282,15 +296,18 @@ export default function Component() {
             className="flex flex-col justify-center space-y-4 p-4"
           >
             <h3 className="text-2xl font-bold">
-              Get the slides to my presentation
+              Get the slides from my presentation
             </h3>
             <p className="text-muted-foreground">
-              Yes, the one you saw in the Elevate CX London 2024 edition.
+              Interested in practical advice on focus, productivity, and
+              empowerment from the Elevate CX London 2024 session? Download the
+              slides to revisit key insights and explore actionable steps for
+              overcoming barriers.
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
                 <Link
-                  href="https://docs.google.com/presentation/d/1DJIoTlPVhxSnaJzmmNFM5P2Eh5JXJum9rQtoTMQWLiM/edit#slide=id.g2202cb2f5dc_0_1471"
+                  href="https://docs.google.com/presentation/d/1u9rLVgI7d-ns0m2tMRsJI__iTAGGWGVWmfKYnbcdWJo/edit#slide=id.p23"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"

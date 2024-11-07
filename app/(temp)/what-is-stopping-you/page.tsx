@@ -2,6 +2,8 @@ import React from "react";
 import EnhancedStoryAnimations from "./_components/enhanced-story-animations";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { Metadata } from "next";
+import { ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "What is stopping you? | London 2024 | Elevate CX",
@@ -53,6 +55,15 @@ const WhatIsStoppingYouPage = () => {
           </p>
         </div>
       </BackgroundBeamsWithCollision>
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+        <Button
+          variant="ghost"
+          className="w-16 h-16 rounded-full transition-transform hover:translate-y-1 animate-bounce"
+          aria-label="Scroll down"
+        >
+          <ArrowDown className="h-8 w-8 text-purple-700" />
+        </Button>
+      </div>
 
       <EnhancedStoryAnimations />
     </div>
