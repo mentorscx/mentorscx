@@ -1,9 +1,10 @@
+import { updateSession } from "@/lib/actions/session.action";
 import { db } from "@/lib/db";
 import { SessionStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import pLimit from "p-limit";
 
-const CONCURRENCY_LIMIT = 10;
+const CONCURRENCY_LIMIT = 5;
 
 export async function GET(request: NextRequest) {
   const apiKey = request.headers.get("x-api-key");
@@ -13,6 +14,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
+    const BATCH_LIMIT = 100;
+
     const sessions = await db.session.findMany({
       where: {
         end: {
@@ -20,22 +23,17 @@ export async function GET(request: NextRequest) {
         },
         status: SessionStatus.ACCEPTED,
       },
+      select: {
+        id: true,
+      },
+      take: BATCH_LIMIT,
     });
 
     const limit = pLimit(CONCURRENCY_LIMIT);
 
     // Limit concurrent updates
     const updatePromises = sessions.map((session) =>
-      limit(() =>
-        db.session.update({
-          where: {
-            id: session.id,
-          },
-          data: {
-            status: SessionStatus.DONE,
-          },
-        })
-      )
+      limit(() => updateSession({ ...session, status: SessionStatus.DONE }))
     );
 
     const results = await Promise.allSettled(updatePromises);

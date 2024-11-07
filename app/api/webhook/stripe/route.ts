@@ -1,10 +1,26 @@
 import Stripe from "stripe";
 import { db } from "@/lib/db";
+import { pricingPlans } from "@/constants/data";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
   typescript: true,
 });
+
+function getSubscriptionPeriod(interval: "month" | "year" = "month") {
+  const now = new Date();
+  const start = Math.floor(now.getTime() / 1000);
+
+  const end = new Date(now);
+  interval === "month"
+    ? end.setMonth(end.getMonth() + 1)
+    : end.setFullYear(end.getFullYear() + 1);
+
+  return {
+    start,
+    end: Math.floor(end.getTime() / 1000),
+  };
+}
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -23,12 +39,39 @@ export async function POST(req: Request) {
   const session = event.data.object as Stripe.Checkout.Session;
 
   if (event.type === "checkout.session.completed") {
+    if (!session.metadata?.buyerId) {
+      console.error("Missing buyerId in session metadata:", {
+        sessionId: session.id,
+        metadata: session.metadata,
+      });
+      throw new Error(
+        "Failed to process subscription: Missing buyer information"
+      );
+    }
+
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     );
 
-    await db.subscription.create({
-      data: {
+    // Get correct period using current time
+    const period = getSubscriptionPeriod(
+      subscription.items.data[0].plan.interval as "month" | "year"
+    );
+
+    await db.subscription.upsert({
+      where: {
+        userId: session.metadata?.buyerId || "",
+      },
+      update: {
+        stripeSubscriptionId: subscription.id,
+        currentPeriodStart: subscription.current_period_start,
+        currentPeriodEnd: subscription.current_period_end,
+        status: subscription.status,
+        planId: subscription.items.data[0].plan.id,
+        interval: String(subscription.items.data[0].plan.interval),
+        credits: Number(session.metadata?.credits) || 0,
+      },
+      create: {
         stripeSubscriptionId: subscription.id,
         userId: session.metadata?.buyerId || "",
         currentPeriodStart: subscription.current_period_start,
@@ -39,11 +82,30 @@ export async function POST(req: Request) {
         credits: Number(session.metadata?.credits) || 0,
       },
     });
-  }
+  } else if (event.type === "invoice.payment_succeeded") {
+    // Get invoice and subscription data (no change)
+    const invoice = event.data.object as Stripe.Invoice;
+    const subscriptionId = invoice.subscription as string;
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ["items.data.price"],
+    });
 
-  if (event.type === "invoice.payment_succeeded") {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
+    // Get the price and plan (no change)
+    const currentPriceId = subscription.items.data[0].price.id;
+    const plan = pricingPlans.find(
+      (p) =>
+        p.monthlyPriceId === currentPriceId ||
+        p.annualPriceId === currentPriceId
+    );
+
+    if (!plan) {
+      console.error("Price ID not found in plans:", currentPriceId);
+      throw new Error(`No plan found for price: ${currentPriceId}`);
+    }
+
+    // 3. Calculate correct period
+    const period = getSubscriptionPeriod(
+      subscription.items.data[0].plan.interval as "month" | "year"
     );
 
     await db.subscription.update({
@@ -51,11 +113,11 @@ export async function POST(req: Request) {
         stripeSubscriptionId: subscription.id,
       },
       data: {
-        planId: subscription.items.data[0].price.id,
+        planId: currentPriceId,
         currentPeriodStart: subscription.current_period_start,
         currentPeriodEnd: subscription.current_period_end,
         status: subscription.status,
-        credits: Number(session.metadata?.credits) || 0,
+        credits: plan.credits || 0,
       },
     });
   }

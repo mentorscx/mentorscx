@@ -62,12 +62,14 @@ const createStripeSession = async ({
 }: CreateStripeSessionParams): Promise<
   Stripe.Response<Stripe.Checkout.Session>
 > => {
+  const metadata = {
+    buyerId: userId,
+    credits: credits.toString(),
+    email,
+  };
+
   return await stripe.checkout.sessions.create({
-    metadata: {
-      buyerId: userId,
-      credits: credits.toString(),
-      email: email,
-    },
+    metadata,
     customer: customerId,
     mode: "subscription",
     allow_promotion_codes: true,
@@ -76,11 +78,7 @@ const createStripeSession = async ({
     success_url: `${domainUrl}/payment/success`,
     cancel_url: `${domainUrl}/payment/cancelled`,
     subscription_data: {
-      metadata: {
-        buyerId: userId,
-        credits: credits.toString(),
-        email: email,
-      },
+      metadata,
     },
   });
 };
@@ -128,8 +126,7 @@ export const getStripeSession = async ({
     const { userId: clerkId } = await auth();
 
     if (!clerkId) {
-      redirect("/sign-in");
-      return ""; // Safeguard for redirect, although it won't execute further
+      return "/sign-in"; // Safeguard for redirect, although it won't execute further
     }
 
     // If the email or customerId is not provided, we need to get it from the database
