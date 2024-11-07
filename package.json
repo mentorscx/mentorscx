@@ -80,7 +80,7 @@
     "googleapis": "^134.0.0",
     "lucide-react": "^0.419.0",
     "markdown-draft-js": "^2.4.0",
-    "mongodb": "^6.3.0",
+    "mongodb": "^6.9.0",
     "mongoose": "^8.0.3",
     "next": "^14.2.3",
     "next-contentlayer": "^0.3.4",
