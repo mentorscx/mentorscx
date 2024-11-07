@@ -203,8 +203,10 @@ export default function Component() {
               Behind "Truffle Pig"
             </h3>
             <p className="text-muted-foreground">
-              Read the story behind Truffle Pig, and how a $50 budget + iPhone
-              made it possible to produce from idea to distribution in ~1 week.
+              Learn how a $50 budget and an iPhone turned an idea into a full
+              project in just one week. Explore the journey behind "Truffle Pig"
+              and see how the "what’s stopping you? Go for it." mindset brought
+              this vision to life.
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
@@ -214,7 +216,7 @@ export default function Component() {
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
                 >
-                  Read more
+                  Read the full story
                 </Link>
               </Button>
             </motion.div>
@@ -241,7 +243,7 @@ export default function Component() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <img
-                src="/HK.jpg"
+                src="/HK.png"
                 alt="Truffle Pig product"
                 className="object-cover w-full h-full"
               />
@@ -293,7 +295,10 @@ export default function Component() {
               Get the slides to my presentation
             </h3>
             <p className="text-muted-foreground">
-              Yes, the one you saw in the Elevate CX London 2024 edition.
+              Interested in practical advice on focus, productivity, and
+              empowerment from the Elevate CX London 2024 session? Download the
+              slides to revisit key insights and explore actionable steps for
+              overcoming barriers.
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">

@@ -56,9 +56,9 @@ const PriceForm = ({ id, price }: PriceFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const completedSessions = await getCompletedSessionsCount(id);
+      const completedSessions = (await getCompletedSessionsCount(id)) ?? 0;
 
-      if (!completedSessions || completedSessions < 4) {
+      if (completedSessions < 4) {
         toast.warning("Please complete 4 sessions to update the price!");
         return;
       }

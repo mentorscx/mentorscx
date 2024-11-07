@@ -61,7 +61,7 @@ const WhatIsStoppingYouPage = () => {
           className="w-16 h-16 rounded-full transition-transform hover:translate-y-1 animate-bounce"
           aria-label="Scroll down"
         >
-          <ArrowDown className="h-6 w-6" />
+          <ArrowDown className="h-8 w-8 text-purple-700" />
         </Button>
       </div>
 
