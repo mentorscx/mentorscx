@@ -28,7 +28,7 @@ export function MeteorsCTA() {
     "LARISSA",
     "CHRIS",
     "DARREN",
-    "JOHN",
+    "JOHNO",
   ];
 
   let couponName = validCoupons.includes(nameOfCoupon)
@@ -241,7 +241,7 @@ export default function Component() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <img
-                src="/hero.png"
+                src="/HK.jpg"
                 alt="Truffle Pig product"
                 className="object-cover w-full h-full"
               />
@@ -261,12 +261,20 @@ export default function Component() {
             }}
             className="bg-[#E85D3D] rounded-lg overflow-hidden shadow-lg aspect-[4/3] flex items-center"
           >
-            <div className="p-8 space-y-4 text-white">
-              <h2 className="text-3xl font-bold">
-                Making Presentations That Stick
-              </h2>
-              <p className="text-lg">A guide by CX</p>
-            </div>
+            <motion.div
+              className="w-full h-full"
+              style={{
+                y: useTransform(scrollYProgress, [0, 1], [0, -20]),
+              }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img
+                src="/what_is_stopping_you.jpg"
+                alt="What is stopping you"
+                className="object-fit w-full h-full"
+              />
+            </motion.div>
           </motion.div>
 
           <motion.div
@@ -290,7 +298,7 @@ export default function Component() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button asChild variant="secondary" size="lg">
                 <Link
-                  href="https://docs.google.com/presentation/d/1DJIoTlPVhxSnaJzmmNFM5P2Eh5JXJum9rQtoTMQWLiM/edit#slide=id.g2202cb2f5dc_0_1471"
+                  href="https://docs.google.com/presentation/d/1u9rLVgI7d-ns0m2tMRsJI__iTAGGWGVWmfKYnbcdWJo/edit#slide=id.p23"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"
