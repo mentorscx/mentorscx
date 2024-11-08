@@ -674,6 +674,9 @@ export async function fetchSessionCount(
           status: {
             in: statusArr,
           },
+          start: {
+            gt: new Date(),
+          },
         }),
     };
 

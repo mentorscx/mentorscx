@@ -34,6 +34,8 @@ export const DashBoardQueueLimit = async ({
   const creditLimit = getCreditLimit(planName);
   const subscription = await getSubscriptionDetails(userId);
 
+  console.log(queuedSessionsCount);
+
   return (
     <section>
       <DashboardInfoCard
