@@ -18,7 +18,8 @@ import { Badge } from "@/components/ui/badge";
 
 import { formatMonthYear } from "@/lib/format";
 import RequestSessionButton from "@/components/shared/request-session-button";
-import { formatToOneDp } from "@/lib/utils";
+import { formatToOneDp, getInitials } from "@/lib/utils";
+import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 
 interface ProfileCardProps {
   user: string;
@@ -67,7 +68,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
   }
 
   return (
-    <Card className="mb-6 bg-white max-w-5xl mx-auto overflow-hidden p-4 sm:p-6 lg:p-8">
+    <Card className="mb-3 md:mb-6 bg-white max-w-5xl mx-auto overflow-hidden p-4 sm:p-3 lg:p-8">
       {/* <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span> */}
 
       {/* header */}
@@ -75,15 +76,16 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
         <div className="flex  space-x-3">
           {/* image */}
           <div className="block shrink-0">
-            <div className="h-16 w-16">
-              <Image
-                alt={username}
+            <Avatar className="h-16 w-16 relative overflow-hidden">
+              <AvatarImage
                 src={imageUrl}
-                className="rounded-lg object-cover shadow-sm"
-                height={64}
-                width={64}
+                alt={username}
+                className="object-cover w-full h-full"
               />
-            </div>
+              <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-muted text-2xl">
+                {getInitials(username)}
+              </AvatarFallback>
+            </Avatar>
           </div>
 
           {/* profile in medium devices */}

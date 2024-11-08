@@ -40,7 +40,7 @@ const ProfileSkillList = ({
       {data.length === 0 && (
         <div className="flex justify-center items-center flex-col gap-4 my-3">
           <Image src="/no_data.svg" alt="avatar" width={100} height={100} />
-          {dataType === "experience" ? (
+          {dataType === "experience" && canEdit ? (
             <p className="text-muted-foreground text-sm">
               No data yet. Let others know about your experience.
             </p>

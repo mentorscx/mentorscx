@@ -1,6 +1,8 @@
 import React from "react";
 
 import Checkout from "@/components/shared/Checkout";
+import { Button } from "@/components/ui/button";
+import { SignInButton } from "@clerk/nextjs";
 
 export type PricingPlan = {
   id: number;
@@ -22,6 +24,7 @@ type PricingTableProps = {
   annual: boolean;
   showPricing?: boolean;
   children?: React.ReactNode;
+  isLoggedIn?: boolean;
 };
 
 const PricingFeatures = ({ features }: { features: string[] }) => {
@@ -99,6 +102,7 @@ const PricingTable = ({
   plan,
   annual,
   showPricing = true,
+  isLoggedIn = false,
   children,
 }: PricingTableProps) => {
   return (
@@ -113,7 +117,7 @@ const PricingTable = ({
       <PricingDetails plan={plan} annual={annual} showPricing={showPricing} />
       <PricingFeatures features={plan.features} />
 
-      {showPricing && (
+      {isLoggedIn && showPricing && (
         <Checkout
           plan={plan.name}
           amount={annual ? plan.annualPrice : plan.monthlyPrice}
@@ -123,6 +127,18 @@ const PricingTable = ({
           planEnabled={!plan.comingSoon}
         />
       )}
+      {!isLoggedIn && (
+        <Button asChild className="mt-4">
+          <SignInButton
+            mode="modal"
+            fallbackRedirectUrl="/billing"
+            forceRedirectUrl="/billing"
+          >
+            Get started
+          </SignInButton>
+        </Button>
+      )}
+
       {children}
     </div>
   );
