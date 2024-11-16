@@ -122,7 +122,7 @@ export default function CreditsDialog({
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xl font-bold text-blue-600">Credits</span>
+                <span className="text-xl font-bold">Credits</span>
                 <span className="text-lg font-semibold flex items-center gap-2">
                   {isUnlimited ? (
                     <>

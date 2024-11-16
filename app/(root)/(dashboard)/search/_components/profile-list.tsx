@@ -8,7 +8,7 @@ export default async function ProfileList({ users }: ProfileListProps) {
   const parsedUsers = JSON.parse(users);
 
   return (
-    <section className="max-w-[1100px] mx-3 lg:mx-6">
+    <section className="max-w-[1100px] md:mx-6">
       {parsedUsers.map((user: any) => (
         <ProfileCard key={user.id} user={JSON.stringify(user)} />
       ))}

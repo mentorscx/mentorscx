@@ -57,6 +57,7 @@ const Credits = async () => {
           }}
           annual={false}
           showPricing={false}
+          isLoggedIn={true}
         >
           <ManageSubscriptionButton email={user.email} userId={user.id} />
         </PricingTable>

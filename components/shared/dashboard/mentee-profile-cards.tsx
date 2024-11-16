@@ -38,7 +38,7 @@ export const DashBoardQueueLimit = async ({
     <section>
       <DashboardInfoCard
         title="Available to Queue"
-        displayValue={`${queuedSessionsCount}/${bookingLimit}`}
+        displayValue={`${bookingLimit - queuedSessionsCount}/${bookingLimit}`}
         footer="calls"
       >
         <CreditsDialog

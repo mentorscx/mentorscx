@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { pricingPlans } from "@/constants/data";
 
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 export default function PricingTables({
   showHeader = true,
@@ -17,6 +18,8 @@ export default function PricingTables({
   const searchParams = useSearchParams();
   const initialAnnual = searchParams.get("annual") === "true" ?? false;
   const [annual, setAnnual] = useState<boolean>(initialAnnual && true);
+
+  const { userId } = useAuth();
 
   return (
     <section className="bg-gradient-to-b from-white to-gray-100">
@@ -56,7 +59,12 @@ export default function PricingTables({
           </h2>
           <div className="max-w-sm md:max-w-2xl xl:max-w-none mx-auto grid gap-8 md:grid-cols-3 xl:gap-6 items-start">
             {pricingPlans.map((plan) => (
-              <PricingTable key={plan.id} plan={plan} annual={annual} />
+              <PricingTable
+                key={plan.id}
+                plan={plan}
+                annual={annual}
+                isLoggedIn={userId ? true : false}
+              />
             ))}
           </div>
         </div>

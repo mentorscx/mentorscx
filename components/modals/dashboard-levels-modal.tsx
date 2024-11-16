@@ -76,7 +76,7 @@ function LevelsDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-blue-600">
+          <DialogTitle className="text-2xl font-bold">
             {dialogTitle}
           </DialogTitle>
         </DialogHeader>
@@ -86,9 +86,9 @@ function LevelsDialog({
             Every level unlocks a special surprise, giving you a new reward that
             makes your journey more exciting.
           </p>
-          <Button variant="link" asChild size="lg" className="px-0">
+          {/* <Button variant="link" asChild size="lg" className="px-0">
             <Link href="/">Learn more</Link>
-          </Button>
+          </Button> */}
         </div>
       </DialogContent>
     </Dialog>
