@@ -179,6 +179,7 @@ enum SessionStatus {
   AWAITING_REVIEW @map("AWAITING_REVIEW")
   INCOMPLETE @map("INCOMPLETE")
   REVIEWED        @map("REVIEWED")
+  AUTODECLINED @map("AUTODECLINED")
 }
 
 
