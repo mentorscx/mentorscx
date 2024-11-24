@@ -215,7 +215,7 @@ const getSessionHeaderContent = (
     [`${Role.MENTEE}-${SessionStatus.AUTODECLINED}`]: {
       header: "Auto-declined due to unresponsiveness",
       content:
-        "The mentor didn’t accept the session within 10 days and it was declined automatically. If you’d like to try again, we encourage you to shoot them a message before sending a request.",
+        "The mentor didn’t accept the session and it was declined automatically. If you’d like to try again, we encourage you to shoot them a message before sending a request.",
       Icon: MessageSquareWarningIcon,
       theme: "slate",
     },

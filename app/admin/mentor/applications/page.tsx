@@ -37,6 +37,8 @@ function getMentorApplications() {
       lastname: true,
       email: true,
       applicationStatus: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 }
@@ -66,6 +68,8 @@ const ApplicationTable = async () => {
           <TableHead>Last Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Status</TableHead>
+          <TableHead>Submitted</TableHead>
+          <TableHead>Updated</TableHead>
           <TableHead className="w-0">
             <span className="sr-only">Actions</span>
           </TableHead>
@@ -78,6 +82,8 @@ const ApplicationTable = async () => {
             <TableCell>{application.lastname}</TableCell>
             <TableCell>{application.email}</TableCell>
             <TableCell>{application?.applicationStatus}</TableCell>
+            <TableCell>{application.createdAt?.toDateString()}</TableCell>
+            <TableCell>{application.updatedAt?.toDateString()}</TableCell>
             <TableCell className="text-center">
               <DropdownMenu>
                 <DropdownMenuTrigger className="border p-1 border-blue-500 rounded-md">
