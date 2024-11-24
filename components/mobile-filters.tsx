@@ -32,16 +32,17 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
 
   const onOpen = () => setOpen(true);
   const onClose = () => setOpen(false);
-  console.log(prices);
 
   return (
     <>
       <Button
         onClick={onOpen}
-        className="flex items-center gap-x-2 lg:hidden mb-3"
+        className="flex items-center gap-x-1 md:hidden mb-3 text-primary"
+        variant="secondary"
+        size="lg"
       >
         Filters
-        <Plus size={20} />
+        <Plus size={16} />
       </Button>
 
       <Dialog

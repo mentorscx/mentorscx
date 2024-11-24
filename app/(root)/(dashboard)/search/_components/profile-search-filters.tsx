@@ -158,7 +158,7 @@ type ProfileSearchFiltersProps = {
 
 const ProfileSearchFilters = (props: ProfileSearchFiltersProps) => {
   return (
-    <Card className=" max-w-[1100px] mx-3 md:mx-6 mt-3 md:mt-6 p-3">
+    <Card className=" max-w-[1100px] md:mx-6 mt-3 md:mt-6 p-3">
       <div className="md:flex items-center justify-between space-y-3">
         <div className="w-full md:w-[400px]">
           <SearchInput />

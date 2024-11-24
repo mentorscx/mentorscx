@@ -34,6 +34,7 @@ const isAPIRoute = createRouteMatcher([
   "/api/uploadthing",
   "/api/liveblocks-auth",
   "/api/sessions/revalidate",
+  "/api/sessions/revalidate/unaccepted",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

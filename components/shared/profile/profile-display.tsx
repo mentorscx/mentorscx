@@ -210,7 +210,7 @@ export const ProfileDisplayPage = async ({
               <MessageMe
                 currentUserClerkId={userId}
                 otherUserClerkId={user.clerkId}
-                redirectUrl={"/mentor/chats"}
+                redirectUrl={isMentorRoute ? "/mentor/chats" : "/chats"}
               />
             </div>
 

@@ -191,6 +191,7 @@ export const isProUser = (
   if (!subscription) return false;
 
   const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
   return (
     subscription.status === "active" &&
     subscription.currentPeriodEnd > currentTime

@@ -148,16 +148,12 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
               Atens, Greece
             </div> */}
           <div className="flex items-center ">
-            <LanguageIcon className="h-4 w-4 mr-1" />
+            <LanguageIcon className="h-4 w-4 mr-1 text-primary" />
             {languages.map((lang: any) => lang.name).join(", ")}
           </div>
           <div className="flex items-center ">
-            <GlobeAltIcon className="h-4 w-4 mr-1" />
-            {location}
-          </div>
-          <div className="flex items-center ">
-            <BoltIcon className="h-4 w-4 mr-1 text-green-600 fill-green-600 outline-green-600" />
-            Usually Active
+            <GlobeAltIcon className="h-4 w-4 mr-1 text-primary" />
+            {city}, {country}
           </div>
         </div>
       </div>
