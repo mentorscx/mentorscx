@@ -7,6 +7,7 @@ import {
   CheckCircleIcon,
   PartyPopperIcon,
   TriangleAlertIcon,
+  MessageSquareWarningIcon,
 } from "lucide-react";
 import { Role, SessionStatus } from "@prisma/client";
 import { SessionHeaderActions } from "./session-header-actions";
@@ -203,6 +204,20 @@ const getSessionHeaderContent = (
         "Looks like you took the time to leave a review for each other after completing the call. Great job in promoting kindness.Please share with others.",
       Icon: PartyPopperIcon,
       theme: "sky",
+    },
+    [`${Role.MENTOR}-${SessionStatus.AUTODECLINED}`]: {
+      header: "Auto-declined due to unresponsiveness",
+      content:
+        "You didn’t accept the session and it was declined automatically. If you’d like to encourage the mentee to book again, shoot them a message.",
+      Icon: MessageSquareWarningIcon,
+      theme: "slate",
+    },
+    [`${Role.MENTEE}-${SessionStatus.AUTODECLINED}`]: {
+      header: "Auto-declined due to unresponsiveness",
+      content:
+        "The mentor didn’t accept the session and it was declined automatically. If you’d like to try again, we encourage you to shoot them a message before sending a request.",
+      Icon: MessageSquareWarningIcon,
+      theme: "slate",
     },
   };
 

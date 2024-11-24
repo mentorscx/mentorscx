@@ -2,10 +2,14 @@
 const { withContentlayer } = require("next-contentlayer");
 
 const nextConfig = {
+  compress: true,
   reactStrictMode: false,
   images: {
     domains: ["img.clerk.com", "uploadthing.com", "utfs.io"],
+    formats: ["image/webp"], // Prefer WebP for better performance
+    minimumCacheTTL: 60,
   },
+
   webpack: (config) => {
     config.externals.push({
       "utf-8-validate": "commonjs utf-8-validate",
@@ -15,6 +19,10 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["@next/third-parties"],
+    optimizeCss: true, // Enable CSS optimization
+    legacyBrowsers: false, // Drop support for legacy browsers
+    scrollRestoration: true, // Better scroll handling
+    serverActions: true,
   },
 };
 

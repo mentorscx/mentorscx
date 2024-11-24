@@ -88,7 +88,9 @@ const getActionVisibility = (role: Role, status: SessionStatus) => ({
   showAskReview: role === Role.MENTOR && status === SessionStatus.COMPLETED,
   showLeaveReview: role === Role.MENTEE && status === SessionStatus.COMPLETED,
   showShareReview: status === SessionStatus.REVIEWED,
-  showMessageMe: status === SessionStatus.INCOMPLETE,
+  showMessageMe:
+    status === SessionStatus.INCOMPLETE ||
+    status === SessionStatus.AUTODECLINED,
 });
 
 // SessionHeaderActions component

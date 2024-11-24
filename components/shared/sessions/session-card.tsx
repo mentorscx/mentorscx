@@ -34,6 +34,7 @@ const StatusStyles: {
   COMPLETED: "text-green-600 border-green-500 bg-green-100",
   DONE: "text-orange-600 border-orange-500 bg-orange-100",
   REVIEWED: "text-sky-600 border-sky-500 bg-sky-100",
+  AUTODECLINED: "text-slate-600 border-slate-500 bg-slate-200",
 };
 
 const SessionCardContent = (props: {
