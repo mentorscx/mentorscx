@@ -22,7 +22,7 @@ export async function generateMetadata({
     title: "Session Review | Mentors CX",
     description: "View mentorship session reviews on Mentors CX",
     metadataBase: new URL(
-      process.env.NEXT_PUBLIC_APP_URL || "https://mentorscx.com"
+      process.env.NEXT_PUBLIC_WEBSITE_URL || "https://mentorscx.com"
     ),
     openGraph: {
       images: ["/assets/review-share.svg"],
@@ -52,7 +52,7 @@ export async function generateMetadata({
     if (!review) return defaultMetadata;
 
     const { mentor } = review.session;
-    const reviewUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reviews/${params.sessionId}`;
+    const reviewUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/reviews/${params.sessionId}`;
 
     return {
       title: `Review for ${mentor.username} | Mentors CX`,
@@ -60,7 +60,7 @@ export async function generateMetadata({
         mentor.shortBio || "View this mentorship session review on Mentors CX",
 
       metadataBase: new URL(
-        process.env.NEXT_PUBLIC_APP_URL || "https://mentorscx.com"
+        process.env.NEXT_PUBLIC_WEBSITE_URL || "https://mentorscx.com"
       ),
 
       openGraph: {
