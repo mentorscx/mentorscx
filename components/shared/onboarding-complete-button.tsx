@@ -12,6 +12,7 @@ type OnboardingCompleteButtonProps = {
   userId: string;
   isActivated: boolean;
   role: Role;
+  showButton: boolean;
 };
 
 // TODO: Show activation button only if it not activated
@@ -21,6 +22,7 @@ const OnboardingCompleteButton = ({
   userId,
   isActivated = false,
   role,
+  showButton = false,
 }: OnboardingCompleteButtonProps) => {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(true);
@@ -55,6 +57,9 @@ const OnboardingCompleteButton = ({
       setIsVisible(true);
     }
   };
+
+  // Route is not mentee return null
+  if (!showButton) return null;
 
   if (isActivated || role === Role.MENTEE) return null;
 

@@ -322,7 +322,12 @@ export const ProfileDisplayPage = async ({
 
         {/* Onboarding Checklist */}
         <div className="max-w-4xl mx-auto mt-4">
-          {canEdit ? <OnboardingChecklist user={user} /> : null}
+          {canEdit ? (
+            <OnboardingChecklist
+              user={user}
+              route={isMentorRoute ? "/mentor/profile" : "/profile"}
+            />
+          ) : null}
         </div>
 
         <YouTubeVideo videoURL={user.videoUrl} />
