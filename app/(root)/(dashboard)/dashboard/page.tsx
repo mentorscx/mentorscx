@@ -26,6 +26,7 @@ import {
   DashboardProfileLevel,
   DashBoardQueueLimit,
 } from "@/components/shared/dashboard/mentee-profile-cards";
+import { isProUser } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Dashboard | Mentors CX",
@@ -64,11 +65,15 @@ const MenteeDashboardPage = async () => {
 
   const { id, imageUrl, username } = user;
 
-  const planName = pricingPlans.find(
-    (plan) =>
-      plan.monthlyPriceId === user.Subscription?.planId ||
-      plan.annualPriceId === user.Subscription?.planId
-  )?.name;
+  const hasProSubscription = isProUser(user.Subscription);
+
+  const planName = hasProSubscription
+    ? pricingPlans.find(
+        (plan) =>
+          plan.monthlyPriceId === user.Subscription?.planId ||
+          plan.annualPriceId === user.Subscription?.planId
+      )?.name
+    : undefined;
 
   return (
     <div className="max-w-5xl mx-auto pt-16 p-3">

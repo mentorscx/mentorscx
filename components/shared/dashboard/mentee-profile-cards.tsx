@@ -14,7 +14,7 @@ import { InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCompletedSessionsCount } from "@/lib/actions/helper.action";
 import { MenteeLevelsDialog } from "@/components/modals/dashboard-levels-modal";
-import { getBookingLimit, getCreditLimit } from "@/lib/utils";
+import { getBookingLimit, getCreditLimit, isProUser } from "@/lib/utils";
 import CreditsDialog from "@/components/modals/credits-dialog";
 import { fetchSessionCount } from "@/lib/actions/session.action";
 import { getSubscriptionDetails } from "@/lib/actions/subscription.action";
