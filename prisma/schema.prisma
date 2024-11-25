@@ -62,6 +62,8 @@ model User {
   isOnboarded Boolean @default(false)
   isActivated Boolean @default(false)
 
+  rank Int?
+
   events           Event[]
   sessionsGiven    Session[] @relation("sessionsGiven")
   sessionsReceived Session[] @relation("sessionsReceived")
