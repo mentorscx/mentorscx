@@ -211,6 +211,10 @@ export async function getUsersWithProfileFilters(searchParams: any) {
           _count: "desc",
         },
       };
+    } else {
+      sortBy = {
+        rank: "asc",
+      };
     }
 
     // Search

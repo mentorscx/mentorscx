@@ -86,8 +86,12 @@ export async function OnboardingChecklist({
     },
   });
 
+  const weeklyAvailability = JSON.parse(
+    JSON.stringify(user.weeklyAvailability)
+  );
+
   const hasSessions: boolean =
-    sessionCount > 0 || user.weeklyAvailability !== null;
+    sessionCount > 0 || (weeklyAvailability?.schedule?.length ?? 0) > 0;
   const hasBio: boolean = Boolean(user.bio);
   const hasExpertise: boolean = user.expertise.length > 0;
   const hasIndustries: boolean = user.industries.length > 0;
@@ -104,8 +108,11 @@ export async function OnboardingChecklist({
     hasProfession && hasOrganization,
   ];
 
+  const isMentorRoute =
+    route === "/mentor/dashboard" || route === "/mentor/profile";
+
   // If route is mentor, add hasSessions and hasMeetingLink to the checklist
-  if (route === "/mentor/dashboard") {
+  if (isMentorRoute) {
     profileCompletionChecks.push(hasSessions, hasMeetingLink, hasShortBio);
   }
 
@@ -137,7 +144,7 @@ export async function OnboardingChecklist({
   ];
 
   // Only add these checklist items for mentors
-  if (route === "/mentor/dashboard") {
+  if (isMentorRoute) {
     checklist.push(
       {
         isChecked: hasSessions,
@@ -157,7 +164,8 @@ export async function OnboardingChecklist({
     );
   }
 
-  if (completionPercentage === 100 && user.isActivated) return null;
+  if (completionPercentage === 100 && (user.isActivated || !isMentorRoute))
+    return null;
   else if (
     completionPercentage === 100 &&
     !user.isActivated &&
@@ -179,6 +187,7 @@ export async function OnboardingChecklist({
                 userId={user.id}
                 isActivated={user.isActivated}
                 role={user.role ?? Role.MENTEE}
+                showButton={isMentorRoute}
               />
             </div>
           </CardHeader>
