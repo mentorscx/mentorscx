@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.1.5",
+    "@clerk/nextjs": "^5.7.3",
     "@date-fns/utc": "^1.2.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
