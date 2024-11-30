@@ -113,9 +113,12 @@ export function SessionDetailsForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      objective: "",
-      category: [],
-      outcome: "",
+      objective: session.objective || "",
+      category:
+        session.category.length > 1
+          ? [{ label: session.category, value: session.category }]
+          : [],
+      outcome: session.outcome || "",
       acceptTerms: false,
     },
   });

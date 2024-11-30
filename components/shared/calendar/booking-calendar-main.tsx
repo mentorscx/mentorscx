@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -19,6 +19,9 @@ import {
 } from "./calendar-server";
 
 import { utcToZonedTime } from "date-fns-tz";
+import { getSessionById } from "@/lib/actions/session.action";
+import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 type Event = {
   start: Date;
@@ -156,6 +159,34 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
   const [localDate, setLocalDate] = React.useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = React.useState<Event | null>(null);
   const [openForm, setOpenForm] = React.useState(false);
+  const [rescheduleSession, setRescheduleSession] = useState<Session | null>(
+    null
+  );
+  const [isLoadingSession, setIsLoadingSession] = useState(false);
+
+  const searchParams = useSearchParams();
+  const rescheduleId = searchParams.get("rescheduleId");
+
+  useEffect(() => {
+    async function loadSessionDetails() {
+      if (!rescheduleId) return;
+
+      try {
+        setIsLoadingSession(true);
+        const session = await getSessionById(rescheduleId);
+        if (session) {
+          setRescheduleSession(session);
+        }
+      } catch (error) {
+        console.error("Error in loadSessionDetails:", error);
+        toast.error("Failed to load session details");
+      } finally {
+        setIsLoadingSession(false);
+      }
+    }
+
+    loadSessionDetails();
+  }, [rescheduleId]);
 
   const handleOpenForm = () => setOpenForm(!openForm);
   const handleSelectSlot = (slot: Event) => setSelectedSlot(slot);
@@ -245,18 +276,18 @@ const BookingCalendarMain = (props: BookingCalendarMainProps) => {
 
           <SessionDetailsForm
             session={{
-              objective: "",
-              category: "",
-              outcome: "",
+              objective: rescheduleSession?.objective || "",
+              category: rescheduleSession?.category || "",
+              outcome: rescheduleSession?.outcome || "",
               menteeId: props.menteeId,
               mentorId: props.mentorId,
               start:
                 (selectedSlot?.start &&
-                  utcToZonedTime(selectedSlot?.start, props.timeZone)) ||
+                  utcToZonedTime(selectedSlot.start, props.timeZone)) ||
                 new Date(),
               end:
                 (selectedSlot?.end &&
-                  utcToZonedTime(selectedSlot?.end, props.timeZone)) ||
+                  utcToZonedTime(selectedSlot.end, props.timeZone)) ||
                 new Date(),
               price: props.price,
               duration: props.duration,
