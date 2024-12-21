@@ -90,8 +90,7 @@ export const EditSocialsModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const id = user?.id;
-      console.log("id", id);
-      console.log("This is the id bro", id);
+
       const result = await updateUser({
         id,
         portfolioWebsite: values.portfolioWebsite,

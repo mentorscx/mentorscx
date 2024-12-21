@@ -21,7 +21,6 @@ import { deleteExperienceById } from "@/lib/actions/experience.action";
 export const DeleteExperienceModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  console.log("Delete comes here!");
 
   const isModalOpen = isOpen && type === "deleteExperience";
   const { experience } = data;

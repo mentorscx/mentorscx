@@ -55,7 +55,6 @@ export const EditExperienceModal = () => {
 
   const isModalOpen = isOpen && type === "editExperience";
   const experience = data?.experience;
-  console.log(experience);
 
   const form = useForm({
     resolver: zodResolver(formSchema),

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useIsClient } from "usehooks-ts";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 const OnboardingMentorPage = () => {
   const isClient = useIsClient();
 
@@ -13,6 +13,11 @@ const OnboardingMentorPage = () => {
     <div className="min-h-screen  bg-[radial-gradient(100%_50%_at_50%_0%,rgba(0,163,255,0.13)_0,rgba(0,163,255,0)_50%,rgba(0,163,255,0)_100%)]">
       {/* Form content here */}
       <div className="form-container pt-10 space-y-4 text-slate-700">
+        <Button asChild variant="link" size="lg">
+          <Link href="/search" className="text-lg">
+            <ArrowLeft className="w-5 h-5 mr-1" /> Back to search
+          </Link>
+        </Button>
         <div className="card-block">
           <h1 className="text-3xl md:text-4xl font-bold">Becoming a mentor</h1>
           <p className="large">

@@ -20,7 +20,6 @@ import { deleteIndustryById } from "@/lib/actions/industry.action";
 export const DeleteIndustryModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  console.log("Delete comes here!");
 
   const isModalOpen = isOpen && type === "deleteIndustry";
   const { industry } = data;

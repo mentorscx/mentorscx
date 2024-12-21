@@ -90,7 +90,9 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
 
           {/* profile in medium devices */}
           <div className="hidden md:block">
-            <h3 className="h3">{username}</h3>
+            <Link href={`/profile/${id}`} className="hover:underline">
+              <h3 className="h3">{username}</h3>
+            </Link>
             <h6 className="h6">
               {position} @{organization}
             </h6>
@@ -138,7 +140,9 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
 
       {/* profile */}
       <div className="block mt-3 md:hidden ">
-        <p>{username}</p>
+        <Link href={`/profile/${id}`} className="hover:underline">
+          <p className="h3">{username}</p>
+        </Link>
         <p>
           {position} @{organization}
         </p>

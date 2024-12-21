@@ -21,7 +21,6 @@ import { deleteExpertiseById } from "@/lib/actions/expertise.action";
 export const DeleteExpertiseModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  console.log("Delete comes here!");
 
   const isModalOpen = isOpen && type === "deleteExpertise";
   const { expertise } = data;

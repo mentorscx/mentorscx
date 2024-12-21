@@ -80,7 +80,7 @@ export const AddIndustryModal = () => {
       form.reset();
       router.refresh();
       onClose();
-      console.log(industry);
+
       if (industry !== null) {
         toast.success("Added successfully");
       } else {

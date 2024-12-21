@@ -21,7 +21,6 @@ import { deleteToolById } from "@/lib/actions/tool.action";
 export const DeleteToolModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  console.log("Delete comes here!");
 
   const isModalOpen = isOpen && type === "deleteTool";
   const { tool } = data;

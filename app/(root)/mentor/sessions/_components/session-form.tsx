@@ -67,8 +67,6 @@ export function SessionForm({ session, user, menteeEmail }: SessionFormProps) {
   } = sessionJSON;
   const { id: userId, email: mentorEmail } = userJSON;
 
-  console.log({ mentorEmail, sessionId, start, end });
-
   if (status === "AVAILABLE") {
     setEnableEdit(true);
   }

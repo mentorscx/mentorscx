@@ -58,7 +58,6 @@ export const EditToolModal = () => {
 
   const isModalOpen = isOpen && type === "editTool";
   const tool = data?.tool;
-  console.log(tool);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
